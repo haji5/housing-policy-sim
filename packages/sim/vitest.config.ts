@@ -4,6 +4,8 @@ export default defineConfig({
   test: {
     include: ['test/**/*.test.ts'],
     environment: 'node',
+    // Multi-run property tests are slow under coverage instrumentation.
+    testTimeout: 30_000,
     coverage: {
       provider: 'v8',
       include: ['src/**/*.ts'],

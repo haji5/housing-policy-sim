@@ -15,4 +15,5 @@ export { POLICY_PRESETS, HISTORICAL_TICKS, DEFAULT_LEVERS, leversAt } from './po
 export { loadScenario, SCENARIOS } from './scenarios/index.ts';
 export { tickToLabel, tickToYearMonth, yearMonthToTick } from './calendar.ts';
 export { hashObject, stableStringify } from './hash.ts';
+export { hash32 } from './rng.ts';
 export { detectProb } from './systems/enforcement.ts';

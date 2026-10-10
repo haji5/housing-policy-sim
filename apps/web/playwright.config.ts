@@ -9,9 +9,14 @@ export default defineConfig({
   reporter: process.env.CI ? 'github' : 'list',
   use: {
     baseURL: 'http://localhost:4173',
-    viewport: { width: 1280, height: 800 },
   },
-  projects: [{ name: 'chromium', use: { ...devices['Desktop Chrome'] } }],
+  // Typical laptop viewport: the key feedback (charts) must be visible without scrolling.
+  projects: [
+    {
+      name: 'chromium',
+      use: { ...devices['Desktop Chrome'], viewport: { width: 1366, height: 768 } },
+    },
+  ],
   webServer: {
     command: 'pnpm build && pnpm preview',
     url: 'http://localhost:4173',
