@@ -1,0 +1,32 @@
+{
+  "name": "zoned-out",
+  "version": "0.0.0",
+  "private": true,
+  "description": "Zoned Out: a playable housing-policy simulator calibrated to BC Bill 35 STR estimates.",
+  "license": "MIT",
+  "type": "module",
+  "packageManager": "pnpm@12.11.2",
+  "engines": {
+    "node": ">=24"
+  },
+  "scripts": {
+    "dev": "pnpm --filter @zoned-out/web dev",
+    "build": "pnpm -r --if-present build",
+    "test": "pnpm -r --if-present test",
+    "e2e": "pnpm --filter @zoned-out/web e2e",
+    "lint": "eslint . && prettier --check .",
+    "format": "prettier --write .",
+    "typecheck": "pnpm -r --if-present typecheck",
+    "sim": "node packages/sim/src/cli.ts"
+  },
+  "devDependencies": {
+    "@eslint/js": "10.0.1",
+    "@types/node": "24.19.2",
+    "eslint": "10.12.0",
+    "eslint-config-prettier": "10.1.8",
+    "globals": "17.13.0",
+    "prettier": "3.9.9",
+    "typescript": "6.0.3",
+    "typescript-eslint": "8.71.1"
+  }
+}

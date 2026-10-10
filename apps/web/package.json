@@ -1,0 +1,24 @@
+{
+  "name": "@zoned-out/web",
+  "version": "0.0.0",
+  "private": true,
+  "license": "MIT",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview",
+    "typecheck": "tsc -p tsconfig.json",
+    "e2e": "playwright test"
+  },
+  "dependencies": {
+    "@zoned-out/sim": "workspace:*",
+    "preact": "10.29.8"
+  },
+  "devDependencies": {
+    "@playwright/test": "1.64.0",
+    "@types/node": "24.19.2",
+    "typescript": "6.0.3",
+    "vite": "8.3.4"
+  }
+}

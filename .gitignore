@@ -1,0 +1,19 @@
+node_modules/
+dist/
+coverage/
+.vite/
+*.log
+*.tsbuildinfo
+
+# Playwright run artefacts (curated screenshots live in docs/screenshots/)
+test-results/
+playwright-report/
+blob-report/
+
+# Python (calibration, from M3)
+.venv/
+__pycache__/
+*.pyc
+
+.DS_Store
+Thumbs.db

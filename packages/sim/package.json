@@ -1,0 +1,21 @@
+{
+  "name": "@zoned-out/sim",
+  "version": "0.0.0",
+  "private": true,
+  "description": "Deterministic, DOM-free agent-based housing-market simulation core.",
+  "license": "MIT",
+  "type": "module",
+  "exports": {
+    ".": "./src/index.ts"
+  },
+  "scripts": {
+    "test": "vitest run",
+    "typecheck": "tsc -p tsconfig.json"
+  },
+  "devDependencies": {
+    "@types/node": "24.19.2",
+    "fast-check": "4.10.2",
+    "typescript": "6.0.3",
+    "vitest": "5.0.3"
+  }
+}
