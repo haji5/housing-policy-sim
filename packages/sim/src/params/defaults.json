@@ -1,0 +1,46 @@
+{
+  "scale": 0.2,
+  "host": {
+    "pReview": 0.1,
+    "beta": 1.5,
+    "gumbelScale": 1,
+    "complianceBase": 0.2,
+    "strCostShare": 0.35,
+    "strUpkeep": 0.4,
+    "ltrUpkeep": 0.25,
+    "anticipation": 0,
+    "prReview": 0.05,
+    "prBeta": 0.5
+  },
+  "enforcement": {
+    "detectMax": 0.3,
+    "detectK": 0.4,
+    "fine": 1.5,
+    "delistProb": 0.85,
+    "registrationCost": 0.02
+  },
+  "str": {
+    "occMax": 0.85,
+    "demandSpillover": 0.2
+  },
+  "rental": {
+    "vStar": 0.03,
+    "kappa": 0.1,
+    "rentCapAnnual": 0.03,
+    "phi": 0.5,
+    "maxRentShare": 0.6,
+    "moveHazard": 0.012,
+    "exitHazard": 0.008,
+    "searchOtherZoneProb": 0.25,
+    "qualitySpread": 0.25,
+    "sittingDiscount": 0.15,
+    "arrivalRentElasticity": 2,
+    "arrivalVacancySemiElasticity": 25
+  },
+  "households": {
+    "kDouble": 3,
+    "kLeave": 12,
+    "incomeMedian": 4.6,
+    "incomeSigma": 0.6
+  }
+}

@@ -1,0 +1,70 @@
+import { poisson, Purpose, uniform } from '../rng.ts';
+import type { SimState } from '../types.ts';
+import { HouseholdStatus } from '../types.ts';
+import { drawIncome, pickWeighted, reserveHouseholds } from '../world.ts';
+
+/**
+ * Exogenous update (PLAN §5.3 step 1): household arrivals from migration, and ordinary tenant
+ * turnover. A housed household leaves the region with probability exitHazard (status LEFT) or
+ * moves within the region with probability moveHazard (back to SEARCHING). The unit it vacates is
+ * flagged `due` so its owner decides on its use this tick.
+ */
+export function exogenousUpdate(state: SimState): void {
+  const { households: hh, dwellings: dw, params, seed, tick } = state;
+  const { exitHazard, moveHazard } = params.rental;
+
+  // Turnover first, over the households that existed at the start of the tick.
+  for (let h = 0; h < hh.n; h++) {
+    if (hh.status[h] !== HouseholdStatus.HOUSED) continue;
+    const exit = uniform(seed, h, tick, Purpose.TENANT_EXIT) < exitHazard;
+    const move = !exit && uniform(seed, h, tick, Purpose.TENANT_MOVE) < moveHazard;
+    if (!exit && !move) continue;
+    const d = hh.dwelling[h]!;
+    dw.tenant[d] = -1;
+    dw.due[d] = 1;
+    hh.dwelling[h] = -1;
+    hh.searchMonths[h] = 0;
+    if (exit) hh.status[h] = HouseholdStatus.LEFT;
+    else {
+      hh.status[h] = HouseholdStatus.SEARCHING;
+      hh.prefZone[h] = dw.zone[d]!;
+    }
+  }
+
+  // Arrivals.
+  // Arrivals respond to asking rents (fixed-weight index): cheaper housing draws more households.
+  const asking = state.zones.reduce(
+    (a, z, zi) => a + z.marketRent * state.base.renterWeights[zi]!,
+    0,
+  );
+  // ...and to how easy it is to find a place (vacancy gap), which damps the rent cycle.
+  const v = totalVacancy(state);
+  const lambda =
+    state.base.arrivalsPerMonth *
+    Math.pow(asking / state.base.askingRent, -params.rental.arrivalRentElasticity) *
+    Math.exp(params.rental.arrivalVacancySemiElasticity * (v - params.rental.vStar));
+  const k = poisson(lambda, seed, 0, tick, Purpose.ARRIVALS);
+  reserveHouseholds(hh, k);
+  for (let i = 0; i < k; i++) {
+    const h = hh.n++;
+    hh.income[h] = drawIncome(params, seed, h);
+    hh.dwelling[h] = -1;
+    hh.status[h] = HouseholdStatus.SEARCHING;
+    hh.searchMonths[h] = 0;
+    hh.prefZone[h] = pickWeighted(
+      state.base.renterWeights,
+      uniform(seed, h, 0, Purpose.HH_PREF_ZONE),
+    );
+  }
+}
+
+function totalVacancy(state: SimState): number {
+  let vac = 0;
+  let all = 0;
+  state.zones.forEach((_, zi) => {
+    const w = state.base.renterWeights[zi]!;
+    vac += state.derived.vacancy[zi]! * w;
+    all += w;
+  });
+  return vac / Math.max(1, all);
+}

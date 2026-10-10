@@ -1,0 +1,33 @@
+{
+  "id": "two-zone",
+  "name": "Two-zone test city (stylised, M1)",
+  "start": { "year": 2023, "month": 9 },
+  "zones": [
+    {
+      "name": "Core",
+      "covered": true,
+      "dwellings": 30000,
+      "renterHouseholds": 12000,
+      "strListings": 1500,
+      "prShareOfListings": 0.4,
+      "marketRent": 2.0,
+      "nightlyRate": 0.2,
+      "occupancy": 0.55,
+      "capacity": 33000
+    },
+    {
+      "name": "Fringe",
+      "covered": false,
+      "dwellings": 5000,
+      "renterHouseholds": 1000,
+      "strListings": 250,
+      "prShareOfListings": 0.5,
+      "marketRent": 1.7,
+      "nightlyRate": 0.18,
+      "occupancy": 0.5,
+      "capacity": 6000
+    }
+  ],
+  "initialSearchingShare": 0.03,
+  "rentDriftAnnual": 0.0
+}

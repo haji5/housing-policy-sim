@@ -4,5 +4,11 @@ export default defineConfig({
   test: {
     include: ['test/**/*.test.ts'],
     environment: 'node',
+    coverage: {
+      provider: 'v8',
+      include: ['src/**/*.ts'],
+      exclude: ['src/cli.ts'],
+      thresholds: { lines: 85 },
+    },
   },
 });
