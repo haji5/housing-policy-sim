@@ -46,7 +46,12 @@ test('keyboard-only play: start, change a lever, end turns, reach the debrief', 
   await page.getByRole('button', { name: 'Open the debrief' }).focus();
   await page.keyboard.press('Enter');
   await expect(page.getByTestId('debrief')).toBeVisible();
-  await expect(page.getByTestId('did-card')).toBeVisible();
+  // The rule started in the first quarter: no pre-period, so the card explains why a DiD is
+  // not identified instead of estimating one.
+  await expect(page.getByTestId('did-card')).toContainText('cannot separate');
+  await expect(page.getByTestId('debrief')).toHaveAttribute('data-ready', 'true', {
+    timeout: 60_000,
+  });
 });
 
 test('colour-vision simulations of the map and charts', async ({ page }) => {

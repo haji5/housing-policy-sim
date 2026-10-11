@@ -1,6 +1,14 @@
 import { RULES } from '@zoned-out/sim';
 import type { CooldownLever, Decision, GameState, Quote } from '@zoned-out/sim';
 import { capName, regimeName, upzoneName } from '../game/useGame.ts';
+import { LEVER_EVIDENCE } from './evidence.ts';
+import { Badge } from './Tips.tsx';
+
+/** Evidence badge for a lever (PLAN §6.3). */
+function LeverBadge({ lever }: { lever: keyof typeof LEVER_EVIDENCE }) {
+  const e = LEVER_EVIDENCE[lever]!;
+  return <Badge level={e.level} why={e.why} />;
+}
 
 interface Props {
   draft: Decision;
@@ -53,7 +61,8 @@ export function Levers({ draft, game, quote, zoneNames, zoneCovered, disabled, o
 
       <fieldset disabled={disabled || regimeLocked}>
         <legend>
-          Short-term rental rules <span class="cost">{RULES.capitalCost.strRegime} capital</span>
+          Short-term rental rules <span class="cost">{RULES.capitalCost.strRegime} capital</span>{' '}
+          <LeverBadge lever="strRegime" />
         </legend>
         {[0, 1, 2].map((v) => (
           <label class="radio" key={v}>
@@ -76,7 +85,8 @@ export function Levers({ draft, game, quote, zoneNames, zoneCovered, disabled, o
       <fieldset disabled={disabled}>
         <legend>
           Enforcement budget{' '}
-          <span class="cost">${RULES.enforcementCostPerLevel.toFixed(1)}M per level</span>
+          <span class="cost">${RULES.enforcementCostPerLevel.toFixed(1)}M per level</span>{' '}
+          <LeverBadge lever="enforcement" />
         </legend>
         <label class="slider">
           <span class="sr-only">Enforcement level</span>
@@ -96,7 +106,8 @@ export function Levers({ draft, game, quote, zoneNames, zoneCovered, disabled, o
 
       <fieldset disabled={disabled || taxLocked}>
         <legend>
-          Vacancy tax <span class="cost">{RULES.capitalCost.vacancyTax} capital per point</span>
+          Vacancy tax <span class="cost">{RULES.capitalCost.vacancyTax} capital per point</span>{' '}
+          <LeverBadge lever="vacancyTax" />
         </legend>
         <label class="slider">
           <span class="sr-only">Vacancy tax rate</span>
@@ -117,7 +128,8 @@ export function Levers({ draft, game, quote, zoneNames, zoneCovered, disabled, o
 
       <fieldset disabled={disabled || capLocked}>
         <legend>
-          Rent-increase cap <span class="cost">{RULES.capitalCost.rentCap} capital</span>
+          Rent-increase cap <span class="cost">{RULES.capitalCost.rentCap} capital</span>{' '}
+          <LeverBadge lever="rentCap" />
         </legend>
         {[0, 1, 2].map((v) => (
           <label class="radio" key={v}>
@@ -142,7 +154,8 @@ export function Levers({ draft, game, quote, zoneNames, zoneCovered, disabled, o
 
       <fieldset disabled={disabled}>
         <legend>
-          Upzoning <span class="cost">{RULES.capitalCost.upzone} capital per step</span>
+          Upzoning <span class="cost">{RULES.capitalCost.upzone} capital per step</span>{' '}
+          <LeverBadge lever="upzone" />
         </legend>
         <small>
           Raises housing starts in a zone after a permit delay. <strong>Cannot be reversed.</strong>
@@ -181,7 +194,8 @@ export function Levers({ draft, game, quote, zoneNames, zoneCovered, disabled, o
       <fieldset disabled={disabled}>
         <legend>
           Non-market homes{' '}
-          <span class="cost">${RULES.nonMarketSubsidy.toFixed(2)}M subsidy each</span>
+          <span class="cost">${RULES.nonMarketSubsidy.toFixed(2)}M subsidy each</span>{' '}
+          <LeverBadge lever="nonMarket" />
         </legend>
         <label class="slider">
           <span class="sr-only">Non-market homes started per quarter</span>

@@ -1,7 +1,7 @@
 # Handoff: where the build stands and exactly what to do next
 
-_Last updated 2026-10-10 ~20:30 (end of the third session), for the next session. Read this, then
-`WORKING_AGREEMENTS.md` and `docs/PLAN.md`._
+_Last updated 2026-10-11 (fourth session: m5, m6, m7 tagged), for the next session. Read this,
+then `WORKING_AGREEMENTS.md` and `docs/PLAN.md`._
 
 ## 0. What the user asked for (standing instructions)
 
@@ -20,13 +20,13 @@ _Last updated 2026-10-10 ~20:30 (end of the third session), for the next session
 
 ## 1. Milestone status
 
-| Milestone                 | Status                                                                | Tag  |
-| ------------------------- | --------------------------------------------------------------------- | ---- |
-| M0-M4                     | done                                                                  | m0-4 |
-| M5 full mechanics         | done: validation + Sobol written up in VALIDATION.md §1.1-2 (§3)      | m5   |
-| M6 art pass               | done: icons, delisting stamp, dust, 1:1 canvas fix, review round (§4) | m6   |
-| **M7 debrief/onboarding** | **drafted, not wired into the UI (§5)**                               | -    |
-| M8 polish, docs, launch   | not started (§6)                                                      | -    |
+| Milestone                   | Status                                                                | Tag  |
+| --------------------------- | --------------------------------------------------------------------- | ---- |
+| M0-M4                       | done                                                                  | m0-4 |
+| M5 full mechanics           | done: validation + Sobol written up in VALIDATION.md §1.1-2 (§3)      | m5   |
+| M6 art pass                 | done: icons, delisting stamp, dust, 1:1 canvas fix, review round (§4) | m6   |
+| M7 debrief/onboarding       | done: wired, a11y checklist, ADR 0011, 3 review rounds (§5)           | m7   |
+| **M8 polish, docs, launch** | **next (§6)**                                                         | -    |
 
 Git: `main`, no remote (GitHub MCP auth fails; nothing pushed; Pages deploy untested).
 Order of commits this session: `eb2ed3b` m5 → `m6 (WIP)` → `m7 (WIP)` drafts + this file.
@@ -138,46 +138,31 @@ Left before tagging `m6`:
    ODD's UI/observation note if there is one.
 4. Gate, commit, tag `m6`.
 
-## 5. M7: drafted, not wired (committed as `m7 (WIP)`)
+## 5. M7: done (tagged `m7`)
 
-New files (typecheck and lint clean, **not imported by App yet**):
+Wired: `<Tutorial>` above the charts while playing; evidence `<Badge>`s in every lever legend
+(the first legend of a disabled fieldset stays focusable) and on both charts (LineChart `badge`
+prop); `<Term>` glossary tooltips (top bar "model variant", shock card, KPIs, chart notes);
+"Open the debrief" / "Back to the city" when the term is over (swaps `<main>`); `debrief.css`
+imported in `main.tsx`.
 
-- `workers/debrief.worker.ts` + `game/debrief.ts`: replays the player's decisions in 32 model
-  variants (spread through the ensemble; includes the player's own) on a pool of up to 4
-  workers, each paired with a no-policy run (same seed + shocks), returning per-tick effect
-  paths; `fan()` quantiles; `didCard()` = the researcher's DiD in the player's world (scraped
-  snapshots, flagged dropped, `twoWayFE`) vs the exact paired truth; `ruleOnFrom(events)`.
-  PLAN asked for N=200 in < 10 s; 32 variants keeps it to a few seconds — state the deviation.
-- `ui/Debrief.tsx`: cards for "your term vs no policy" (fan charts), "what you could have
-  known" (scraped vs true, CPI vs asking), the DiD card, the Bill 35 lesson card (numbers checked
-  against bc-str-ban-analysis `README.md`: −0.390 / 32%, RI p = 0.011, 1.7% of renter
-  households, rent cap −0.4% to −3.3%, dashboard https://haji5.github.io/bc-str-ban-analysis/),
-  and a share link `?seed=N&mandate=id`.
-- `ui/evidence.ts` (badge levels per lever from ASSUMPTIONS tags + glossary), `ui/Tips.tsx`
-  (`Badge`, `Term` accessible tooltips), `ui/Tutorial.tsx` (4 tips, skippable, localStorage),
-  `ui/debrief.css` (import it from `main.tsx` or App).
-- Already changed: `LineChart` supports `bands` (fans) and `zero`; worker `finish` returns
-  `runs: {policyRun, baseRun}` (in `Final` and `FinalResult`); `UiState.events` collects the
-  player's policy events; `?mandate=` preselects the mandate.
-- `apps/web/e2e-pending/a11y.spec.ts`: keyboard-only play to the debrief, reduced motion,
-  protan/deutan/tritan screenshots → `docs/screenshots/m7`. Move it into `e2e/` once wired
-  (it expects a "Skip the tutorial" button, a "Open the debrief" button and `data-testid`s
-  `tutorial`, `debrief`, `did-card`).
+Checks and fixes:
 
-To finish M7:
-
-1. Wire into `ui/App.tsx`: `<Tutorial turn={g.turn} />` above the charts while playing;
-   `<Badge>` next to each lever legend in `Levers.tsx` (from `LEVER_EVIDENCE`) and on the two
-   charts (listings: measured; rents: assumed); `<Term>` in key labels; when `phase === 'over'`
-   add an "Open the debrief" button that swaps the main column for `<Debrief state={state} />`.
-2. Check the debrief numbers in a run (the player's own variant's path in the fan should match
-   "your world"; DiD error should be of the order VALIDATION §3 reports).
-3. Accessibility checklist (PLAN §6.7) → `docs/ACCESSIBILITY.md`: Okabe-Ito + shapes ✓, keyboard
-   (map keys, native controls) ✓, focus visible, reduced motion ✓, ARIA on charts/canvas ✓.
-   **Known gap: `small`/`.muted` text is 14px and chart ticks ~12px, below PLAN's 16px minimum**
-   — fix or document.
-4. e2e (move a11y spec), 3 screenshot rounds, ADR 0011 (debrief design, N=32 choice), commit,
-   tag `m7`.
+- Debrief self-check: `data-own-variant-gap` = max |player's variant replayed in the debrief
+  worker − live game| on the covered-listings path; e2e requires < 1e-9 (passes).
+- DiD card in a seed-1 run: estimate −0.507 vs truth −0.484 (error −0.023, spillover +0.063),
+  the size VALIDATION §3 reports. **Bug fixed:** rule switched on in turn 1 = no pre-period =
+  singular regression, which crashed the debrief; `didCard` now returns `reason: 'no-pre'` and
+  the card explains it (covered by the keyboard e2e).
+- Debrief time: 32 variants × 2 runs on 4 workers = 8.0-9.6 s alone, 12.4 s with another e2e
+  test in parallel (busy machine). N=200 would be ~50-60 s: N=32 is the documented deviation
+  (ADR 0011).
+- Accessibility (`docs/ACCESSIBILITY.md`): all HTML text raised to ≥ 16 px; chart ticks 14 SVG
+  units (documented exception, text summaries carry the content); tutorial text no longer names
+  lines by colour only; tutorial secondary text contrast 4.2 → white. Not done: screen-reader
+  session, Lighthouse/axe (M8).
+- e2e: `a11y.spec.ts` moved into `e2e/`; new `debrief.spec.ts` (tutorial, badges, tooltips,
+  debrief numbers, honesty rule, screenshots `docs/screenshots/m7`).
 
 ## 6. M8 reminders
 
@@ -185,8 +170,10 @@ README per PLAN §12 (pitch, GIF, 3 headline results, link to the first project,
 limitations, "not policy advice; not affiliated with the Government of BC", reproduce steps,
 licences + data attribution: Inside Airbnb CC BY 4.0, StatCan OGL-Canada, Bank of Canada, CMHC);
 docs complete (ODD, ASSUMPTIONS, CALIBRATION, VALIDATION); performance budgets (PLAN §11: bundle
-< 400 KB gz — currently ~23 KB + 154 KB worker; atlas < 300 KB — 6.4 KB); Lighthouse; attribution
-page; GitHub remote + Pages need the user (create the repo / authorise GitHub).
+< 400 KB gz — page script now 48.5 KB gz because the debrief imports the ensemble, + two ~150 KB
+workers; atlas < 300 KB — 6.4 KB; consider lazy-loading the debrief); Lighthouse/axe; attribution
+page; check CSS `url('/atlas/...')` paths under a Pages base path; GitHub remote + Pages need the
+user (create the repo / authorise GitHub).
 
 ## 7. Open issues to report to the user
 
@@ -196,6 +183,10 @@ page; GitHub remote + Pages need the user (create the repo / authorise GitHub).
   changes vs the no-policy run). Held-empty stock +16% over 6 years with no policy.
 - VERIFY items unchanged: fine, registration cost, incomes, BC rent caps by year, assessed value,
   CRD census counts, construction rates.
+- Parameter recovery (M5 ensemble): 79% coverage; misses are truths at prior edges (VALIDATION §1.1).
+- `pnpm test` can fail `perf.test.ts` on a busy machine when test files run in parallel under
+  coverage; `npx vitest run --coverage --no-file-parallelism` in `packages/sim` passes.
+- Debrief uses 32 variants, not PLAN's 200 (ADR 0011).
 
 ## 8. Useful commands
 

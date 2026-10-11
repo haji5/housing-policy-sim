@@ -7,7 +7,7 @@ import { useState } from 'preact/hooks';
 const STEPS = [
   {
     title: 'Turn 1: the short-term rental rules',
-    text: 'Each turn is a quarter. Start with the STR rules: the principal-residence rule is what BC did in May 2024. Watch the listings chart: covered areas (orange) against exempt areas (green). Changes cost political capital, shown in the top bar.',
+    text: 'Each turn is a quarter. Start with the STR rules: the principal-residence rule is what BC did in May 2024. Watch the listings chart: covered areas (solid orange line) against exempt areas (dashed green line). Changes cost political capital, shown in the top bar.',
   },
   {
     title: 'Turn 2: two rent indices',

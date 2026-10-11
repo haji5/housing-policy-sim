@@ -98,6 +98,21 @@ export function Debrief({ state }: { state: UiState }) {
         (v) => v,
       )
     : null;
+  // Self-check: the player's own variant, replayed in the debrief worker, must reproduce "your
+  // world" exactly (same params, seed, shocks and decisions; events up front ≡ turn by turn).
+  const own = paths?.find((p) => p.member === layout.ensembleMember);
+  const ownGap = own
+    ? Math.max(
+        ...own.covered.map((v, i) =>
+          Math.abs(
+            v -
+              Math.log(
+                Math.max(1, sumCov(policyRun, i, true)) / Math.max(1, sumCov(baseRun, i, true)),
+              ),
+          ),
+        ),
+      )
+    : null;
   const endCov = yourCov[n - 1]?.y ?? 0;
   const endAsk = yourAsk[n - 1]?.y ?? 0;
 
@@ -119,7 +134,13 @@ export function Debrief({ state }: { state: UiState }) {
   const [copied, setCopied] = useState(false);
 
   return (
-    <section class="debrief" aria-labelledby="debrief-h" data-testid="debrief">
+    <section
+      class="debrief"
+      aria-labelledby="debrief-h"
+      data-testid="debrief"
+      data-ready={paths ? 'true' : 'false'}
+      data-own-variant-gap={ownGap ?? ''}
+    >
       <h2 id="debrief-h">Debrief: what your policies did</h2>
 
       <div class="debrief-grid">
@@ -136,7 +157,7 @@ export function Debrief({ state }: { state: UiState }) {
             asking rents <strong>{signed(endAsk, 1)} index points</strong> against the{' '}
             <Term id="counterfactual">no-policy run</Term>.{' '}
             {covFan &&
-              `Replaying your decisions in ${paths!.length} other model variants gives ${signed(pctOfLog(covFan.q05[n - 1]!), 0)}% to ${signed(pctOfLog(covFan.q95[n - 1]!), 0)}% for listings (5-95%).`}
+              `Replaying your decisions in ${paths!.length} model variants (yours included) gives ${signed(pctOfLog(covFan.q05[n - 1]!), 0)}% to ${signed(pctOfLog(covFan.q95[n - 1]!), 0)}% for listings (5-95%).`}
           </p>
           {!paths && !error && (
             <p class="muted" aria-live="polite">
@@ -169,6 +190,12 @@ export function Debrief({ state }: { state: UiState }) {
             />
             <LineChart
               title="Effect on asking rents (index points)"
+              badge={
+                <Badge
+                  level="assumed"
+                  why="Rent responses are assumed, not measured: the real data cannot detect an effect this small."
+                />
+              }
               xMax={XMAX}
               xLabel={label}
               yFormat={(y) => y.toFixed(1)}
@@ -188,14 +215,12 @@ export function Debrief({ state }: { state: UiState }) {
                 { label: 'Your world', points: yourAsk, color: '#1b1b2a' },
               ]}
               summary={`Your world ends at ${signed(endAsk, 1)} points.`}
-              note="Rent responses are assumed, not measured: badge Assumed."
             />
           </div>
           <p class="muted">
-            Rents: <Badge level="assumed" />{' '}
             {Math.abs(endAsk) < 2.4
-              ? `an effect of ${signed(endAsk, 1)} points is smaller than the month-to-month noise in the published CPI rent series (about 2.4%), so it would be too small to detect in real data.`
-              : `an effect of ${signed(endAsk, 1)} points is larger than the CPI noise, but it rests on assumed rent responses.`}
+              ? `Rents: an effect of ${signed(endAsk, 1)} points is smaller than the month-to-month noise in the published CPI rent series (about 2.4%), so it would be too small to detect in real data.`
+              : `Rents: an effect of ${signed(endAsk, 1)} points is larger than the CPI noise, but it rests on assumed rent responses.`}
           </p>
         </article>
 
@@ -269,6 +294,16 @@ export function Debrief({ state }: { state: UiState }) {
                 estimate misses by about ±0.08 from noise alone (VALIDATION.md §3).
               </p>
             </>
+          ) : did.reason === 'no-pre' ? (
+            <p>
+              You switched the short-term rental rule on in your first quarter, before any complete
+              listing snapshot. With no &ldquo;before&rdquo; data a DiD cannot separate the rule
+              from the difference between covered and exempt areas, so a researcher could not have
+              estimated it. (The real Bill 35 study had data from before the rule: its baseline
+              snapshot was taken in summer 2023, before Bill 35 was announced.) In your world the
+              rule changed covered-area listings by <strong>{signed(endCov, 0)}%</strong> by the end
+              of your term.
+            </p>
           ) : (
             <p>
               You never switched the short-term rental rule on, so there is no effect to estimate.

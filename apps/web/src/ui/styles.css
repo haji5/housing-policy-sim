@@ -155,11 +155,11 @@ h2 {
   stroke: #ebe8e2;
 }
 .chart .tick {
-  font-size: 12px;
+  font-size: 14px;
   fill: var(--muted);
 }
 .chart .empty {
-  font-size: 14px;
+  font-size: 16px;
   fill: var(--muted);
 }
 .chart .marker {
@@ -174,7 +174,7 @@ h2 {
   display: flex;
   flex-wrap: wrap;
   gap: 0.25rem 1rem;
-  font-size: 0.875rem;
+  font-size: 1rem;
 }
 .legend li {
   display: flex;
@@ -223,7 +223,7 @@ legend {
 small,
 .muted {
   color: var(--muted);
-  font-size: 0.875rem;
+  font-size: 1rem;
 }
 .slider {
   display: flex;
@@ -254,7 +254,7 @@ small,
   text-align: right;
 }
 .note {
-  font-size: 0.875rem;
+  font-size: 1rem;
   background: #fff8e6;
   padding: 0.5rem;
   border-left: 3px solid #e69f00;
@@ -263,7 +263,7 @@ small,
 .log {
   margin: 0;
   padding-left: 1.2rem;
-  font-size: 0.875rem;
+  font-size: 1rem;
 }
 
 button {
@@ -316,7 +316,7 @@ button:disabled {
 /* Levers */
 .cost {
   font-weight: 400;
-  font-size: 0.8rem;
+  font-size: 1rem;
   color: var(--muted);
   margin-left: 0.25rem;
 }
@@ -344,17 +344,17 @@ button:disabled {
   justify-content: space-between;
   align-items: center;
   gap: 0.5rem;
-  font-size: 0.9rem;
+  font-size: 1rem;
 }
 .upzone-row select {
   font: inherit;
-  font-size: 0.875rem;
+  font-size: 1rem;
   padding: 0.1rem 0.25rem;
 }
 .quote {
   border-top: 1px solid var(--line);
   padding-top: 0.5rem;
-  font-size: 0.9rem;
+  font-size: 1rem;
 }
 .quote p {
   margin: 0.25rem 0;
@@ -385,7 +385,7 @@ button:disabled {
 .scorecard table {
   border-collapse: collapse;
   width: 100%;
-  font-size: 0.9rem;
+  font-size: 1rem;
   font-variant-numeric: tabular-nums;
 }
 .scorecard th,
@@ -404,7 +404,7 @@ button:disabled {
 }
 .chart-note {
   margin: 0.25rem 0 0;
-  font-size: 0.8rem;
+  font-size: 1rem;
   color: var(--muted);
 }
 

@@ -1,4 +1,4 @@
-import { useMemo } from 'preact/hooks';
+import { useMemo, useState } from 'preact/hooks';
 import { MANDATES, OBJECTIVES, shockCard, tickToYearMonth } from '@zoned-out/sim';
 import type { MandateId, Objective } from '@zoned-out/sim';
 import { MapCanvas } from '../render/MapCanvas.tsx';
@@ -7,6 +7,9 @@ import { firstLastValid, researcherView } from '../game/observe.ts';
 import { capName, regimeName, TICKS_PER_TURN, TOTAL_TURNS, useGame } from '../game/useGame.ts';
 import type { UiState } from '../game/useGame.ts';
 import { AtlasSprite, SHOCK_ICON } from './AtlasSprite.tsx';
+import { Debrief } from './Debrief.tsx';
+import { Badge, Term } from './Tips.tsx';
+import { Tutorial } from './Tutorial.tsx';
 import { Levers } from './Levers.tsx';
 import { LineChart } from './LineChart.tsx';
 import { Logo } from './Logo.tsx';
@@ -112,6 +115,7 @@ function Setup({ state, start, setMandate }: Game) {
 }
 
 function Play({ state, quote, setDraft, endTurn, setup }: Game) {
+  const [debrief, setDebrief] = useState(false);
   const snapshot = state.snapshot!;
   const layout = state.layout!;
   const g = state.game!;
@@ -157,153 +161,192 @@ function Play({ state, quote, setDraft, endTurn, setup }: Game) {
         </span>
         <span class="seed">
           seed {state.seed}
-          {layout.ensembleMember >= 0 &&
-            ` · model variant ${layout.ensembleMember + 1} of ${layout.ensembleSize}`}
+          {layout.ensembleMember >= 0 && (
+            <>
+              {' · '}
+              <Term id="variant">model variant</Term> {layout.ensembleMember + 1} of{' '}
+              {layout.ensembleSize}
+            </>
+          )}
         </span>
       </header>
 
-      <main class="layout">
-        <section class="left">
-          {state.currentShock !== null && state.phase !== 'over' && (
-            <aside class="shock-card" role="status" aria-labelledby="shock-h">
-              <h2 id="shock-h">
-                {SHOCK_ICON[shockCard(state.currentShock).id] && (
-                  <AtlasSprite name={SHOCK_ICON[shockCard(state.currentShock).id]!} />
-                )}
-                Shock: {shockCard(state.currentShock).name}
-              </h2>
-              <p>{shockCard(state.currentShock).text}</p>
-              <small>
-                The same shock hits the no-policy comparison run, so it does not affect your score.
-              </small>
-            </aside>
-          )}
-          {state.final && <ScorecardPanel state={state} />}
-          <div class="charts">
-            <LineChart
-              title="Entire-home STR listings (quarterly scrape)"
-              xMax={XMAX}
-              xLabel={label}
-              yFormat={(y) => fmt(y)}
-              markers={markers}
-              lines={[
-                { label: 'Covered areas', points: view.covered, color: '#d55e00', dots: true },
-                {
-                  label: 'Exempt areas',
-                  points: view.exempt,
-                  color: '#009e73',
-                  dash: '6 4',
-                  dots: true,
-                },
-              ]}
-              summary={
-                cov && ex
-                  ? `Covered-area listings ${pct(cov[0].y, cov[1].y)} since the first snapshot; exempt areas ${pct(ex[0].y, ex[1].y)}.`
-                  : 'No snapshots yet.'
-              }
-              note={`Scraped counts are noisy. ${view.flagged > 0 ? `${view.flagged} snapshot${view.flagged === 1 ? ' was' : 's were'} flagged incomplete and left out.` : 'Incomplete scrapes are flagged and left out.'}`}
-            />
-            <LineChart
-              title="Rent indices (start = 100)"
-              xMax={XMAX}
-              xLabel={label}
-              yFormat={(y) => y.toFixed(0)}
-              markers={markers}
-              lines={[
-                {
-                  label: 'All-tenant rents (published, quarterly)',
-                  points: view.cpi,
-                  color: '#cc79a7',
-                  dash: '6 4',
-                  dots: true,
-                },
-                ...(view.asking.length > 0
-                  ? [{ label: 'Asking rents (bought data)', points: view.asking, color: '#0072b2' }]
-                  : []),
-              ]}
-              summary={`Published all-tenant rents ${cpiLast !== undefined ? pct(100, cpiLast) : 'not yet available'}${view.asking.length > 0 ? `; asking rents ${pct(100, lastOf(view.asking)!)} (through ${label(state.dataThroughTick)})` : ''}.`}
-              note={
-                view.asking.length > 0
-                  ? `Asking-rent data covers months up to ${label(state.dataThroughTick)}.`
-                  : 'Buy asking-rent data to see what new leases cost.'
-              }
-            />
-          </div>
-          {FLAT_MAP ? (
-            <MapCanvas layout={layout} snapshot={snapshot} />
-          ) : (
-            <IsoMap layout={layout} snapshot={snapshot} />
-          )}
-        </section>
-
-        <aside class="right">
-          {state.phase !== 'over' && (
-            <Levers
-              draft={draft}
-              game={g}
-              quote={quote}
-              zoneNames={layout.zoneNames}
-              zoneCovered={layout.zoneCovered}
-              disabled={state.phase !== 'playing'}
-              onChange={setDraft}
-            />
-          )}
-          <section class="panel" aria-labelledby="sum-h">
-            <h2 id="sum-h">Since you took office</h2>
-            <dl class="kpis">
-              {[
-                { name: 'Covered-area listings', v: cov },
-                { name: 'Exempt-area listings', v: ex },
-              ].map((r) => (
-                <div key={r.name}>
-                  <dt>{r.name}</dt>
-                  <dd>
-                    {r.v ? `${fmt(r.v[0].y)} → ${fmt(r.v[1].y)} (${pct(r.v[0].y, r.v[1].y)})` : '–'}
-                  </dd>
-                </div>
-              ))}
-              <div>
-                <dt>All-tenant rents</dt>
-                <dd>{cpiLast !== undefined ? pct(100, cpiLast) : '–'}</dd>
-              </div>
-              <div>
-                <dt>STR rules</dt>
-                <dd>{regimeName(snapshot.levers.strRegime)}</dd>
-              </div>
-              <div>
-                <dt>Rent cap</dt>
-                <dd>{capName(snapshot.levers.rentCap)}</dd>
-              </div>
-              <div>
-                <dt>Fines and vacancy tax so far</dt>
-                <dd>${g.revenue.toFixed(2)}M</dd>
-              </div>
-            </dl>
-            <p class="muted">
-              Listings are scraped counts; they move for many reasons besides your rules.
-            </p>
-          </section>
-          <section class="panel" aria-labelledby="log-h">
-            <h2 id="log-h">Decisions</h2>
-            {state.log.length === 0 ? (
-              <p class="muted">No changes yet.</p>
+      {debrief && state.final ? (
+        <main class="debrief-main">
+          <Debrief state={state} />
+        </main>
+      ) : (
+        <main class="layout">
+          <section class="left">
+            {state.phase !== 'over' && <Tutorial turn={g.turn} />}
+            {state.currentShock !== null && state.phase !== 'over' && (
+              <aside class="shock-card" role="status" aria-labelledby="shock-h">
+                <h2 id="shock-h">
+                  {SHOCK_ICON[shockCard(state.currentShock).id] && (
+                    <AtlasSprite name={SHOCK_ICON[shockCard(state.currentShock).id]!} />
+                  )}
+                  Shock: {shockCard(state.currentShock).name}
+                </h2>
+                <p>{shockCard(state.currentShock).text}</p>
+                <small>
+                  The same shock hits the <Term id="counterfactual">no-policy comparison run</Term>,
+                  so it does not affect your score.
+                </small>
+              </aside>
+            )}
+            {state.final && <ScorecardPanel state={state} />}
+            <div class="charts">
+              <LineChart
+                title="Entire-home STR listings (quarterly scrape)"
+                badge={
+                  <Badge
+                    level="measured"
+                    why="The listing response to the STR rules is calibrated to the Bill 35 data from the first project."
+                  />
+                }
+                xMax={XMAX}
+                xLabel={label}
+                yFormat={(y) => fmt(y)}
+                markers={markers}
+                lines={[
+                  { label: 'Covered areas', points: view.covered, color: '#d55e00', dots: true },
+                  {
+                    label: 'Exempt areas',
+                    points: view.exempt,
+                    color: '#009e73',
+                    dash: '6 4',
+                    dots: true,
+                  },
+                ]}
+                summary={
+                  cov && ex
+                    ? `Covered-area listings ${pct(cov[0].y, cov[1].y)} since the first snapshot; exempt areas ${pct(ex[0].y, ex[1].y)}.`
+                    : 'No snapshots yet.'
+                }
+                note={`Scraped counts are noisy. ${view.flagged > 0 ? `${view.flagged} snapshot${view.flagged === 1 ? ' was' : 's were'} flagged incomplete and left out.` : 'Incomplete scrapes are flagged and left out.'}`}
+              />
+              <LineChart
+                title="Rent indices (start = 100)"
+                badge={
+                  <Badge
+                    level="assumed"
+                    why="How rents respond to STR rules, taxes and supply is assumed: the real data cannot detect an STR rent effect this small."
+                  />
+                }
+                xMax={XMAX}
+                xLabel={label}
+                yFormat={(y) => y.toFixed(0)}
+                markers={markers}
+                lines={[
+                  {
+                    label: 'All-tenant rents (published, quarterly)',
+                    points: view.cpi,
+                    color: '#cc79a7',
+                    dash: '6 4',
+                    dots: true,
+                  },
+                  ...(view.asking.length > 0
+                    ? [
+                        {
+                          label: 'Asking rents (bought data)',
+                          points: view.asking,
+                          color: '#0072b2',
+                        },
+                      ]
+                    : []),
+                ]}
+                summary={`Published all-tenant rents ${cpiLast !== undefined ? pct(100, cpiLast) : 'not yet available'}${view.asking.length > 0 ? `; asking rents ${pct(100, lastOf(view.asking)!)} (through ${label(state.dataThroughTick)})` : ''}.`}
+                note={
+                  view.asking.length > 0
+                    ? `Asking-rent data covers months up to ${label(state.dataThroughTick)}.`
+                    : 'Buy asking-rent data to see what new leases cost.'
+                }
+              />
+            </div>
+            {FLAT_MAP ? (
+              <MapCanvas layout={layout} snapshot={snapshot} />
             ) : (
-              <ol class="log">
-                {state.log.map((l, i) => (
-                  <li key={i} class={l.kind}>
-                    Turn {l.turn} ({label(l.tick)}): {l.text}
-                  </li>
-                ))}
-              </ol>
+              <IsoMap layout={layout} snapshot={snapshot} />
             )}
           </section>
-        </aside>
-      </main>
+
+          <aside class="right">
+            {state.phase !== 'over' && (
+              <Levers
+                draft={draft}
+                game={g}
+                quote={quote}
+                zoneNames={layout.zoneNames}
+                zoneCovered={layout.zoneCovered}
+                disabled={state.phase !== 'playing'}
+                onChange={setDraft}
+              />
+            )}
+            <section class="panel" aria-labelledby="sum-h">
+              <h2 id="sum-h">Since you took office</h2>
+              <dl class="kpis">
+                {[
+                  { name: 'Covered-area listings', v: cov },
+                  { name: 'Exempt-area listings', v: ex },
+                ].map((r) => (
+                  <div key={r.name}>
+                    <dt>{r.name}</dt>
+                    <dd>
+                      {r.v
+                        ? `${fmt(r.v[0].y)} → ${fmt(r.v[1].y)} (${pct(r.v[0].y, r.v[1].y)})`
+                        : '–'}
+                    </dd>
+                  </div>
+                ))}
+                <div>
+                  <dt>
+                    <Term id="cpi">All-tenant rents</Term>
+                  </dt>
+                  <dd>{cpiLast !== undefined ? pct(100, cpiLast) : '–'}</dd>
+                </div>
+                <div>
+                  <dt>STR rules</dt>
+                  <dd>{regimeName(snapshot.levers.strRegime)}</dd>
+                </div>
+                <div>
+                  <dt>Rent cap</dt>
+                  <dd>{capName(snapshot.levers.rentCap)}</dd>
+                </div>
+                <div>
+                  <dt>Fines and vacancy tax so far</dt>
+                  <dd>${g.revenue.toFixed(2)}M</dd>
+                </div>
+              </dl>
+              <p class="muted">
+                Listings are <Term id="snapshot">scraped counts</Term>; they move for many reasons
+                besides your rules.
+              </p>
+            </section>
+            <section class="panel" aria-labelledby="log-h">
+              <h2 id="log-h">Decisions</h2>
+              {state.log.length === 0 ? (
+                <p class="muted">No changes yet.</p>
+              ) : (
+                <ol class="log">
+                  {state.log.map((l, i) => (
+                    <li key={i} class={l.kind}>
+                      Turn {l.turn} ({label(l.tick)}): {l.text}
+                    </li>
+                  ))}
+                </ol>
+              )}
+            </section>
+          </aside>
+        </main>
+      )}
 
       <footer class="bottombar">
         {state.phase === 'over' ? (
           <>
             <p data-testid="over">Your term is over.</p>
+            <button class="primary" onClick={() => setDebrief((d) => !d)}>
+              {debrief ? 'Back to the city' : 'Open the debrief'}
+            </button>
             <button onClick={setup}>New term (new seed)</button>
           </>
         ) : (
@@ -382,8 +425,8 @@ function ScorecardPanel({ state }: { state: UiState }) {
       </p>
       <p class="muted">
         Asking rents ended {signed(e.askingRentPct, 1)} index points (start = 100) versus no policy
-        (not scored directly). The debrief with uncertainty bands across model variants arrives in a
-        later version.
+        (not scored directly). Open the debrief to see the uncertainty across model variants and
+        what the data could have told you.
       </p>
     </section>
   );

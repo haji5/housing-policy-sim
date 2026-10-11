@@ -73,8 +73,13 @@ export function fan(paths: number[][], qs: readonly number[]): number[][] {
 }
 
 export interface DidCard {
-  /** False when the player never switched the STR rule on (nothing to estimate). */
+  /** False when there is nothing to estimate or the DiD is not identified (see `reason`). */
   applicable: boolean;
+  /**
+   * Why not: 'no-rule' = the STR rule was never on (long enough); 'no-pre' = no complete snapshot
+   * before the rule, so "covered × rule in force" is collinear with the zone fixed effects.
+   */
+  reason: 'no-rule' | 'no-pre' | null;
   estimate: number;
   truth: number;
   /** Change in exempt-area listings caused by the policy (spillover), log points. */
@@ -99,16 +104,20 @@ export function didCard(
   const last = ticks[ticks.length - 1] ?? 0;
   const snaps: number[] = [];
   for (let t = 0; t <= last; t += 3) snaps.push(t);
-  const empty = {
+  const empty = (reason: 'no-rule' | 'no-pre'): DidCard => ({
     applicable: false,
+    reason,
     estimate: 0,
     truth: 0,
     spillover: 0,
     snapshots: snaps.length,
     dropped: 0,
-  };
-  if (ruleOnFrom === null || ruleOnFrom > last - 3) return empty;
+  });
+  if (ruleOnFrom === null || ruleOnFrom > last - 3) return empty('no-rule');
   const panel = researcherPanel(policy, seed, snaps);
+  const kept = snaps.filter((_, k) => !panel.incomplete[k]);
+  if (!kept.some((t) => t < ruleOnFrom)) return empty('no-pre');
+  if (!kept.some((t) => t >= ruleOnFrom)) return empty('no-rule');
   const zones = policy.series.zones;
   const rows: PanelRow[] = [];
   snaps.forEach((t, k) => {
@@ -135,6 +144,7 @@ export function didCard(
     ) / post.length;
   return {
     applicable: true,
+    reason: null,
     estimate,
     truth: gap(true),
     spillover: gap(false),

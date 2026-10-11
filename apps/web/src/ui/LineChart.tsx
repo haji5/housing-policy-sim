@@ -1,3 +1,5 @@
+import type { ComponentChildren } from 'preact';
+
 export interface Point {
   x: number;
   y: number;
@@ -29,6 +31,8 @@ export interface Marker {
 
 interface Props {
   title: string;
+  /** Shown after the title (e.g. an evidence badge); not part of the chart's accessible name. */
+  badge?: ComponentChildren;
   lines: Line[];
   bands?: Band[];
   /** Draw a horizontal reference line at this y (e.g. 0 for effects). */
@@ -67,6 +71,7 @@ export function dense(values: readonly number[], x0 = 0): Point[] {
 /** Minimal SVG line chart (placeholder until the M7 chart pass). */
 export function LineChart({
   title,
+  badge,
   lines,
   bands = [],
   zero = false,
@@ -85,7 +90,9 @@ export function LineChart({
   if (all.length === 0) {
     return (
       <figure class="chart">
-        <figcaption>{title}</figcaption>
+        <figcaption>
+          {title} {badge}
+        </figcaption>
         <svg viewBox={`0 0 ${W} ${H}`} role="img" aria-label={`${title}: no data yet.`}>
           <text x={W / 2} y={H / 2} text-anchor="middle" class="empty">
             No data yet. End a turn to see results.
@@ -111,7 +118,9 @@ export function LineChart({
 
   return (
     <figure class="chart">
-      <figcaption>{title}</figcaption>
+      <figcaption>
+        {title} {badge}
+      </figcaption>
       <svg viewBox={`0 0 ${W} ${H}`} role="img" aria-label={`${title}. ${summary}`}>
         {yTicks.map((y) => (
           <g key={`y${y}`}>
