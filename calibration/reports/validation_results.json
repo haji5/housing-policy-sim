@@ -1,0 +1,545 @@
+{
+ "estimator": {
+  "rows": [
+   {
+    "term": "antic",
+    "pyfixest": -0.07537165095352791,
+    "typescript": -0.075371650953514,
+    "abs_diff": 1.3905543383430086e-14,
+    "se_crv1": 0.05491248023613016
+   },
+   {
+    "term": "p1",
+    "pyfixest": -0.39624895005551636,
+    "typescript": -0.39624895005550687,
+    "abs_diff": 9.492406860545088e-15,
+    "se_crv1": 0.04058562422036374
+   },
+   {
+    "term": "p2",
+    "pyfixest": -0.11442371494632426,
+    "typescript": -0.11442371494632385,
+    "abs_diff": 4.163336342344337e-16,
+    "se_crv1": 0.03765370628253548
+   }
+  ],
+  "max_abs_diff": 1.3905543383430086e-14,
+  "nobs": 118
+ },
+ "recovery": [
+  {
+   "case": 1,
+   "param": "host.pReview",
+   "truth": 0.232695,
+   "lo": 0.031693780000000005,
+   "hi": 0.28740139999999986,
+   "covered": true,
+   "width_vs_prior": 0.8141501205833095
+  },
+  {
+   "case": 1,
+   "param": "host.beta",
+   "truth": 2.52133,
+   "lo": 0.36511400000000005,
+   "hi": 3.3846649999999987,
+   "covered": true,
+   "width_vs_prior": 0.7914950233080803
+  },
+  {
+   "case": 1,
+   "param": "host.complianceBase",
+   "truth": 0.418015,
+   "lo": 0.063605165,
+   "hi": 0.7092695999999998,
+   "covered": true,
+   "width_vs_prior": 0.8070805437499997
+  },
+  {
+   "case": 1,
+   "param": "host.multiComplianceShift",
+   "truth": -0.143874,
+   "lo": -0.375097,
+   "hi": 0.3255704499999995,
+   "covered": true,
+   "width_vs_prior": 0.8758343124999993
+  },
+  {
+   "case": 1,
+   "param": "host.anticipation",
+   "truth": 0.436123,
+   "lo": 0.05014131,
+   "hi": 0.481179,
+   "covered": true,
+   "width_vs_prior": 0.8620753800000001
+  },
+  {
+   "case": 1,
+   "param": "host.prShare",
+   "truth": 0.383172,
+   "lo": 0.32659245,
+   "hi": 0.5093770499999999,
+   "covered": true,
+   "width_vs_prior": 0.553892727272727
+  },
+  {
+   "case": 1,
+   "param": "host.investorEntry",
+   "truth": 0.00400561,
+   "lo": 0.0010379176500000002,
+   "hi": 0.009172074999999998,
+   "covered": true,
+   "width_vs_prior": 0.8134157349999998
+  },
+  {
+   "case": 1,
+   "param": "enforcement.detectMax",
+   "truth": 0.191977,
+   "lo": 0.041568100000000004,
+   "hi": 0.339763,
+   "covered": true,
+   "width_vs_prior": 0.7646023076923076
+  },
+  {
+   "case": 1,
+   "param": "enforcement.delistProb",
+   "truth": 0.0293244,
+   "lo": 0.0288078,
+   "hi": 0.381164,
+   "covered": true,
+   "width_vs_prior": 0.40040477272727276
+  },
+  {
+   "case": 1,
+   "param": "enforcement.regTakeup",
+   "truth": 0.412306,
+   "lo": 0.168744,
+   "hi": 0.85685295,
+   "covered": true,
+   "width_vs_prior": 0.562171125198666
+  },
+  {
+   "case": 1,
+   "param": "enforcement.exemptClaimShare",
+   "truth": 0.049848,
+   "lo": 0.008873261,
+   "hi": 0.13304829999999995,
+   "covered": true,
+   "width_vs_prior": 0.6208751949999998
+  },
+  {
+   "case": 1,
+   "param": "str.demandSpillover",
+   "truth": 0.651301,
+   "lo": 0.107838,
+   "hi": 0.9863543499999999,
+   "covered": true,
+   "width_vs_prior": 0.87851635
+  },
+  {
+   "case": 1,
+   "param": "str.demandGrowthAnnual",
+   "truth": -0.0304002,
+   "lo": -0.0419175,
+   "hi": 0.08959431500000001,
+   "covered": true,
+   "width_vs_prior": 0.8767454333333332
+  },
+  {
+   "case": 1,
+   "param": "rental.arrivalRentElasticity",
+   "truth": 1.26934,
+   "lo": 0.68037205,
+   "hi": 4.62119,
+   "covered": true,
+   "width_vs_prior": 0.8757373222222223
+  },
+  {
+   "case": 2,
+   "param": "host.pReview",
+   "truth": 0.235962,
+   "lo": 0.0224342,
+   "hi": 0.281434,
+   "covered": true,
+   "width_vs_prior": 0.9339972281822397
+  },
+  {
+   "case": 2,
+   "param": "host.beta",
+   "truth": 0.816592,
+   "lo": 0.333512,
+   "hi": 2.1449204999999956,
+   "covered": true,
+   "width_vs_prior": 0.661538292270468
+  },
+  {
+   "case": 2,
+   "param": "host.complianceBase",
+   "truth": 0.334396,
+   "lo": 0.0429197,
+   "hi": 0.6482414499999992,
+   "covered": true,
+   "width_vs_prior": 0.756652187499999
+  },
+  {
+   "case": 2,
+   "param": "host.multiComplianceShift",
+   "truth": -0.181563,
+   "lo": -0.358643,
+   "hi": 0.312875,
+   "covered": true,
+   "width_vs_prior": 0.8393975
+  },
+  {
+   "case": 2,
+   "param": "host.anticipation",
+   "truth": 0.0391716,
+   "lo": 0.0178177,
+   "hi": 0.492713,
+   "covered": true,
+   "width_vs_prior": 0.9497906
+  },
+  {
+   "case": 2,
+   "param": "host.prShare",
+   "truth": 0.382484,
+   "lo": 0.27228535,
+   "hi": 0.515203,
+   "covered": true,
+   "width_vs_prior": 0.7361140909090909
+  },
+  {
+   "case": 2,
+   "param": "host.investorEntry",
+   "truth": 0.00641599,
+   "lo": 0.0012200045000000002,
+   "hi": 0.00919574,
+   "covered": true,
+   "width_vs_prior": 0.7975735500000001
+  },
+  {
+   "case": 2,
+   "param": "enforcement.detectMax",
+   "truth": 0.221319,
+   "lo": 0.02879908,
+   "hi": 0.295392,
+   "covered": true,
+   "width_vs_prior": 0.6835715897435898
+  },
+  {
+   "case": 2,
+   "param": "enforcement.delistProb",
+   "truth": 0.119986,
+   "lo": 0.041023285,
+   "hi": 0.374914,
+   "covered": true,
+   "width_vs_prior": 0.37942126704545454
+  },
+  {
+   "case": 2,
+   "param": "enforcement.regTakeup",
+   "truth": 0.390734,
+   "lo": 0.13866595,
+   "hi": 0.8297192999999999,
+   "covered": true,
+   "width_vs_prior": 0.6189583200228562
+  },
+  {
+   "case": 2,
+   "param": "enforcement.exemptClaimShare",
+   "truth": 0.0338286,
+   "lo": 0.00688978,
+   "hi": 0.10141279999999996,
+   "covered": true,
+   "width_vs_prior": 0.4726150999999998
+  },
+  {
+   "case": 2,
+   "param": "str.demandSpillover",
+   "truth": 0.794203,
+   "lo": 0.07609051500000001,
+   "hi": 0.9182152499999999,
+   "covered": true,
+   "width_vs_prior": 0.842124735
+  },
+  {
+   "case": 2,
+   "param": "str.demandGrowthAnnual",
+   "truth": 0.0247616,
+   "lo": -0.03609548,
+   "hi": 0.094039455,
+   "covered": true,
+   "width_vs_prior": 0.8675662333333333
+  },
+  {
+   "case": 2,
+   "param": "rental.arrivalRentElasticity",
+   "truth": 2.59776,
+   "lo": 1.343196,
+   "hi": 4.58415,
+   "covered": true,
+   "width_vs_prior": 0.7202120000000001
+  },
+  {
+   "case": 3,
+   "param": "host.pReview",
+   "truth": 0.104048,
+   "lo": 0.0237972,
+   "hi": 0.27074659999999995,
+   "covered": true,
+   "width_vs_prior": 0.8979210948175339
+  },
+  {
+   "case": 3,
+   "param": "host.beta",
+   "truth": 0.8229,
+   "lo": 0.34115505,
+   "hi": 4.3049159999999995,
+   "covered": true,
+   "width_vs_prior": 0.901104066800236
+  },
+  {
+   "case": 3,
+   "param": "host.complianceBase",
+   "truth": 0.308232,
+   "lo": 0.0113172,
+   "hi": 0.744401,
+   "covered": true,
+   "width_vs_prior": 0.9163547499999999
+  },
+  {
+   "case": 3,
+   "param": "host.multiComplianceShift",
+   "truth": -0.312534,
+   "lo": -0.36744325,
+   "hi": 0.18072189999999988,
+   "covered": true,
+   "width_vs_prior": 0.6852064374999998
+  },
+  {
+   "case": 3,
+   "param": "host.anticipation",
+   "truth": 0.183853,
+   "lo": 0.0279944,
+   "hi": 0.4335885999999999,
+   "covered": true,
+   "width_vs_prior": 0.8111883999999998
+  },
+  {
+   "case": 3,
+   "param": "host.prShare",
+   "truth": 0.321795,
+   "lo": 0.215366,
+   "hi": 0.516263,
+   "covered": true,
+   "width_vs_prior": 0.9118090909090909
+  },
+  {
+   "case": 3,
+   "param": "host.investorEntry",
+   "truth": 0.00812948,
+   "lo": 0.0005386816,
+   "hi": 0.009308511999999998,
+   "covered": true,
+   "width_vs_prior": 0.8769830399999997
+  },
+  {
+   "case": 3,
+   "param": "enforcement.detectMax",
+   "truth": 0.117119,
+   "lo": 0.0176395,
+   "hi": 0.20923644999999993,
+   "covered": true,
+   "width_vs_prior": 0.4912742307692306
+  },
+  {
+   "case": 3,
+   "param": "enforcement.delistProb",
+   "truth": 0.0571808,
+   "lo": 0.0252652,
+   "hi": 0.22607024999999997,
+   "covered": true,
+   "width_vs_prior": 0.2281875568181818
+  },
+  {
+   "case": 3,
+   "param": "enforcement.regTakeup",
+   "truth": 0.382294,
+   "lo": 0.105185,
+   "hi": 0.7001652499999996,
+   "covered": true,
+   "width_vs_prior": 0.6558310946842592
+  },
+  {
+   "case": 3,
+   "param": "enforcement.exemptClaimShare",
+   "truth": 0.0552278,
+   "lo": 0.007910953,
+   "hi": 0.14352,
+   "covered": true,
+   "width_vs_prior": 0.678045235
+  },
+  {
+   "case": 3,
+   "param": "str.demandSpillover",
+   "truth": 0.416,
+   "lo": 0.12109600000000001,
+   "hi": 0.94819855,
+   "covered": true,
+   "width_vs_prior": 0.82710255
+  },
+  {
+   "case": 3,
+   "param": "str.demandGrowthAnnual",
+   "truth": 0.00421053,
+   "lo": -0.03685955,
+   "hi": 0.0975151,
+   "covered": true,
+   "width_vs_prior": 0.8958309999999997
+  },
+  {
+   "case": 3,
+   "param": "rental.arrivalRentElasticity",
+   "truth": 2.84005,
+   "lo": 1.0906013000000003,
+   "hi": 4.68189,
+   "covered": true,
+   "width_vs_prior": 0.7980641555555555
+  }
+ ],
+ "sensitivity": [
+  {
+   "base": {
+    "coveredListings": -0.46077970483407704,
+    "exemptListings": 0.029522686117442302,
+    "askingRent": -0.006388929355672773,
+    "cpiRent": -0.003421520746360392
+   }
+  },
+  {
+   "param": "enforcement.detectMax",
+   "low": 0.026981845,
+   "high": 0.2848607,
+   "d_coveredEffect": -0.24255096351320982,
+   "d_askingRentEffect_pp": -0.4459308904314215,
+   "d_didP1": -0.3836148359151843,
+   "d_exemptEffect": 0.06029519931774243
+  },
+  {
+   "param": "enforcement.delistProb",
+   "low": 0.0306593,
+   "high": 0.23090700000000006,
+   "d_coveredEffect": -0.24171524769523695,
+   "d_askingRentEffect_pp": -0.26009408143653817,
+   "d_didP1": 8.881784197001252e-16,
+   "d_exemptEffect": -0.013035818297313727
+  },
+  {
+   "param": "host.pReview",
+   "low": 0.042416,
+   "high": 0.28656309999999996,
+   "d_coveredEffect": 0.2204152042284031,
+   "d_askingRentEffect_pp": 0.3623476061518218,
+   "d_didP1": 0.14472024333528574,
+   "d_exemptEffect": -0.004985390647740763
+  },
+  {
+   "param": "host.prShare",
+   "low": 0.26196,
+   "high": 0.48641710000000005,
+   "d_coveredEffect": 0.21257960877638554,
+   "d_askingRentEffect_pp": 0.3126792808773052,
+   "d_didP1": 0.21126098830896378,
+   "d_exemptEffect": -0.04077853328065244
+  },
+  {
+   "param": "host.complianceBase",
+   "low": 0.11787897000000003,
+   "high": 0.7423159,
+   "d_coveredEffect": -0.1547838716071956,
+   "d_askingRentEffect_pp": -0.39626343805345765,
+   "d_didP1": -0.2564652737086689,
+   "d_exemptEffect": 0.052337545501555574
+  },
+  {
+   "param": "host.multiComplianceShift",
+   "low": -0.3888831,
+   "high": 0.12128025000000005,
+   "d_coveredEffect": -0.11499761465188363,
+   "d_askingRentEffect_pp": -0.305515516284254,
+   "d_didP1": -0.20637553625664634,
+   "d_exemptEffect": 0.049755170334420895
+  },
+  {
+   "param": "str.demandGrowthAnnual",
+   "low": -0.040124755,
+   "high": 0.090514035,
+   "d_coveredEffect": -0.05968700741102917,
+   "d_askingRentEffect_pp": 0.15078207052821643,
+   "d_didP1": -0.013103068655814343,
+   "d_exemptEffect": 0.058117354989578256
+  },
+  {
+   "param": "enforcement.regTakeup",
+   "low": 0.2489868,
+   "high": 0.8499017000000001,
+   "d_coveredEffect": 0.0442222704550701,
+   "d_askingRentEffect_pp": -0.011560514613312336,
+   "d_didP1": -2.2370993946196904e-14,
+   "d_exemptEffect": 0.07229507760439814
+  },
+  {
+   "param": "host.beta",
+   "low": 0.35370640000000003,
+   "high": 4.3190205,
+   "d_coveredEffect": -0.03575632104492482,
+   "d_askingRentEffect_pp": -0.058843369331017165,
+   "d_didP1": -0.059504960961222486,
+   "d_exemptEffect": 0.11102896785424474
+  },
+  {
+   "param": "enforcement.exemptClaimShare",
+   "low": 0.019957614999999998,
+   "high": 0.144786,
+   "d_coveredEffect": 0.021337939449960097,
+   "d_askingRentEffect_pp": 0.016847006623083374,
+   "d_didP1": 1.1102230246251565e-15,
+   "d_exemptEffect": 0.007819277853989049
+  },
+  {
+   "param": "rental.arrivalRentElasticity",
+   "low": 0.8372204,
+   "high": 4.7822975,
+   "d_coveredEffect": 0.018936203753829817,
+   "d_askingRentEffect_pp": 0.20265621797896216,
+   "d_didP1": 0.012843686905841811,
+   "d_exemptEffect": 0.009350711632102333
+  },
+  {
+   "param": "host.investorEntry",
+   "low": 0.0011754184999999999,
+   "high": 0.0097091,
+   "d_coveredEffect": 0.01090813010426328,
+   "d_askingRentEffect_pp": 0.1586424847409412,
+   "d_didP1": -0.04480713254179419,
+   "d_exemptEffect": 0.05725127032838436
+  },
+  {
+   "param": "host.anticipation",
+   "low": 0.03917001,
+   "high": 0.483175,
+   "d_coveredEffect": 0.003064841168105348,
+   "d_askingRentEffect_pp": -0.13730611748597776,
+   "d_didP1": 0.011831709745473817,
+   "d_exemptEffect": 0.008623805534820221
+  },
+  {
+   "param": "str.demandSpillover",
+   "low": 0.051365810000000005,
+   "high": 0.965733,
+   "d_coveredEffect": -0.0007453081454161792,
+   "d_askingRentEffect_pp": 0.0034412549593083007,
+   "d_didP1": -0.04706159550626565,
+   "d_exemptEffect": 0.16110552885269902
+  }
+ ]
+}

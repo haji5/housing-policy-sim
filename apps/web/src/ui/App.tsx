@@ -39,8 +39,8 @@ export function App() {
   };
   const s = snapshot.series;
   const zones = s.zones;
-  const coveredSeries = sumZones(zones, (z) => z.covered);
-  const exemptSeries = sumZones(zones, (z) => !z.covered);
+  const coveredSeries = sumZones(zones, (z) => z.covered, layout.scale);
+  const exemptSeries = sumZones(zones, (z) => !z.covered, layout.scale);
   const first = (xs: number[]) => xs[0] ?? 0;
   const lastv = (xs: number[]) => xs[xs.length - 1] ?? 0;
   const dirty =
@@ -154,6 +154,7 @@ export function App() {
 
 function Summary({ state }: { state: GameState }) {
   const s = state.snapshot!.series;
+  const scale = state.layout!.scale;
   const z = s.zones;
   const first = (xs: number[]) => xs[0] ?? 0;
   const lastv = (xs: number[]) => xs[xs.length - 1] ?? 0;
@@ -164,13 +165,14 @@ function Summary({ state }: { state: GameState }) {
       <h2 id="sum-h">Since you took office</h2>
       <dl class="kpis">
         {[
-          { name: 'Covered-area listings', values: sumZones(z, (x) => x.covered) },
-          { name: 'Exempt-area listings', values: sumZones(z, (x) => !x.covered) },
+          { name: 'Covered-area listings', values: sumZones(z, (x) => x.covered, scale) },
+          { name: 'Exempt-area listings', values: sumZones(z, (x) => !x.covered, scale) },
         ].map((g) => (
           <div key={g.name}>
             <dt>{g.name}</dt>
             <dd>
-              {first(g.values)} → {lastv(g.values)} ({pct(first(g.values), lastv(g.values))})
+              {fmt(first(g.values))} → {fmt(lastv(g.values))} (
+              {pct(first(g.values), lastv(g.values))})
             </dd>
           </div>
         ))}
@@ -184,7 +186,7 @@ function Summary({ state }: { state: GameState }) {
         </div>
         <div>
           <dt>Households that left (housing stress)</dt>
-          <dd>{lastv(s.gone)}</dd>
+          <dd>{fmt(lastv(s.gone) / scale)}</dd>
         </div>
       </dl>
       {state.phase === 'over' && (
@@ -198,13 +200,19 @@ function Summary({ state }: { state: GameState }) {
   );
 }
 
-/** Element-wise sum of listings over the zones matching `pred`. */
+/** Element-wise sum of listings over the zones matching `pred`, in real units (agents / scale). */
 function sumZones(
   zones: { covered: boolean; strListings: number[] }[],
   pred: (z: { covered: boolean }) => boolean,
+  scale: number,
 ): number[] {
   const n = zones[0]?.strListings.length ?? 0;
   const out = new Array<number>(n).fill(0);
   for (const z of zones) if (pred(z)) for (let i = 0; i < n; i++) out[i]! += z.strListings[i]!;
-  return out;
+  return out.map((v) => Math.round(v / scale));
+}
+
+/** Rounded count with thousands separators. */
+function fmt(v: number): string {
+  return Math.round(v).toLocaleString('en-CA');
 }

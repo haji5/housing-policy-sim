@@ -83,7 +83,7 @@ h2 {
 
 .layout {
   display: grid;
-  grid-template-columns: minmax(0, 1fr) 360px;
+  grid-template-columns: minmax(0, 1fr) 380px;
   gap: 1rem;
   padding: 1rem;
   align-items: start;
@@ -224,13 +224,14 @@ small,
 .kpis div {
   display: flex;
   justify-content: space-between;
-  gap: 1rem;
+  gap: 0.5rem;
 }
 .kpis dt {
   color: var(--muted);
 }
 .kpis dd {
   margin: 0;
+  white-space: nowrap;
   font-variant-numeric: tabular-nums;
   text-align: right;
 }

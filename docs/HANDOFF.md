@@ -22,20 +22,20 @@ _Written 2026-10-10 at the end of a the coding agent session, for the next sessi
 
 ## 1. Milestone status
 
-| Milestone                             | Status                                          | Tag     |
-| ------------------------------------- | ----------------------------------------------- | ------- |
-| M0 scaffold                           | done                                            | `m0`    |
-| M1 headless sim v0                    | done                                            | `m1`    |
-| M2 ugly playable prototype            | done (screenshots in `docs/screenshots/m2/`)    | `m2`    |
-| **M3 calibration + validation**       | **~85% done; committed as WIP (see §3)**        | not yet |
-| M4 DiD-recovery experiment            | Python script written; sim side staged (see §4) | -       |
-| M5 full mechanics                     | designed only (see §5)                          | -       |
-| M6 art pass                           | not started                                     | -       |
-| M7 debrief / evidence UI / onboarding | not started                                     | -       |
-| M8 polish, docs, launch               | not started                                     | -       |
+| Milestone                             | Status                                                      | Tag  |
+| ------------------------------------- | ----------------------------------------------------------- | ---- |
+| M0 scaffold                           | done                                                        | `m0` |
+| M1 headless sim v0                    | done                                                        | `m1` |
+| M2 ugly playable prototype            | done (screenshots in `docs/screenshots/m2/`)                | `m2` |
+| M3 calibration + validation           | done; acceptance partly met (T5, T6a miss; see CALIBRATION) | `m3` |
+| **M4 DiD-recovery experiment**        | **next** (see §4)                                           | -    |
+| M5 full mechanics                     | designed only (see §5)                                      | -    |
+| M6 art pass                           | not started                                                 | -    |
+| M7 debrief / evidence UI / onboarding | not started                                                 | -    |
+| M8 polish, docs, launch               | not started                                                 | -    |
 
-Git: branch `main`, no remote configured (the GitHub MCP connector failed to authenticate in
-this session; nothing has been pushed; Pages deploy is untested).
+Git: branch `main`, no remote configured (the GitHub MCP connector failed to authenticate;
+nothing has been pushed; Pages deploy is untested).
 
 ## 2. Environment facts (important, learned the hard way)
 
@@ -63,95 +63,21 @@ this session; nothing has been pushed; Pages deploy is untested).
 - Shell pitfalls: in Bash `node -e "..."` with JS template literals (backticks) gets mangled by
   command substitution. Use the Edit/Write tools for TS/TSX containing backticks, or write a
   script file first.
+- `python` is not on PATH in the Bash tool; use `calibration/.venv/Scripts/python.exe` directly.
 - Full Victoria calibration takes ~25 min on this 20-thread machine (16 workers). A sim run is
   ~0.15 s (60k agents, 24 spin-up + 49 recorded months).
 
-## 3. M3: what is done and the exact remaining steps
+## 3. M3: finished (tag `m3`)
 
-### Done (all in the working tree; commit them)
-
-- **Model** (ADRs 0004, 0005; ODD, ASSUMPTIONS updated; SIM_VERSION 0.4.0):
-  - Victoria 8-zone scenario `packages/sim/src/scenarios/victoria.json`, built by
-    `tools/scenario/build-victoria.mjs`. Listings sum exactly to 3,133 covered / 500 exempt.
-  - Host classes; registry everywhere with exempt claims, regTakeup and a 1-month de-listing lag.
-  - Anticipation as early exit; investor entry; common demand growth; `preTicks`.
-  - Cross-zone search fix; 24-month spin-up with adaptive ASCs and matching (`create.ts`).
-- **Moments** `packages/sim/src/moments.ts` (S2a DiD, event-study leads, paths, shares) and the
-  `batch` CLI command (`cli.ts`). `params.ts` has `DEFAULT_PARAMS` and a validated `mergeParams`.
-- **Python pipeline** in `calibration/`: `common.py` (FNV hash identical to TS, verified),
-  `simbridge.py`, `calibrate.py` (Sobol 8192 → Nelder-Mead → ABC importance sampling → 300-member
-  ensemble), `report.py`, `validate.py` (written, **never run yet**), `did_recovery.py` (M4,
-  needs the `panel` CLI command). `inputs/targets.json` has provenance for every number;
-  `priors.json` has 14 parameters.
-- `packages/sim/src/ensemble.ts` + `test/ensemble.test.ts`: the hash-check drift test (priors,
-  targets, defaults, scenario hashes + simVersion).
-- The web game now uses the Victoria scenario and one ensemble member per seed (worker), with
-  covered/exempt aggregate charts and a wrapping 8-zone map. **Not yet e2e-tested or
-  screenshot-reviewed after this change.**
-- CI: calibration smoke step added (`node scripts/py.mjs smoke`).
-- Docs: `docs/CALIBRATION.md` (method; results section has a `<!-- results-summary -->`
-  placeholder), ADR 0004, ADR 0005.
-
-### The second calibration (spin-up model, SIM_VERSION 0.4.0): FINISHED, committed
-
-`pnpm calibrate` finished at handoff (exit 0, 28.6 min). It wrote `ensemble.json` (300 sets,
-600 accepted, ESS 146, tolerance D <= 45.1, best D 19.7) and `calibration/reports/*`. All 32 sim
-tests pass, including the ensemble hash test. Results (ensemble mean vs target, pass = within 2 SE):
-
-- **Pass:** T1 -0.374 vs -0.390; T1a -0.100 vs -0.124; T3 covered path (endpoint -0.506 vs
-  -0.432, path RMSE 0.055); T4 exempt path; T6b exempt claims 7.7% vs 9.4%.
-- **Fail:** T2 Phase 2 -0.228 vs -0.115 (just outside 2 SE; down-weighted target, RI p = 0.27
-  in data); T5 multi-host share 31.2% vs 37.6%; T6a registered 62.4% vs 70.0%.
-- **T7 leads:** -0.016, -0.034, +0.004, -0.017 (much better than the first run's -0.04/-0.06).
-- **H1 Salt Spring holdout:** -0.26 vs -0.02 (miss; report it).
-- **S2 rent effect:** -0.61% (5-95% -0.92% to -0.09%); 83% of the ensemble inside the bound.
-  S1 not comparable (no macro rent inflation).
-- **Identified (contraction >= 0.5):** prShare, detectMax, delistProb, regTakeup,
-  exemptClaimShare. Partly: pReview, complianceBase, multiComplianceShift. Weakly: beta,
-  anticipation, investorEntry, demandSpillover, demandGrowthAnnual, arrivalRentElasticity.
-
-Do not re-run unless the model changes. The M3 acceptance ("fits T1, T3-T6 within tolerance")
-is **not fully met**: T5 and T6a miss. Per the user's M3 instruction, report the diagnostics.
-Do not hand-tune. Possible _structural_ (ADR-worthy) causes to investigate, not parameter tweaks:
-
-- T5: multi-host share is uniform across zones at the start; real exempt areas may have more
-  multi-hosts.
-- T6a: unregistered illegal survivors in covered zones.
-
-### Remaining M3 steps, in order
-
-1. Read `calibration/reports/calibration.md` (fit table, identification table, figures).
-2. (Done at handoff: sim tests pass with the new ensemble.)
-3. `pnpm validate` (first ever run of `calibration/validate.py`; expect to debug it). It does a
-   pyfixest cross-check of the TS DiD (must agree to 1e-6), 3 parameter-recovery cases (~10 min),
-   the Salt Spring holdout, S1/S2, and one-at-a-time sensitivity → `calibration/reports/validation.md`.
-4. Fill in `docs/CALIBRATION.md` (results summary) and `docs/VALIDATION.md` §2-3 from the reports.
-   Add the ADR 0005 residual-drift note and the known misses (below) honestly.
-5. Web: `pnpm e2e`, then look at `docs/screenshots/m2/*.png` regenerated with Victoria. Do 3 rounds
-   of defect fixing (the 8-zone map layout is new and unreviewed). Consider moving screenshots to
-   `docs/screenshots/m3/` (edit `apps/web/e2e/play.spec.ts`).
-6. `pnpm format && pnpm lint && pnpm typecheck && pnpm test && pnpm build && pnpm e2e`.
-7. Commit. Message: list the new dependencies for the Python side (numpy, pandas, scipy,
-   pyfixest, matplotlib: reuse of the first project's estimator stack, PLAN §3). The golden
-   snapshot was updated deliberately (registry everywhere, host classes, search weighting).
-   Then tag `m3` and give the milestone summary.
-
-### Results of the first (pre-spin-up) calibration, for comparison
-
-- **Pass:** T1 −0.370 vs −0.390; T1a −0.085 vs −0.124; T2 −0.202 vs −0.115 (within 2 SE);
-  T4 exempt path; T6b exempt claims 7.5% vs 9.4%.
-- **Fail:** T3 endpoint −0.54 vs −0.43 (path RMSE 0.056 is good; the Jun 2026 data point jumps
-  up, and the first project documents a vintage break there: Victoria totals +23% vs Dec 2025);
-  T5 multi-host share 31% vs 37.6%; T6a registered 63% vs 70%.
-- **Holdout H1 (Salt Spring) misses:** sim −0.36 vs data −0.02. The model applies the full rule
-  at the Nov 2025 opt-in; the data show almost no fall. Report it, don't fit it.
-- **S2:** STR-attributable asking-rent effect −0.79% (97% of the ensemble inside −3.3%..−0.4%).
-  **S1** not comparable (no macro rent inflation in the sim; rentDriftAnnual = 0). Say why.
-- **Identified:** pReview, prShare, detectMax, delistProb, regTakeup, exemptClaimShare.
-  **Weakly identified:** beta, complianceBase, investorEntry, demandSpillover,
-  demandGrowthAnnual, arrivalRentElasticity. This is expected and is the M4 story.
-- The user instruction for M3: **do not hand-tune parameters to hit targets; if the fit fails,
-  show the diagnostics.** Do not loosen target SEs after seeing results.
+- Calibration (2026-10-10, sim 0.4.0, 28.6 min): results summarised in `docs/CALIBRATION.md`
+  (Results). Pass: T1, T1a, T3, T4, T6b, T7. Miss: T2 (down-weighted), T5, T6a. Diagnostics are
+  written up there; nothing was hand-tuned. Do not re-run unless the model changes.
+- Validation (`pnpm validate`, 18.8 min, first complete run): `calibration/reports/validation.md`,
+  summarised in `docs/VALIDATION.md` §1.1-2. pyfixest = TS DiD to 1.4e-14; recovery 42/42
+  covered but with wide intervals; H1 Salt Spring miss (-0.26 vs -0.02); S2 83% in band.
+- Web: listing counts now in real units (`layout.scale`), map packs to fit 1366x768 with charts
+  visible; e2e asserts a covered-vs-exempt DiD < -0.15 (was a two-zone threshold). Screenshots in
+  `docs/screenshots/m3/`.
 
 ### Known limitations to carry into docs
 

@@ -22,7 +22,7 @@ interface Props {
 }
 
 const W = 520;
-const H = 220;
+const H = 190;
 const M = { top: 12, right: 26, bottom: 28, left: 52 };
 
 /** Rough "nice" ticks (1-2-5 steps) covering [lo, hi]. */

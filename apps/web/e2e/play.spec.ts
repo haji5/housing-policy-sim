@@ -3,7 +3,7 @@ import { mkdirSync } from 'node:fs';
 import { dirname, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
-const SHOTS = resolve(dirname(fileURLToPath(import.meta.url)), '../../../docs/screenshots/m2');
+const SHOTS = resolve(dirname(fileURLToPath(import.meta.url)), '../../../docs/screenshots/m3');
 
 test('play a full 20-turn term with the principal-residence rule', async ({ page }) => {
   mkdirSync(SHOTS, { recursive: true });
@@ -41,11 +41,17 @@ test('play a full 20-turn term with the principal-residence rule', async ({ page
   await expect(page.getByTestId('over')).toBeVisible();
   await page.screenshot({ path: `${SHOTS}/03-end-of-term.png`, fullPage: true });
 
-  // The covered zone's listings fell; the summary says so.
+  // Covered-area listings fell relative to exempt areas: a DiD in log points, as in the data
+  // (the calibrated Phase 1 effect is about -0.4). The summary shows real-unit counts.
   const summary = page.getByRole('region', { name: 'Since you took office' });
   await expect(summary.getByText(/Covered-area listings/)).toBeVisible();
-  const text = (await summary.textContent()) ?? '';
-  const m = /Covered-arealistings(\d+)→(\d+)/.exec(text.replace(/\s+/g, ''));
-  expect(m).not.toBeNull();
-  expect(Number(m![2])).toBeLessThan(Number(m![1]) * 0.8);
+  const text = ((await summary.textContent()) ?? '').replace(/[\s,]+/g, '');
+  const cov = /Covered-arealistings(\d+)→(\d+)/.exec(text);
+  const ex = /Exempt-arealistings(\d+)→(\d+)/.exec(text);
+  expect(cov).not.toBeNull();
+  expect(ex).not.toBeNull();
+  expect(Number(cov![1])).toBeGreaterThan(2500); // ~3,133 real covered listings at the start
+  const did =
+    Math.log(Number(cov![2]) / Number(cov![1])) - Math.log(Number(ex![2]) / Number(ex![1]));
+  expect(did).toBeLessThan(-0.15);
 });

@@ -61,6 +61,7 @@ self.onmessage = (ev: MessageEvent<WorkerRequest>) => {
             start: sim.scenario.start,
             ensembleMember: member,
             ensembleSize: ENSEMBLE.sets.length,
+            scale: sim.params.scale,
           },
           snapshot: snap,
         },

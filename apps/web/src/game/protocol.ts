@@ -26,6 +26,8 @@ export interface WorldLayout {
   /** Calibrated parameter set used for this game (-1 = uncalibrated defaults). */
   ensembleMember: number;
   ensembleSize: number;
+  /** Agents per real unit (params.scale); divide counts by it to show real numbers. */
+  scale: number;
 }
 
 export type WorkerResponse =

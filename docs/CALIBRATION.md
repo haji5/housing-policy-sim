@@ -54,7 +54,7 @@ documented defaults (ASSUMPTIONS.md).
 ## Reproduce
 
 ```bash
-pnpm calibrate          # ~15-20 min on 16 cores; writes ensemble.json and calibration/reports/
+pnpm calibrate          # ~30 min on 16 workers; writes ensemble.json and calibration/reports/
 pnpm validate           # estimator cross-check, parameter recovery, held-out checks, sensitivity
 pnpm calibrate:smoke    # 1-minute version used in CI (does not touch the committed ensemble)
 ```
@@ -68,3 +68,68 @@ See [`calibration/reports/calibration.md`](../calibration/reports/calibration.md
 below (filled in after each full calibration run).
 
 <!-- results-summary -->
+
+### Run of 2026-10-10 (sim 0.4.0, spin-up model, ADR 0005)
+
+8,192 Sobol draws, 4 Nelder-Mead starts, 4,096 ABC proposals; 600 accepted (D ≤ 45.1), effective
+sample size 146, ensemble of 300 sets. Best distance 19.7 (stage-1 median 346). Wall time 28.6 min
+on 16 workers.
+
+**Fit (ensemble mean vs target; pass = within 2 SE, paths judged at the last point).**
+
+| ID  | Target   | Sim mean (5-95%)                      | Pass                           |
+| --- | -------- | ------------------------------------- | ------------------------------ |
+| T1  | −0.390   | −0.374 (−0.481 to −0.260)             | yes                            |
+| T1a | −0.124   | −0.100 (−0.167 to −0.043)             | yes                            |
+| T2  | −0.115   | −0.228 (−0.337 to −0.121)             | **no** (weight ¼; RI p = 0.27) |
+| T3  | −0.432   | −0.506 (−0.669 to −0.380), RMSE 0.055 | yes                            |
+| T4  | +0.062   | +0.181 (+0.060 to +0.321), RMSE 0.053 | yes                            |
+| T5  | 37.6%    | 31.2% (27.0% to 35.6%)                | **no**                         |
+| T6a | 70.0%    | 62.4% (55.3% to 69.1%)                | **no**                         |
+| T6b | 9.4%     | 7.7% (1.9% to 14.5%)                  | yes                            |
+| T7  | leads ≈0 | −0.016, −0.034, +0.004, −0.017        | yes (no spurious pre-trend)    |
+
+**The M3 acceptance criterion ("fits T1, T3-T6 within tolerance") is not fully met.** T1, T3, T4,
+T6b and T7 pass; T5 (multi-host share) and T6a (registered share) miss. No parameter was tuned by
+hand to close the gap. Diagnostics:
+
+- **T5.** The 95th percentile of the ensemble (35.6%) is below the target (37.6%): the model's
+  multi-host share falls from 46.1% about twice as far as the data's. In the model every
+  principal-residence listing is a single-host listing and every multi-host listing is a
+  non-principal-residence unit, so any rule that removes non-PR listings lowers the multi share
+  mechanically. The only offset is for multi-hosts to comply less, and the posterior of
+  `multiComplianceShift` presses against the lower edge of its prior (5% quantile −0.389, prior
+  −0.4). Multi-hosts are also spread uniformly across zones (`world.ts`). Both are structural
+  choices; the first project reports neither the host mix by zone nor by PR status, so they are
+  left as documented misses rather than re-specified to fit.
+- **T6a.** The registered share rises only through `regTakeup` (identified, median 0.54) and
+  through illegal listings leaving. Unregistered illegal survivors in covered zones, governed by a
+  low `delistProb` (identified, median 0.09), hold it down. Faster de-listing would raise T6a but
+  push T2 (already too negative) further from its estimate: T2, T6a and `delistProb` pull against
+  each other.
+- **T2.** Down-weighted on purpose. The sim's Phase 2 effect (−0.23) is twice the estimate, but the
+  estimate itself is not distinguishable from placebo (RI p = 0.27).
+- **T4** passes at the endpoint, but the ensemble mean (+18%) overshoots the observed +6.4%. The
+  spillover parameters (`demandSpillover`, `investorEntry`) are weakly identified, so the exempt
+  path is the model's least certain part. This matters for M4 (DiD recovery).
+
+**Identification.** Identified (contraction ≥ 0.5): `prShare`, `detectMax`, `delistProb`,
+`regTakeup`, `exemptClaimShare`. Partly: `pReview`, `complianceBase`, `multiComplianceShift`.
+Weakly: `beta`, `anticipation`, `investorEntry`, `demandSpillover`, `demandGrowthAnnual`,
+`arrivalRentElasticity`. The weakly identified ones are the behavioural responses the first
+project could not measure (where displaced units go, spillover). Their uncertainty is carried into
+the game through the ensemble, as PLAN §5.4 intends.
+
+**Rents (not fitted).** The STR-attributable change in asking rents by Jun 2026 is −0.61% (5-95%
+−0.92% to −0.09%); 83% of the ensemble lies inside the first project's −3.3% to −0.4% bound. On a
+CPI-style all-tenant index it is −0.40%: too small to detect against a +19.5% CPI rise with
+quarterly noise of a few points.
+
+**Residual drift.** With no policy, the covered-minus-exempt listing difference still drifts within
+±0.05 log points over 64 months (ADR 0005). This is about the size of the real leads' SE and is
+left as noise, not removed by tuning.
+
+### First calibration (pre-spin-up, superseded)
+
+For comparison: T1 −0.370, T2 −0.202 (passed), T3 endpoint −0.54 (failed), T5 31%, T6a 63%, and
+leads of −0.04/−0.06 (a spurious pre-trend). Spin-up (ADR 0005) fixed T3 and T7 at the cost of T2.

@@ -182,7 +182,7 @@ def main(argv=None) -> int:
          "## 1. Estimator cross-check", "",
          f"The TypeScript DiD used for calibration moments matches pyfixest `feols(y ~ antic + p1 + p2 | zone + month)` "
          f"on the same simulated panel ({est['nobs']} zone-snapshot cells): max |difference| = {est['max_abs_diff']:.2e}.", "",
-         "| Term | pyfixest | TypeScript | |diff| | CRV1 SE (zone) |", "|---|---:|---:|---:|---:|"]
+         "| Term | pyfixest | TypeScript | Abs. diff | CRV1 SE (zone) |", "|---|---:|---:|---:|---:|"]
     for r in est["rows"]:
         L.append(f"| {r['term']} | {r['pyfixest']:.6f} | {r['typescript']:.6f} | {r['abs_diff']:.1e} | {r['se_crv1']:.4f} |")
 

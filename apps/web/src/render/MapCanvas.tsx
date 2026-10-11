@@ -7,7 +7,6 @@ import type { Snapshot, WorldLayout } from '../game/protocol.ts';
  * fixed hashed shuffle so building types are scattered rather than banded. The M6 art pass
  * replaces this with the isometric renderer.
  */
-const GAP = 1;
 const ZONE_GAP = 24;
 const LABEL_H = 18;
 const MAX_W = 880;
@@ -39,43 +38,66 @@ function zoneLabel(layout: WorldLayout, zi: number, ruleOn: boolean): string {
   return `${layout.zoneNames[zi]} (${tag})`;
 }
 
-/** Blocks flow left to right and wrap onto new rows at MAX_W. Cells shrink for big cities. */
-function layoutBlocks(layout: WorldLayout): {
+interface Geometry {
   blocks: Block[];
   width: number;
   height: number;
   cell: number;
-} {
-  const cell = layout.zone.length > 20000 ? 3 : 4;
-  const perZone: number[][] = layout.zoneNames.map(() => []);
-  for (let d = 0; d < layout.zone.length; d++) perZone[layout.zone[d]!]!.push(d);
+  gap: number;
+}
+
+/** Blocks of width:height `aspect` flow left to right and wrap onto new rows at MAX_W. */
+function packBlocks(layout: WorldLayout, perZone: Int32Array[], cell: number, aspect: number) {
   const blocks: Block[] = [];
   let x = 12;
   let y = LABEL_H + 6;
   let rowH = 0;
   let width = 0;
-  perZone.forEach((ids, zi) => {
-    const sorted = ids
-      .map((d) => ({ d, k: hash32(7, d, 0, 1) }))
-      .sort((a, b) => a.k - b.k)
-      .map((e) => e.d);
+  perZone.forEach((cells, zi) => {
     const label = zoneLabel(layout, zi, true);
-    const cols = Math.max(
-      Math.ceil(Math.sqrt(sorted.length * 3)),
-      Math.ceil((label.length * LABEL_CHAR_W) / cell),
+    const cols = Math.min(
+      Math.floor((MAX_W - 24) / cell),
+      Math.max(
+        Math.ceil(Math.sqrt(cells.length * aspect)),
+        Math.ceil((label.length * LABEL_CHAR_W) / cell),
+      ),
     );
-    const rows = Math.ceil(sorted.length / cols);
+    const rows = Math.ceil(cells.length / cols);
     if (x > 12 && x + cols * cell > MAX_W) {
       x = 12;
-      y += rowH + LABEL_H + 14;
+      y += rowH + LABEL_H + 8;
       rowH = 0;
     }
-    blocks.push({ zone: zi, x, y, cols, rows, label, cells: Int32Array.from(sorted) });
+    blocks.push({ zone: zi, x, y, cols, rows, label, cells });
     width = Math.max(width, x + cols * cell + 12);
     x += cols * cell + ZONE_GAP;
     rowH = Math.max(rowH, rows * cell);
   });
-  return { blocks, width, height: y + rowH + 12, cell };
+  return { blocks, width, height: y + rowH + 12 };
+}
+
+/** Cells shrink for big cities; the block shape that gives the shortest map wins. */
+function layoutBlocks(layout: WorldLayout): Geometry {
+  // Small cells so the whole map and the charts fit a laptop screen.
+  const n = layout.zone.length;
+  const cell = n > 30000 ? 2 : n > 15000 ? 3 : 4;
+  const ids: number[][] = layout.zoneNames.map(() => []);
+  for (let d = 0; d < n; d++) ids[layout.zone[d]!]!.push(d);
+  // Fixed hashed shuffle so building types are scattered rather than banded.
+  const perZone = ids.map((zoneIds) =>
+    Int32Array.from(
+      zoneIds
+        .map((d) => ({ d, k: hash32(7, d, 0, 1) }))
+        .sort((a, b) => a.k - b.k)
+        .map((e) => e.d),
+    ),
+  );
+  let best = packBlocks(layout, perZone, cell, 3);
+  for (let aspect = 1.5; aspect <= 12; aspect += 0.5) {
+    const g = packBlocks(layout, perZone, cell, aspect);
+    if (g.height < best.height) best = g;
+  }
+  return { ...best, cell, gap: cell > 2 ? 1 : 0 };
 }
 
 export function MapCanvas({ layout, snapshot }: { layout: WorldLayout; snapshot: Snapshot }) {
@@ -101,7 +123,7 @@ export function MapCanvas({ layout, snapshot }: { layout: WorldLayout; snapshot:
         const d = b.cells[i]!;
         const cx = b.x + (i % b.cols) * CELL;
         const cy = b.y + Math.floor(i / b.cols) * CELL;
-        const s = CELL - GAP;
+        const s = CELL - geo.gap;
         const t = tenure[d];
         if (t === Tenure.STR) {
           ctx.fillStyle = principalRes[d] ? MAP_COLORS.strPr : MAP_COLORS.str;
@@ -125,7 +147,9 @@ export function MapCanvas({ layout, snapshot }: { layout: WorldLayout; snapshot:
   }, [geo, snapshot, layout]);
 
   const counts = snapshot.series.zones.map((z) => z.strListings[z.strListings.length - 1] ?? 0);
-  const alt = layout.zoneNames.map((n, i) => `${n}: ${counts[i]} STR listings`).join('; ');
+  const alt = layout.zoneNames
+    .map((n, i) => `${n}: about ${Math.round(counts[i]! / layout.scale)} STR listings`)
+    .join('; ');
   return (
     <div class="map">
       <canvas ref={ref} role="img" aria-label={`City map. ${alt}.`} />
