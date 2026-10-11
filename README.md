@@ -122,17 +122,18 @@ Art is generated, not drawn: `pnpm art` rebuilds the sprite atlas. README media:
 
 ## Performance
 
-Measured on the development laptop (busy at the time) — PLAN §11 budgets:
+Measured on the development laptop, otherwise idle (Node, headless Chromium), against the
+[PLAN §11](docs/PLAN.md) budgets:
 
 | Budget                                     | Target     | Measured                                                   |
 | ------------------------------------------ | ---------- | ---------------------------------------------------------- |
-| Page script (gzipped)                      | < 400 KB   | 47 KB, plus two workers of 29 KB each                      |
-| Sprite atlas                               | < 300 KB   | 6.4 KB PNG + 16 KB JSON                                    |
-| First interaction                          | < 2 s      | start screen interactive at 74 ms; city built in 0.9 s     |
-| One turn                                   | -          | 0.11 s (player and no-policy runs)                         |
-| 10k agents × 60 ticks in Node              | < 150 ms   | passes the test's 600 ms CI margin                         |
-| Victoria run (75k agents, 24 + 60 months)  | < 150 ms   | **not met**: 361 ms best, 404 ms median (`pnpm sim bench`) |
-| Debrief ensemble in the browser, 4 workers | 200 < 10 s | **32 variants × 2 runs: 8-12 s** (ADR 0011)                |
+| Page script (gzipped)                      | < 400 KB   | 57 KB, plus two workers of 29 KB each                      |
+| Sprite atlas                               | < 300 KB   | 6.7 KB PNG + 17.7 KB JSON                                  |
+| First interaction                          | < 2 s      | start screen interactive at 76 ms; city built in 0.4 s     |
+| One turn                                   | -          | 0.10 s (player and no-policy runs)                         |
+| 10k agents × 60 ticks in Node              | < 150 ms   | 37 ms best, 39 ms median (12.7k agents)                    |
+| Victoria run (75k agents, 24 + 60 months)  | < 150 ms   | **not met**: 284 ms best, 293 ms median (`pnpm sim bench`) |
+| Debrief ensemble in the browser, 4 workers | 200 < 10 s | **32 variants × 2 runs: 6.0 s** (N = 200 not attempted, ADR 0011) |
 
 ## Tech stack
 
