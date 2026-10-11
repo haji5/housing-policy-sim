@@ -1,8 +1,38 @@
 import { leversAt } from '../policy.ts';
+import { policyRateAt } from '../rates.ts';
 import { Purpose, uniform } from '../rng.ts';
+import { combineShocks } from '../shocks.ts';
 import type { Params, SimState } from '../types.ts';
-import { RegStatus, StrRegime, Tenure } from '../types.ts';
-import { ltrNetRevenue, strNetRevenue } from '../world.ts';
+import { RegStatus, RentCap, StrRegime, Tenure, Upzone } from '../types.ts';
+import { ltrNetRevenue, scheduleBuy, strNetRevenue } from '../world.ts';
+
+/** Nominal annual rent-increase cap for a RentCap setting. */
+export function rentCapValue(params: Params, code: number): number {
+  if (code === RentCap.LOW) return params.rental.rentCapLow;
+  if (code === RentCap.HIGH) return params.rental.rentCapHigh;
+  return params.rental.rentCapAnnual;
+}
+
+/** Starts multiplier for an Upzone setting. */
+export function upzoneMultiplier(params: Params, code: number): number {
+  if (code === Upzone.MODERATE) return params.dev.upzoneModerate;
+  if (code === Upzone.AGGRESSIVE) return params.dev.upzoneAggressive;
+  return 1;
+}
+
+/**
+ * Rent-cap factor on expected LTR revenue (ADR 0007): a sitting tenant's rent can rise by at most
+ * the nominal cap, so when inflation plus expected real market growth exceeds it, the investor
+ * expects to fall behind the market by the gap for about capPenaltyYears years.
+ */
+export function capFactor(params: Params, cap: number, realGrowth: number): number {
+  const gap = Math.max(0, params.rental.inflationAnnual + Math.max(0, realGrowth) - cap);
+  return Math.max(0.5, 1 - params.host.capPenaltyYears * gap);
+}
+
+/** dwellings.due codes: 1 = tenant left or new owner; 2 = just removed from STR (no relisting). */
+export const DUE_NOW = 1;
+export const DUE_REMOVED = 2;
 
 /** Monthly detection probability of an illegal STR at enforcement level 0..5 (diminishing returns). */
 export function detectProb(params: Params, level: number): number {
@@ -52,6 +82,7 @@ export function anticipatedPenalty(state: SimState, zi: number): number {
 export function updateDerived(state: SimState): void {
   const { params, zones, dwellings: dw } = state;
   state.levers = leversAt(state.policy, state.tick);
+  const shock = combineShocks(state.levers.shocks);
   const nZ = zones.length;
   const strCount = new Array<number>(nZ).fill(0);
   const ltrOcc = new Array<number>(nZ).fill(0);
@@ -72,12 +103,12 @@ export function updateDerived(state: SimState): void {
   // Common growth in tourist demand from tick 0 (none during pre-ticks).
   const growth = Math.exp((params.str.demandGrowthAnnual * Math.max(0, state.tick)) / 12);
   zones.forEach((z) => {
-    z.strDemand = z.strDemand0 * growth;
+    z.strDemand = z.strDemand0 * growth * shock.strDemandMult;
   });
   zones.forEach((z, zi) => {
     if (coveredNow[zi]) {
       const served = servedNights(params, z.strDemand, strCount[zi]!);
-      displaced += Math.max(0, z.baselineServedStr * growth - served);
+      displaced += Math.max(0, z.baselineServedStr * growth * shock.strDemandMult - served);
     } else exemptDemand += z.strDemand;
   });
   zones.forEach((z, zi) => {
@@ -87,15 +118,28 @@ export function updateDerived(state: SimState): void {
     }
     z.occupancy = occupancy(params, demand, strCount[zi]!);
   });
+  // Upzoning takes effect after the permit delay; the cap bites through expected real growth.
+  const permitted = leversAt(state.policy, state.tick - params.dev.permitDelayTicks).upzone;
+  const cap = rentCapValue(params, state.levers.rentCap);
+  const H = state.history;
+  const caps = zones.map((z, zi) => {
+    const past = H.length >= 12 ? H[H.length - 12]!.zones[zi]!.marketRent : z.marketRent;
+    return capFactor(params, cap, z.marketRent / past - 1);
+  });
   state.derived = {
     coveredNow,
-    detectProb: detectProb(params, state.levers.enforcement),
+    detectProb: detectProb(params, state.levers.enforcement) * shock.detectMult,
     strNet: zones.map((z) => strNetRevenue(params, z.occupancy, z.spec.nightlyRate)),
     vacancy: zones.map((_, zi) => ltrVac[zi]! / Math.max(1, ltrOcc[zi]! + ltrVac[zi]!)),
     ltrNet: [],
+    policyRate: policyRateAt(state.scenario.start, state.tick) + shock.rateShift,
+    vacancyTaxMonthly: ((state.levers.vacancyTax / 100) * params.fiscal.assessedValue) / 12,
+    upzoneMult: zones.map((_, zi) => upzoneMultiplier(params, permitted[zi] ?? Upzone.NONE)),
+    capFactor: caps,
+    shock,
   };
   state.derived.ltrNet = zones.map((z, zi) =>
-    ltrNetRevenue(params, z.marketRent, state.derived.vacancy[zi]!),
+    ltrNetRevenue(params, z.marketRent, state.derived.vacancy[zi]!, caps[zi]),
   );
 }
 
@@ -148,13 +192,13 @@ export function applyEnforcement(state: SimState): void {
       !dw.principalRes[d] &&
       dw.compliant[d] &&
       zoneStatutorilyCovered(state, zi, tick) &&
-      uniform(seed, d, tick, Purpose.ANTICIPATE) < params.host.anticipation
+      uniform(seed, dw.key[d]!, tick, Purpose.ANTICIPATE) < params.host.anticipation
     )
       removed = true;
     if (illegal) {
       if (dw.registered[d] === RegStatus.REGISTERED) dw.registered[d] = RegStatus.NONE;
       if (dw.compliant[d]) removed = true;
-      else if (uniform(seed, d, tick, Purpose.DETECT) < dp) {
+      else if (uniform(seed, dw.key[d]!, tick, Purpose.DETECT) < dp) {
         state.acc.fines += fine;
         removed = true;
       }
@@ -162,22 +206,26 @@ export function applyEnforcement(state: SimState): void {
     if (!removed && registry) {
       if (dw.registered[d] === RegStatus.NONE) {
         if (dw.claimsExempt[d]) dw.registered[d] = RegStatus.EXEMPT_CLAIM;
-        else if (!illegal && uniform(seed, d, tick, Purpose.REG_TAKEUP) < regTakeup)
+        else if (!illegal && uniform(seed, dw.key[d]!, tick, Purpose.REG_TAKEUP) < regTakeup)
           dw.registered[d] = RegStatus.REGISTERED;
       }
       if (
         platformValidates &&
         dw.registered[d] === RegStatus.NONE &&
-        uniform(seed, d, tick, Purpose.DELIST) < delistProb
+        uniform(seed, dw.key[d]!, tick, Purpose.DELIST) < delistProb
       )
         removed = true;
     }
     if (removed) {
       dw.registered[d] = RegStatus.NONE;
-      if (dw.principalRes[d]) dw.tenure[d] = Tenure.OWNER_OCC;
-      else {
+      if (dw.principalRes[d]) {
+        dw.tenure[d] = Tenure.OWNER_OCC;
+        scheduleBuy(state, d, tick);
+      } else {
+        // The host chooses between renting long-term, holding vacant and selling this month.
         dw.tenure[d] = Tenure.LTR;
         dw.tenant[d] = -1;
+        dw.due[d] = DUE_REMOVED;
       }
     }
   }

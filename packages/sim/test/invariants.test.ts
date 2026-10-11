@@ -1,10 +1,26 @@
 import { describe, expect, it } from 'vitest';
 import fc from 'fast-check';
-import { checkInvariants, Tenure } from '../src/index.ts';
+import { checkInvariants, stepSim, Tenure } from '../src/index.ts';
 import type { PolicyEvent } from '../src/index.ts';
 import { sim, stepN } from './helpers.ts';
 
 const policyEvent: fc.Arbitrary<PolicyEvent> = fc.oneof(
+  fc.record({
+    tick: fc.integer({ min: 0, max: 30 }),
+    lever: fc.constantFrom('vacancyTax' as const, 'rentCap' as const, 'nonMarket' as const),
+    value: fc.integer({ min: 0, max: 3 }).map((v) => v * 50),
+  }),
+  fc.record({
+    tick: fc.integer({ min: 0, max: 30 }),
+    lever: fc.constant('upzone' as const),
+    value: fc.integer({ min: 0, max: 2 }),
+    zone: fc.integer({ min: 0, max: 1 }),
+  }),
+  fc.record({
+    tick: fc.integer({ min: 0, max: 30 }),
+    lever: fc.constant('shock' as const),
+    value: fc.integer({ min: 1, max: 6 }),
+  }),
   fc.record({
     tick: fc.integer({ min: 0, max: 30 }),
     lever: fc.constant('strRegime' as const),
@@ -25,13 +41,14 @@ describe('conservation and consistency', () => {
         fc.array(policyEvent, { maxLength: 6 }),
         (seed, events) => {
           const s = sim(seed, events);
-          const nDwellings = s.dwellings.n;
           expect(checkInvariants(s)).toEqual([]);
           for (let t = 0; t < 30; t++) {
-            stepN(s, 1);
+            const before = s.dwellings.n;
+            const rec = stepSim(s);
             expect(checkInvariants(s)).toEqual([]);
-            // M1 has no construction, so the dwelling stock is fixed.
-            expect(s.dwellings.n).toBe(nDwellings);
+            // The dwelling stock changes only through construction starts.
+            const starts = rec.zones.reduce((a, z) => a + z.starts, 0);
+            expect(s.dwellings.n - before).toBe(starts);
           }
         },
       ),

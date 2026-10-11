@@ -21,11 +21,14 @@ describe('common random numbers', () => {
   });
 
   it('paired (same-seed) effect estimates are far less noisy than unpaired ones', () => {
-    const seeds = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
-    const covered = (out: ReturnType<typeof run>) => last(out.series.zones[0]!.strListings);
-    const base = seeds.map((s) => covered(run(s, 'none', 36)));
-    const treated = seeds.map((s) => covered(run(s, ruleAt(6), 36)));
-    const treatedShifted = seeds.map((s) => covered(run(s + 1000, ruleAt(6), 36)));
+    // Measured six months after the rule. Further out, the paired advantage fades: once the rule
+    // has removed the investor STR stock in the treated arm, the churn of that stock in the
+    // no-policy arm (reviews, sales, purchases; ADR 0007) is no longer shared by the two arms.
+    const seeds = Array.from({ length: 20 }, (_, i) => i + 1);
+    const covered = (out: ReturnType<typeof run>) => out.series.zones[0]!.strListings[12]!;
+    const base = seeds.map((s) => covered(run(s, 'none', 13)));
+    const treated = seeds.map((s) => covered(run(s, ruleAt(6), 13)));
+    const treatedShifted = seeds.map((s) => covered(run(s + 1000, ruleAt(6), 13)));
 
     const paired = seeds.map((_, i) => treated[i]! - base[i]!);
     const unpaired = seeds.map((_, i) => treatedShifted[i]! - base[i]!);

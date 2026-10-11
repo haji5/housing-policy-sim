@@ -55,6 +55,13 @@ export function collectOutput(state: SimState): RunOutput {
         strRegistered: col((r) => r.zones[zi]!.strRegistered),
         strExemptClaim: col((r) => r.zones[zi]!.strExemptClaim),
         strMulti: col((r) => r.zones[zi]!.strMulti),
+        vacantHeld: col((r) => r.zones[zi]!.vacantHeld),
+        construction: col((r) => r.zones[zi]!.construction),
+        starts: col((r) => r.zones[zi]!.starts),
+        completions: col((r) => r.zones[zi]!.completions),
+        sales: col((r) => r.zones[zi]!.sales),
+        nonMarket: col((r) => r.zones[zi]!.nonMarket),
+        dwellings: col((r) => r.zones[zi]!.dwellings),
       })),
       housed: col((r) => r.housed),
       searching: col((r) => r.searching),
@@ -65,6 +72,8 @@ export function collectOutput(state: SimState): RunOutput {
       askingRentIndex: col((r) => r.askingRentIndex),
       rentBurdenShare: col((r) => r.rentBurdenShare),
       fines: col((r) => r.fines),
+      vacancyTaxRevenue: col((r) => r.vacancyTaxRevenue),
+      policyRate: col((r) => r.policyRate),
     },
   };
 }

@@ -98,6 +98,20 @@
       "lo": 0.5,
       "hi": 5,
       "note": "renter arrivals vs asking rents; not identified by listing moments, kept to carry rent-effect uncertainty"
+    },
+    {
+      "name": "host.vacantHeldShare",
+      "dist": "uniform",
+      "lo": 0.005,
+      "hi": 0.08,
+      "note": "share of investor units held vacant off-market at the start (destination simplex of displaced units; ADR 0007)"
+    },
+    {
+      "name": "host.sellRateAnnual",
+      "dist": "uniform",
+      "lo": 0.02,
+      "hi": 0.1,
+      "note": "annual share of investor units sold to owner-occupiers in the steady state (destination simplex; ADR 0007)"
     }
   ]
 }

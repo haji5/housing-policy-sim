@@ -129,4 +129,13 @@ export const Purpose = {
   OBS_ZONE: 26,
   OBS_TRUNCATED: 27,
   OBS_CPI: 28,
+  // Full mechanics (M5, ADRs 0007-0009).
+  DEV_START: 29, // sub = zone
+  DEV_LAG: 30,
+  DEV_TENURE: 31,
+  BUY: 32,
+  INIT_PIPELINE: 33, // sub 0: lag, 1: age, 2: tenure
+  NONMARKET_START: 34,
+  NONMARKET_ZONE: 35,
+  SHOCK_DRAW: 36, // agent 0, tick = turn; sub 0: whether, sub 1: which card
 } as const;

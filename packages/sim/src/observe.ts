@@ -1,13 +1,13 @@
 import type { SimState, TickRecord } from './types.ts';
-import { HostClass, HouseholdStatus, RegStatus, Tenure } from './types.ts';
+import { HostClass, HouseholdStatus, RegStatus, RentalKind, Tenure } from './types.ts';
 
 /**
  * Observation (PLAN §5.3 step 7): the true ("god view") state at the end of a tick.
- * The noisy researcher view is added in M5 on top of these records.
+ * The noisy researcher view (researcher.ts) is computed from these records.
  */
 export function observe(state: SimState): TickRecord {
   const { dwellings: dw, households: hh, zones, derived } = state;
-  const zr = zones.map((z) => ({
+  const zr = zones.map((z, zi) => ({
     strListings: 0,
     strPrincipal: 0,
     strIllegal: 0,
@@ -19,10 +19,20 @@ export function observe(state: SimState): TickRecord {
     strRegistered: 0,
     strExemptClaim: 0,
     strMulti: 0,
+    vacantHeld: 0,
+    construction: 0,
+    starts: state.acc.starts[zi]!,
+    completions: state.acc.completions[zi]!,
+    sales: state.acc.sales[zi]!,
+    nonMarket: 0,
+    dwellings: 0,
   }));
   let qRent = 0;
   for (let d = 0; d < dw.n; d++) {
     const r = zr[dw.zone[d]!]!;
+    if (dw.rentalKind[d] === RentalKind.NON_MARKET && dw.tenure[d] !== Tenure.CONSTRUCTION)
+      r.nonMarket++;
+    if (dw.tenure[d] !== Tenure.CONSTRUCTION) r.dwellings++;
     switch (dw.tenure[d]) {
       case Tenure.STR:
         r.strListings++;
@@ -41,6 +51,12 @@ export function observe(state: SimState): TickRecord {
       case Tenure.OWNER_OCC:
         r.ownerOcc++;
         break;
+      case Tenure.VACANT:
+        r.vacantHeld++;
+        break;
+      case Tenure.CONSTRUCTION:
+        r.construction++;
+        break;
     }
   }
   let housed = 0;
@@ -49,11 +65,12 @@ export function observe(state: SimState): TickRecord {
   let gone = 0;
   let left = 0;
   let burdened = 0;
+  const incomeMult = derived.shock.incomeMult;
   for (let h = 0; h < hh.n; h++) {
     switch (hh.status[h]) {
       case HouseholdStatus.HOUSED:
         housed++;
-        if (dw.rent[hh.dwelling[h]!]! > 0.3 * hh.income[h]!) burdened++;
+        if (dw.rent[hh.dwelling[h]!]! > 0.3 * hh.income[h]! * incomeMult) burdened++;
         break;
       case HouseholdStatus.SEARCHING:
         searching++;
@@ -82,5 +99,7 @@ export function observe(state: SimState): TickRecord {
     askingRentIndex: (100 * asking) / state.base.askingIndexBase,
     rentBurdenShare: burdened / Math.max(1, housed),
     fines: state.acc.fines,
+    vacancyTaxRevenue: zr.reduce((a, z) => a + z.vacantHeld, 0) * derived.vacancyTaxMonthly,
+    policyRate: derived.policyRate,
   };
 }

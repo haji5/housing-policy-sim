@@ -1,0 +1,53 @@
+{
+  "_doc": "Shock cards (PLAN §5.9, ADR 0009). Effects are ASSUMED magnitudes for gameplay; each lasts durationTicks months from the tick it is drawn. Codes are append-only. Multipliers compound and shifts add when cards overlap.",
+  "cards": [
+    {
+      "code": 1,
+      "id": "rateHike",
+      "name": "Interest-rate hike",
+      "text": "The Bank of Canada raises its policy rate by a full point. Builders shelve marginal projects.",
+      "durationTicks": 12,
+      "effects": { "rateShift": 1.0 }
+    },
+    {
+      "code": 2,
+      "id": "migrationSurge",
+      "name": "Migration surge",
+      "text": "More people move to the region than expected. Renter arrivals rise by 30% for a year.",
+      "durationTicks": 12,
+      "effects": { "arrivalsMult": 1.3 }
+    },
+    {
+      "code": 3,
+      "id": "recession",
+      "name": "Recession",
+      "text": "Incomes fall 5%, fewer people arrive and tourism softens for a year.",
+      "durationTicks": 12,
+      "effects": { "incomeMult": 0.95, "arrivalsMult": 0.9, "strDemandMult": 0.9 }
+    },
+    {
+      "code": 4,
+      "id": "courtChallenge",
+      "name": "Court challenge",
+      "text": "Hosts challenge the short-term rental rules in court. Enforcement is half as effective for a year.",
+      "durationTicks": 12,
+      "effects": { "detectMult": 0.5 }
+    },
+    {
+      "code": 5,
+      "id": "tourismBoom",
+      "name": "Tourism boom",
+      "text": "A strong tourist season: short-term rental demand is 25% higher for a year.",
+      "durationTicks": 12,
+      "effects": { "strDemandMult": 1.25 }
+    },
+    {
+      "code": 6,
+      "id": "wildfire",
+      "name": "Wildfire season",
+      "text": "Smoke keeps tourists away and displaced households seek housing in the region for six months.",
+      "durationTicks": 6,
+      "effects": { "strDemandMult": 0.7, "arrivalsMult": 1.1 }
+    }
+  ]
+}

@@ -14,11 +14,17 @@
  *       on the same seed over the calibration window and writes the researcher-view panel at the
  *       scenario's snapshot ticks (real units): {"id", "snapshotTicks", "zones", "observed",
  *       "hist", "none", "truncated", "incomplete"}. Used by calibration/did_recovery.py (M4).
+ *   pnpm sim playtest [--seeds 1,2,...] [--out results.json]
+ *       Plays the five balance-playtest strategies (playtest.ts) over a full term on each seed
+ *       under the game rules, against the paired no-policy run, and prints the scorecards (M5).
  */
 import { readFileSync, writeFileSync } from 'node:fs';
 import { parseArgs } from 'node:util';
 import { computeMoments, DEFAULT_PARAMS, mergeParams, researcherPanel, runSim } from './index.ts';
 import type { Moments, ParamOverrides, Params, PolicyEvent, RunOutput } from './index.ts';
+import { MANDATES, OBJECTIVES } from './index.ts';
+import type { MandateId } from './index.ts';
+import { playGame, STRATEGIES } from './playtest.ts';
 
 /** Calibration window: Jun 2022 (tick -15) to Jun 2026 (tick 33). */
 const CAL_PRE = 15;
@@ -118,6 +124,92 @@ function main(argv: string[]): void {
       outLines.push(JSON.stringify(result));
     }
     writeFileSync(values.out, outLines.join('\n') + '\n');
+    return;
+  }
+
+  if (command === 'playtest') {
+    const seeds = values.seeds.split(',').map(Number);
+    const mean = (xs: number[]) => xs.reduce((a, b) => a + b, 0) / xs.length;
+    const rows = Object.entries(STRATEGIES).map(([id, s]) => {
+      const res = seeds.map((seed) => playGame(s.play, seed, values.scenario));
+      const eff = (k: keyof (typeof res)[number]['card']['effects']) =>
+        mean(res.map((r) => r.card.effects[k]));
+      return {
+        id,
+        label: s.label,
+        effects: {
+          rentBurdenPp: eff('rentBurdenPp'),
+          stressed: eff('stressed'),
+          stressRatePp: eff('stressRatePp'),
+          completions: eff('completions'),
+          strListingsPct: eff('strListingsPct'),
+          askingRentPct: eff('askingRentPct'),
+          fiscalBalance: mean(res.map((r) => r.card.fiscalBalance)),
+          capital: mean(res.map((r) => r.card.capital)),
+        },
+        points: Object.fromEntries(
+          OBJECTIVES.map((k) => [k, mean(res.map((r) => r.card.points[k]))]),
+        ),
+        composite: Object.fromEntries(
+          (Object.keys(MANDATES) as MandateId[]).map((m) => [
+            m,
+            mean(res.map((r) => r.composite[m])),
+          ]),
+        ),
+        refusedTurns: mean(res.map((r) => r.refused)),
+        perSeedComposite: res.map((r) => r.composite),
+      };
+    });
+    // Pareto check over the six objectives (mean points).
+    const dominated = rows.map((a) =>
+      rows
+        .filter(
+          (b) =>
+            b !== a &&
+            OBJECTIVES.every((k) => b.points[k]! >= a.points[k]!) &&
+            OBJECTIVES.some((k) => b.points[k]! > a.points[k]!),
+        )
+        .map((b) => b.id),
+    );
+    const f = (v: number, d = 1) => (v >= 0 ? '+' : '') + v.toFixed(d);
+    const lines = [
+      `Playtest: ${seeds.length} seeds (${seeds.join(',')}), scenario ${values.scenario}`,
+      '',
+    ];
+    lines.push(
+      'strategy      rentBurden pp  stressed  stressRate pp  completions  STR %  askRent %  fiscal $M  capital',
+    );
+    for (const r of rows)
+      lines.push(
+        `${r.id.padEnd(12)} ${f(r.effects.rentBurdenPp, 2).padStart(13)} ${f(r.effects.stressed, 0).padStart(9)} ${f(r.effects.stressRatePp, 2).padStart(14)} ${f(r.effects.completions, 0).padStart(12)} ${f(r.effects.strListingsPct).padStart(6)} ${f(r.effects.askingRentPct, 2).padStart(10)} ${f(r.effects.fiscalBalance).padStart(10)} ${r.effects.capital.toFixed(1).padStart(8)}`,
+      );
+    lines.push('', 'Mandate scores (mean points; best per mandate marked *):');
+    lines.push(
+      'strategy     ' + (Object.keys(MANDATES) as MandateId[]).map((m) => m.padStart(14)).join(''),
+    );
+    const best = Object.fromEntries(
+      (Object.keys(MANDATES) as MandateId[]).map((m) => [
+        m,
+        rows.reduce((a, b) => (b.composite[m]! > a.composite[m]! ? b : a)).id,
+      ]),
+    );
+    for (const r of rows)
+      lines.push(
+        r.id.padEnd(12) +
+          ' ' +
+          (Object.keys(MANDATES) as MandateId[])
+            .map((m) => (f(r.composite[m]!, 2) + (best[m] === r.id ? '*' : ' ')).padStart(14))
+            .join(''),
+      );
+    lines.push('', 'Pareto dominance over the six objectives:');
+    rows.forEach((r, i) =>
+      lines.push(
+        `  ${r.id}: ${dominated[i]!.length ? 'dominated by ' + dominated[i]!.join(', ') : 'not dominated'}`,
+      ),
+    );
+    process.stdout.write(lines.join('\n') + '\n');
+    if (values.out)
+      writeFileSync(values.out, JSON.stringify({ seeds, rows, best, dominated }, null, 1));
     return;
   }
 

@@ -1,6 +1,6 @@
 /** Public entry point of the simulation core. */
 
-export const SIM_VERSION = '0.4.0';
+export const SIM_VERSION = '0.5.0';
 
 export * from './types.ts';
 export { createSim } from './create.ts';
@@ -27,3 +27,24 @@ export {
   researcherPanel,
 } from './researcher.ts';
 export type { ObservationParams, ResearcherPanel } from './researcher.ts';
+export { SHOCK_CARDS, combineShocks, shockCard } from './shocks.ts';
+export type { ShockCard } from './shocks.ts';
+export { policyRateAt } from './rates.ts';
+export { rentCapValue, upzoneMultiplier } from './systems/enforcement.ts';
+export { OBJECTIVES, outcomes, scorecard } from './metrics.ts';
+export type { Objective, Outcomes, ScoreInputs, Scorecard } from './metrics.ts';
+export {
+  MANDATES,
+  RULES,
+  commitTurn,
+  compositeScore,
+  fiscalBalance,
+  newGame,
+  quote,
+  runningCost,
+  settleTurn,
+  shockEvents,
+  shockSchedule,
+  statusQuo,
+} from './game.ts';
+export type { CooldownLever, Decision, GameState, MandateId, Quote } from './game.ts';

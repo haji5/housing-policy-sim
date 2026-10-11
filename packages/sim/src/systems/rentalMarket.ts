@@ -1,7 +1,16 @@
 import { hash32, Purpose, uniform } from '../rng.ts';
 import type { SimState } from '../types.ts';
-import { HouseholdStatus, Tenure } from '../types.ts';
+import { HouseholdStatus, RentalKind, Tenure } from '../types.ts';
 import { pickWeighted } from '../world.ts';
+import { rentCapValue } from './enforcement.ts';
+
+/** New-lease rent of dwelling d at the zone's market rent (non-market units rent below it). */
+export function newLeaseRent(state: SimState, d: number, marketRent: number): number {
+  const dw = state.dwellings;
+  const share =
+    dw.rentalKind[d] === RentalKind.NON_MARKET ? state.params.rental.nonMarketRentShare : 1;
+  return marketRent * dw.quality[d]! * share;
+}
 
 /**
  * Rental market (PLAN §5.5), M1 version.
@@ -12,7 +21,11 @@ import { pickWeighted } from '../world.ts';
  *    in a hashed random order; each takes the first affordable vacant unit (new-lease rent
  *    <= maxRentShare * income) scanning from a hashed start position.
  * 3. Asking rents adjust: d log m = kappa * (vStar - v) + drift.
- * 4. Sitting-tenant rents adjust on lease anniversaries by min(cap, phi * gap to market), never down.
+ * 4. Sitting-tenant rents adjust on lease anniversaries (ADR 0007). The model runs in real terms
+ *    and the cap is nominal: the landlord wants a nominal increase of
+ *    (1 + inflation)(1 + phi * gap) - 1, gets it clamped to [0, cap], and the real rent becomes
+ *    rent * (1 + allowed) / (1 + inflation). A cap below inflation erodes sitting rents in real
+ *    terms. Non-market units track their below-market target the same way.
  */
 export function rentalMarket(state: SimState): void {
   const { households: hh, dwellings: dw, params, seed, tick, zones } = state;
@@ -23,8 +36,10 @@ export function rentalMarket(state: SimState): void {
     kappa,
     vStar,
     phi,
-    rentCapAnnual,
+    inflationAnnual,
   } = params.rental;
+  const cap = rentCapValue(params, state.levers.rentCap);
+  const incomeMult = state.derived.shock.incomeMult;
 
   // ---- vacant units and searchers per zone
   const vacant: number[][] = Array.from({ length: nZ }, () => []);
@@ -63,12 +78,12 @@ export function rentalMarket(state: SimState): void {
     let matches = 0;
     for (const h of S) {
       if (matches >= M || V.length === 0) break;
-      const budget = maxRentShare * hh.income[h]!;
+      const budget = maxRentShare * hh.income[h]! * incomeMult;
       const start = Math.floor(uniform(seed, h, tick, Purpose.MATCH_UNIT) * V.length);
       let found = -1;
       for (let j = 0; j < V.length; j++) {
         const idx = (start + j) % V.length;
-        if (m * dw.quality[V[idx]!]! <= budget) {
+        if (newLeaseRent(state, V[idx]!, m) <= budget) {
           found = idx;
           break;
         }
@@ -78,7 +93,7 @@ export function rentalMarket(state: SimState): void {
       V[found] = V[V.length - 1]!;
       V.pop();
       dw.tenant[d] = h;
-      dw.rent[d] = m * dw.quality[d]!;
+      dw.rent[d] = newLeaseRent(state, d, m);
       dw.leaseStart[d] = tick;
       dw.due[d] = 0;
       hh.dwelling[h] = d;
@@ -107,8 +122,10 @@ export function rentalMarket(state: SimState): void {
     if (dw.tenant[d]! < 0) continue;
     const age = tick - dw.leaseStart[d]!;
     if (age <= 0 || age % 12 !== 0) continue;
-    const target = zones[dw.zone[d]!]!.marketRent * dw.quality[d]!;
+    const target = newLeaseRent(state, d, zones[dw.zone[d]!]!.marketRent);
     const gap = target / dw.rent[d]! - 1;
-    dw.rent[d]! *= 1 + Math.min(rentCapAnnual, Math.max(0, phi * gap));
+    const wanted = (1 + inflationAnnual) * (1 + phi * gap) - 1;
+    const allowed = Math.min(cap, Math.max(0, wanted));
+    dw.rent[d]! *= (1 + allowed) / (1 + inflationAnnual);
   }
 }

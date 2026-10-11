@@ -1,5 +1,6 @@
+import { shockCard } from './shocks.ts';
 import type { LeverState, PolicyEvent, StrRegimeCode } from './types.ts';
-import { StrRegime } from './types.ts';
+import { RentCap, StrRegime } from './types.ts';
 
 /**
  * Policy calendar of the Historical Bill 35 preset, in ticks from Sep 2023 (PLAN §2):
@@ -12,6 +13,11 @@ export const DEFAULT_LEVERS: Readonly<LeverState> = {
   strRegime: StrRegime.OPEN,
   enforcement: 2,
   announced: 0,
+  vacancyTax: 0,
+  rentCap: RentCap.MEDIUM,
+  upzone: [],
+  nonMarket: 0,
+  shocks: [],
 };
 
 export const POLICY_PRESETS = {
@@ -43,12 +49,39 @@ export function sortEvents(events: readonly PolicyEvent[]): PolicyEvent[] {
 
 /** Lever state in force at `tick`: defaults overridden by every event with event.tick <= tick. */
 export function leversAt(events: readonly PolicyEvent[], tick: number): LeverState {
-  const s: LeverState = { ...DEFAULT_LEVERS };
+  const s: LeverState = { ...DEFAULT_LEVERS, upzone: [], shocks: [] };
   for (const e of events) {
     if (e.tick > tick) break;
-    if (e.lever === 'strRegime') s.strRegime = clampInt(e.value, 0, 2) as StrRegimeCode;
-    else if (e.lever === 'enforcement') s.enforcement = clampInt(e.value, 0, 5);
-    else s.announced = e.value ? 1 : 0;
+    switch (e.lever) {
+      case 'strRegime':
+        s.strRegime = clampInt(e.value, 0, 2) as StrRegimeCode;
+        break;
+      case 'enforcement':
+        s.enforcement = clampInt(e.value, 0, 5);
+        break;
+      case 'announced':
+        s.announced = e.value ? 1 : 0;
+        break;
+      case 'vacancyTax':
+        s.vacancyTax = clampInt(e.value, 0, 3);
+        break;
+      case 'rentCap':
+        s.rentCap = clampInt(e.value, 0, 2);
+        break;
+      case 'upzone': {
+        const z = e.zone ?? -1;
+        if (!Number.isInteger(z) || z < 0) throw new Error('upzone event needs a zone index');
+        while (s.upzone.length <= z) s.upzone.push(0);
+        s.upzone[z] = clampInt(e.value, 0, 2);
+        break;
+      }
+      case 'nonMarket':
+        s.nonMarket = Math.max(0, Math.round(e.value));
+        break;
+      case 'shock':
+        if (tick < e.tick + shockCard(e.value).durationTicks) s.shocks.push(e.value);
+        break;
+    }
   }
   return s;
 }

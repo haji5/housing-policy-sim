@@ -23,6 +23,10 @@ export function checkInvariants(state: SimState): string[] {
       push(`dwelling ${d}: principal residence in tenure ${t}`);
     if (!dw.principalRes[d] && t === Tenure.OWNER_OCC)
       push(`dwelling ${d}: investor unit owner-occupied`);
+    if (t === Tenure.CONSTRUCTION && dw.completeTick[d]! < state.tick)
+      push(`dwelling ${d}: construction past its completion tick`);
+    if (dw.rentalKind[d] && t !== Tenure.LTR && t !== Tenure.CONSTRUCTION)
+      push(`dwelling ${d}: purpose-built or non-market rental in tenure ${t}`);
     const h = dw.tenant[d]!;
     if (h >= 0) {
       if (t !== Tenure.LTR) push(`dwelling ${d}: tenant in non-LTR tenure ${t}`);

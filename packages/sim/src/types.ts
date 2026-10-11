@@ -41,6 +41,31 @@ export const RegStatus = {
   EXEMPT_CLAIM: 2,
 } as const;
 
+/**
+ * Who owns a dwelling's rental use (ADR 0008). Investor units make the STR/LTR/VACANT/SELL
+ * choice; purpose-built rentals (completed rental construction) and non-market homes are always
+ * long-term rentals, the latter at a below-market rent.
+ */
+export const RentalKind = {
+  INVESTOR: 0,
+  NON_MARKET: 1,
+  PURPOSE_BUILT: 2,
+} as const;
+
+/** Rent-increase cap lever (PLAN §5.8): nominal annual caps in params.rental. */
+export const RentCap = {
+  LOW: 0,
+  MEDIUM: 1,
+  HIGH: 2,
+} as const;
+
+/** Upzoning lever per zone: starts multipliers in params.dev, after a permit delay. */
+export const Upzone = {
+  NONE: 0,
+  MODERATE: 1,
+  AGGRESSIVE: 2,
+} as const;
+
 export const StrRegime = {
   OPEN: 0,
   PRINCIPAL_RESIDENCE: 1,
@@ -137,6 +162,15 @@ export interface Params {
      * owner-occupied home is bought by an investor, per unit of proportional STR profit gain.
      */
     investorEntry: number;
+    /** Starting share of investor-owned units held vacant off the market (calibrated). */
+    vacantHeldShare: number;
+    /** Annual share of investor units sold to owner-occupiers in the steady state (calibrated). */
+    sellRateAnnual: number;
+    /**
+     * Years of expected rent growth foregone that investors weigh when a nominal rent cap is
+     * below inflation plus expected real market growth (cuts expected LTR revenue).
+     */
+    capPenaltyYears: number;
   };
   enforcement: {
     /** Monthly detection probability ceiling. */
@@ -182,6 +216,39 @@ export interface Params {
     arrivalRentElasticity: number;
     /** Semi-elasticity of arrivals to the LTR vacancy gap (v - vStar): damping of the rent cycle. */
     arrivalVacancySemiElasticity: number;
+    /** General (all-items) inflation, annual. The model runs in real terms; caps are nominal. */
+    inflationAnnual: number;
+    /** Nominal annual rent-increase cap under the Low and High settings (Medium = rentCapAnnual). */
+    rentCapLow: number;
+    rentCapHigh: number;
+    /** Tenants whose rent is below market move less: moveHazard * exp(-k * discount). */
+    mobilityDiscountElasticity: number;
+    /** Rent of non-market units as a share of the zone's market rent. */
+    nonMarketRentShare: number;
+  };
+  dev: {
+    /** Baseline housing starts per year as a share of each zone's starting stock. */
+    startsAnnualShare: number;
+    /** Construction lag, months, uniform on [lagMin, lagMax]. */
+    lagMin: number;
+    lagMax: number;
+    /** Elasticity of starts to the zone's real asking rent (relative to its starting level). */
+    rentElasticity: number;
+    /** Semi-elasticity of starts to the policy rate, per percentage point above rateRef. */
+    rateSemiElasticity: number;
+    /** Policy rate (%) at which starts run at their baseline. */
+    rateRef: number;
+    /** Starts multipliers for Moderate and Aggressive upzoning (after the permit delay). */
+    upzoneModerate: number;
+    upzoneAggressive: number;
+    /** Months between an upzoning decision and the new zoning being usable. */
+    permitDelayTicks: number;
+    /** Elasticity of rental starts to the rent-cap factor on expected LTR revenue. */
+    capElasticity: number;
+  };
+  fiscal: {
+    /** Assessed value of a typical home, $k (vacancy tax base). */
+    assessedValue: number;
   };
   households: {
     kDouble: number;
@@ -196,18 +263,41 @@ export interface Params {
 // ---------------------------------------------------------------------------------------------
 // Policy
 
-export type Lever = 'strRegime' | 'enforcement' | 'announced';
+export type Lever =
+  | 'strRegime'
+  | 'enforcement'
+  | 'announced'
+  | 'vacancyTax'
+  | 'rentCap'
+  | 'upzone'
+  | 'nonMarket'
+  | 'shock';
 
+/**
+ * A change taking effect at `tick`. `zone` is required for 'upzone'. 'shock' events carry a
+ * shock-card code (shocks.ts) as `value`; their effects last for the card's duration.
+ */
 export interface PolicyEvent {
   tick: number;
   lever: Lever;
   value: number;
+  zone?: number;
 }
 
 export interface LeverState {
   strRegime: StrRegimeCode;
   enforcement: number;
   announced: number;
+  /** Vacancy tax, percent of assessed value per year (0..3). */
+  vacancyTax: number;
+  /** RentCap code. */
+  rentCap: number;
+  /** Upzone code per zone (missing = NONE). */
+  upzone: number[];
+  /** Non-market homes started per quarter, real units. */
+  nonMarket: number;
+  /** Shock-card codes in force. */
+  shocks: number[];
 }
 
 // ---------------------------------------------------------------------------------------------
@@ -215,6 +305,12 @@ export interface LeverState {
 
 export interface Dwellings {
   n: number;
+  /**
+   * Stable RNG key of each dwelling: its index for the starting stock, a birth key (start tick,
+   * zone, order) for construction. Keeps draws common across counterfactual runs even when the
+   * number of starts differs (CRN).
+   */
+  key: Int32Array;
   zone: Uint8Array;
   tenure: Uint8Array;
   principalRes: Uint8Array;
@@ -231,6 +327,14 @@ export interface Dwellings {
   hostClass: Uint8Array;
   /** 1 if the host would claim "Exempt" on the registry (fixed draw). */
   claimsExempt: Uint8Array;
+  /** Tick at which a CONSTRUCTION unit completes. */
+  completeTick: Int32Array;
+  /** 1 for units under construction that are destined for owner-occupiers. */
+  forOwner: Uint8Array;
+  /** RentalKind code (0 for the starting stock and owner-occupied construction). */
+  rentalKind: Uint8Array;
+  /** Tick at which an owner-occupied home is bought by a small investor (geometric waiting time). */
+  buyTick: Int32Array;
 }
 
 export interface Households {
@@ -259,6 +363,16 @@ export interface ZoneState {
   /** Alternative-specific constant for principal-residence listing (vs not listing). */
   ascPr: number;
   baselineServedStr: number;
+  /** ASCs of holding an investor unit vacant and of selling it, relative to LTR. */
+  ascVac: number;
+  ascSell: number;
+  /** Monthly probability an owner-occupied, non-listing home is bought by an investor. */
+  buyProb: number;
+  /** Baseline starts per month (agents) and the asking rent they are referenced to. */
+  startsBase: number;
+  rentRef: number;
+  /** Share of completions that become rentals (the zone's renter share of stock). */
+  rentalShare: number;
 }
 
 export interface Derived {
@@ -268,6 +382,25 @@ export interface Derived {
   ltrNet: number[];
   /** LTR vacancy rate per zone (vacant LTR / all LTR). */
   vacancy: number[];
+  /** Policy rate (%) this tick, including shock adjustments. */
+  policyRate: number;
+  /** Vacancy tax per held-vacant unit, $k/month. */
+  vacancyTaxMonthly: number;
+  /** Upzoning starts multiplier per zone in force this tick (after the permit delay). */
+  upzoneMult: number[];
+  /** Expected-LTR-revenue factor from the rent cap (1 = cap does not bind). */
+  capFactor: number[];
+  /** Shock effects in force. */
+  shock: ShockEffects;
+}
+
+/** Multipliers and shifts applied by active shock cards (1 / 0 = no effect). */
+export interface ShockEffects {
+  rateShift: number;
+  arrivalsMult: number;
+  incomeMult: number;
+  detectMult: number;
+  strDemandMult: number;
 }
 
 export interface TickRecord {
@@ -283,6 +416,13 @@ export interface TickRecord {
     strRegistered: number;
     strExemptClaim: number;
     strMulti: number;
+    vacantHeld: number;
+    construction: number;
+    starts: number;
+    completions: number;
+    sales: number;
+    nonMarket: number;
+    dwellings: number;
   }[];
   housed: number;
   searching: number;
@@ -293,6 +433,8 @@ export interface TickRecord {
   askingRentIndex: number;
   rentBurdenShare: number;
   fines: number;
+  vacancyTaxRevenue: number;
+  policyRate: number;
 }
 
 export interface SimState {
@@ -317,10 +459,18 @@ export interface SimState {
     arrivalsPerMonth: number;
     /** Initial renter households per zone: fixed Laspeyres weights and arrival zone preferences. */
     renterWeights: number[];
+    /** Expected rental completions per month at reference conditions (arrivals grow with them). */
+    rentalCompletionsPerMonth: number;
   };
   history: TickRecord[];
   /** Per-tick accumulators reset at the start of each tick. */
-  acc: { fines: number };
+  acc: {
+    fines: number;
+    vacancyTax: number;
+    starts: number[];
+    completions: number[];
+    sales: number[];
+  };
 }
 
 // ---------------------------------------------------------------------------------------------
@@ -350,6 +500,13 @@ export interface ZoneSeries {
   strRegistered: number[];
   strExemptClaim: number[];
   strMulti: number[];
+  vacantHeld: number[];
+  construction: number[];
+  starts: number[];
+  completions: number[];
+  sales: number[];
+  nonMarket: number[];
+  dwellings: number[];
 }
 
 export interface RunOutput {
@@ -378,5 +535,7 @@ export interface RunOutput {
     askingRentIndex: number[];
     rentBurdenShare: number[];
     fines: number[];
+    vacancyTaxRevenue: number[];
+    policyRate: number[];
   };
 }

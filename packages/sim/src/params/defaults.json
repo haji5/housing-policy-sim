@@ -15,7 +15,10 @@
     "multiComplianceShift": 0,
     "commercialShareOfMulti": 0.5,
     "commercialBetaMult": 1.5,
-    "investorEntry": 0
+    "investorEntry": 0,
+    "vacantHeldShare": 0.03,
+    "sellRateAnnual": 0.05,
+    "capPenaltyYears": 2
   },
   "enforcement": {
     "detectMax": 0.3,
@@ -44,12 +47,32 @@
     "qualitySpread": 0.25,
     "sittingDiscount": 0.15,
     "arrivalRentElasticity": 2,
-    "arrivalVacancySemiElasticity": 25
+    "arrivalVacancySemiElasticity": 25,
+    "inflationAnnual": 0.0265,
+    "rentCapLow": 0.01,
+    "rentCapHigh": 0.06,
+    "mobilityDiscountElasticity": 3,
+    "nonMarketRentShare": 0.7
   },
   "households": {
     "kDouble": 3,
     "kLeave": 12,
     "incomeMedian": 4.6,
     "incomeSigma": 0.6
+  },
+  "dev": {
+    "startsAnnualShare": 0.022,
+    "lagMin": 18,
+    "lagMax": 30,
+    "rentElasticity": 1,
+    "rateSemiElasticity": 0.1,
+    "rateRef": 2.75,
+    "upzoneModerate": 1.4,
+    "upzoneAggressive": 2,
+    "permitDelayTicks": 12,
+    "capElasticity": 3
+  },
+  "fiscal": {
+    "assessedValue": 900
   }
 }

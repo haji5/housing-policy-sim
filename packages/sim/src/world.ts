@@ -11,7 +11,8 @@ import type {
   SimState,
   ZoneState,
 } from './types.ts';
-import { HostClass, HouseholdStatus, Tenure } from './types.ts';
+import { HostClass, HouseholdStatus, RentalKind, Tenure } from './types.ts';
+import { NO_SHOCK } from './shocks.ts';
 
 const NO_ONE = -1;
 
@@ -24,8 +25,17 @@ export function strNetRevenue(params: Params, occupancy: number, nightlyRate: nu
   return occupancy * nightlyRate * 30 * (1 - params.host.strCostShare) - params.host.strUpkeep;
 }
 
-export function ltrNetRevenue(params: Params, marketRent: number, vacancy: number): number {
-  return marketRent * (1 - vacancy) - params.host.ltrUpkeep;
+/**
+ * Expected monthly LTR net revenue. `capFactor` < 1 when a nominal rent cap below inflation plus
+ * expected real market growth erodes future rent from a sitting tenant (ADR 0007).
+ */
+export function ltrNetRevenue(
+  params: Params,
+  marketRent: number,
+  vacancy: number,
+  capFactor = 1,
+): number {
+  return marketRent * (1 - vacancy) * capFactor - params.host.ltrUpkeep;
 }
 
 export function allocHouseholds(cap: number): Households {
@@ -39,24 +49,141 @@ export function allocHouseholds(cap: number): Households {
   };
 }
 
+type AnyArray = Float64Array | Int32Array | Uint8Array | Uint16Array;
+
+function grow<T extends AnyArray>(a: T, cap: number, fill?: number): T {
+  const b = new (a.constructor as new (n: number) => T)(cap);
+  if (fill !== undefined) b.fill(fill);
+  b.set(a);
+  return b;
+}
+
 /** Ensure room for `extra` more households, doubling capacity when needed. */
 export function reserveHouseholds(hh: Households, extra: number): void {
   if (hh.n + extra <= hh.income.length) return;
   const cap = Math.max(hh.income.length * 2, hh.n + extra);
-  const grow = <T extends Float64Array | Int32Array | Uint8Array | Uint16Array>(
-    a: T,
-    fill?: number,
-  ): T => {
-    const b = new (a.constructor as new (n: number) => T)(cap);
-    if (fill !== undefined) b.fill(fill);
-    b.set(a);
-    return b;
+  hh.income = grow(hh.income, cap);
+  hh.dwelling = grow(hh.dwelling, cap, NO_ONE);
+  hh.status = grow(hh.status, cap);
+  hh.searchMonths = grow(hh.searchMonths, cap);
+  hh.prefZone = grow(hh.prefZone, cap);
+}
+
+export function allocDwellings(cap: number): Dwellings {
+  return {
+    n: 0,
+    key: new Int32Array(cap),
+    zone: new Uint8Array(cap),
+    tenure: new Uint8Array(cap),
+    principalRes: new Uint8Array(cap),
+    compliant: new Uint8Array(cap),
+    due: new Uint8Array(cap),
+    quality: new Float64Array(cap),
+    rent: new Float64Array(cap),
+    tenant: new Int32Array(cap).fill(NO_ONE),
+    leaseStart: new Int32Array(cap),
+    registered: new Uint8Array(cap),
+    hostClass: new Uint8Array(cap),
+    claimsExempt: new Uint8Array(cap),
+    completeTick: new Int32Array(cap),
+    forOwner: new Uint8Array(cap),
+    rentalKind: new Uint8Array(cap),
+    buyTick: new Int32Array(cap),
   };
-  hh.income = grow(hh.income);
-  hh.dwelling = grow(hh.dwelling, NO_ONE);
-  hh.status = grow(hh.status);
-  hh.searchMonths = grow(hh.searchMonths);
-  hh.prefZone = grow(hh.prefZone);
+}
+
+/** Ensure room for `extra` more dwellings (construction), doubling capacity when needed. */
+export function reserveDwellings(dw: Dwellings, extra: number): void {
+  if (dw.n + extra <= dw.zone.length) return;
+  const cap = Math.max(dw.zone.length * 2, dw.n + extra);
+  dw.key = grow(dw.key, cap);
+  dw.zone = grow(dw.zone, cap);
+  dw.tenure = grow(dw.tenure, cap);
+  dw.principalRes = grow(dw.principalRes, cap);
+  dw.compliant = grow(dw.compliant, cap);
+  dw.due = grow(dw.due, cap);
+  dw.quality = grow(dw.quality, cap);
+  dw.rent = grow(dw.rent, cap);
+  dw.tenant = grow(dw.tenant, cap, NO_ONE);
+  dw.leaseStart = grow(dw.leaseStart, cap);
+  dw.registered = grow(dw.registered, cap);
+  dw.hostClass = grow(dw.hostClass, cap);
+  dw.claimsExempt = grow(dw.claimsExempt, cap);
+  dw.completeTick = grow(dw.completeTick, cap);
+  dw.forOwner = grow(dw.forOwner, cap);
+  dw.rentalKind = grow(dw.rentalKind, cap);
+  dw.buyTick = grow(dw.buyTick, cap);
+}
+
+/**
+ * A home becomes owner-occupied at `tick`: draw when a small investor will buy it. Equivalent to a
+ * monthly purchase probability p (geometric waiting time), but drawn once instead of every month.
+ */
+export function scheduleBuy(state: SimState, d: number, tick: number): void {
+  const dw = state.dwellings;
+  const p = state.zones[dw.zone[d]!]!.buyProb;
+  if (!(p > 0)) {
+    dw.buyTick[d] = 0x7fffffff;
+    return;
+  }
+  const u = uniform(state.seed, dw.key[d]!, tick, Purpose.BUY);
+  const wait = p >= 1 ? 1 : Math.floor(Math.log(u) / Math.log(1 - p)) + 1;
+  dw.buyTick[d] = Math.min(0x7fffffff, tick + wait);
+}
+
+/** Fixed per-dwelling draws shared by every new dwelling (quality, exempt-claim trait). */
+export function initDwellingTraits(dw: Dwellings, d: number, params: Params, seed: number): void {
+  const s = params.rental.qualitySpread;
+  const k = dw.key[d]!;
+  dw.claimsExempt[d] =
+    uniform(seed, k, 0, Purpose.INIT_EXEMPT_CLAIM) < params.enforcement.exemptClaimShare ? 1 : 0;
+  dw.quality[d] = 1 - s + 2 * s * uniform(seed, k, 0, Purpose.INIT_QUALITY);
+}
+
+/**
+ * RNG key of the i-th unit started in zone `zi` at `tick` (bit 30 set, so it never collides with
+ * a starting-stock index; bit 29 marks non-market starts).
+ */
+export function birthKey(tick: number, zi: number, i: number, nonMarket: boolean): number {
+  return (
+    (1 << 30) |
+    (nonMarket ? 1 << 29 : 0) |
+    (((tick + 512) & 0x3ff) << 19) |
+    ((zi & 0xff) << 11) |
+    (i & 0x7ff)
+  );
+}
+
+/**
+ * Add a unit under construction in zone `zi`, completing at `completeTick`, for an owner-occupier
+ * or as a rental of the given RentalKind (purpose-built or non-market).
+ */
+export function addConstruction(
+  state: SimState,
+  zi: number,
+  completeTick: number,
+  forOwner: boolean,
+  rentalKind: number,
+  key: number,
+): number {
+  const dw = state.dwellings;
+  reserveDwellings(dw, 1);
+  const d = dw.n++;
+  dw.key[d] = key;
+  dw.zone[d] = zi;
+  dw.tenure[d] = Tenure.CONSTRUCTION;
+  dw.principalRes[d] = 0;
+  dw.hostClass[d] = HostClass.SINGLE;
+  dw.compliant[d] =
+    uniform(state.seed, key, 0, Purpose.HOST_COMPLIANT) <
+    classCompliance(state.params, HostClass.SINGLE)
+      ? 1
+      : 0;
+  dw.completeTick[d] = completeTick;
+  dw.forOwner[d] = forOwner ? 1 : 0;
+  dw.rentalKind[d] = forOwner ? RentalKind.INVESTOR : rentalKind;
+  initDwellingTraits(dw, d, state.params, state.seed);
+  return d;
 }
 
 export function drawIncome(params: Params, seed: number, hhId: number): number {
@@ -86,10 +213,17 @@ export function pickWeighted(weights: readonly number[], u: number): number {
   return weights.length - 1;
 }
 
+/** Construction lag in months, uniform on the integers lagMin..lagMax. */
+export function drawLag(params: Params, u: number): number {
+  const { lagMin, lagMax } = params.dev;
+  return lagMin + Math.min(lagMax - lagMin, Math.floor(u * (lagMax - lagMin + 1)));
+}
+
 /**
  * Build the initial world. Counts come from the scenario (real units x params.scale). The
  * alternative-specific constants and matching efficiencies are solved here so that, with no
- * policy change, the starting state is a flow-balanced steady state (see ADR 0002).
+ * policy change, the starting state is approximately flow-balanced (ADRs 0002, 0007); spin-up
+ * (ADR 0005) then settles them in the model's own steady state.
  */
 export function buildWorld(config: RunConfig): SimState {
   const scenario =
@@ -97,9 +231,14 @@ export function buildWorld(config: RunConfig): SimState {
   const params = config.params;
   const seed = config.seed >>> 0;
   const sc = params.scale;
-  const startTick = -Math.max(0, Math.floor(config.preTicks ?? 0));
+  // The world starts at its first simulated tick: before the pre-ticks and the spin-up (ADR 0005),
+  // so every scheduled event (pipeline completions, purchases, leases) is on the same clock.
+  const spinUp = Math.max(0, Math.floor(scenario.spinUpMonths ?? 0));
+  const startTick = -Math.max(0, Math.floor(config.preTicks ?? 0)) - spinUp;
   const nZones = scenario.zones.length;
   if (nZones > 255) throw new Error('At most 255 zones');
+  const { lagMin, lagMax, startsAnnualShare } = params.dev;
+  const meanLag = (lagMin + lagMax) / 2;
 
   // ---- per-zone counts
   const plan = scenario.zones.map((z, zi) => {
@@ -109,13 +248,16 @@ export function buildWorld(config: RunConfig): SimState {
     const nInvStr = nStr - nPrStr;
     const nOcc = Math.round(z.renterHouseholds * sc);
     const nVac = Math.round((nOcc * params.rental.vStar) / (1 - params.rental.vStar));
-    const nOwner = nD - nPrStr - nInvStr - nOcc - nVac;
+    const nHeld = Math.round(params.host.vacantHeldShare * (nOcc + nVac + nInvStr));
+    const nOwner = nD - nPrStr - nInvStr - nOcc - nVac - nHeld;
     if (nOwner < 0)
       throw new Error(`Zone ${zi} (${z.name}): more STR + rental units than dwellings`);
-    return { nD, nPrStr, nInvStr, nOcc, nVac, nOwner };
+    const startsBase = (startsAnnualShare * nD) / 12;
+    return { nD, nPrStr, nInvStr, nOcc, nVac, nHeld, nOwner, startsBase };
   });
   const totalD = plan.reduce((a, p) => a + p.nD, 0);
   const totalOcc = plan.reduce((a, p) => a + p.nOcc, 0);
+  const pipelineGuess = Math.ceil(plan.reduce((a, p) => a + p.startsBase * meanLag * 1.5, 0));
   // Multi-listing hosts: a share m of investor units, chosen so that the multi-host share of all
   // starting listings matches the scenario (PR hosts are single by definition).
   const totalStr = plan.reduce((a, p) => a + p.nPrStr + p.nInvStr, 0);
@@ -126,46 +268,29 @@ export function buildWorld(config: RunConfig): SimState {
       : Math.min(1, (scenario.multiHostShare * totalStr) / totalInvStr);
   const nSearch0 = Math.round(totalOcc * scenario.initialSearchingShare);
 
-  const dw: Dwellings = {
-    n: totalD,
-    zone: new Uint8Array(totalD),
-    tenure: new Uint8Array(totalD),
-    principalRes: new Uint8Array(totalD),
-    compliant: new Uint8Array(totalD),
-    due: new Uint8Array(totalD),
-    quality: new Float64Array(totalD),
-    rent: new Float64Array(totalD),
-    tenant: new Int32Array(totalD).fill(NO_ONE),
-    leaseStart: new Int32Array(totalD),
-    registered: new Uint8Array(totalD),
-    hostClass: new Uint8Array(totalD),
-    claimsExempt: new Uint8Array(totalD),
-  };
+  const dw = allocDwellings(totalD + pipelineGuess + 1024);
   const hh = allocHouseholds((totalOcc + nSearch0) * 3 + 1024);
 
-  const s = params.rental.qualitySpread;
-  let d = 0;
   plan.forEach((p, zi) => {
     const zspec = scenario.zones[zi]!;
     const put = (count: number, tenure: number, pr: boolean) => {
-      for (let k = 0; k < count; k++, d++) {
+      for (let k = 0; k < count; k++) {
+        const d = dw.n++;
+        dw.key[d] = d;
         dw.zone[d] = zi;
         dw.tenure[d] = tenure;
         dw.principalRes[d] = pr ? 1 : 0;
         assignHostClass(dw, d, pr, multiShareInv, params, seed);
-        dw.claimsExempt[d] =
-          uniform(seed, d, 0, Purpose.INIT_EXEMPT_CLAIM) < params.enforcement.exemptClaimShare
-            ? 1
-            : 0;
-        dw.quality[d] = 1 - s + 2 * s * uniform(seed, d, 0, Purpose.INIT_QUALITY);
+        initDwellingTraits(dw, d, params, seed);
       }
     };
     put(p.nOwner, Tenure.OWNER_OCC, true);
     put(p.nPrStr, Tenure.STR, true);
     put(p.nInvStr, Tenure.STR, false);
-    const occStart = d;
+    const occStart = dw.n;
     put(p.nOcc, Tenure.LTR, false);
     put(p.nVac, Tenure.LTR, false);
+    put(p.nHeld, Tenure.VACANT, false);
     // Sitting tenants: rent at or somewhat below market; staggered lease anniversaries.
     for (let k = occStart; k < occStart + p.nOcc; k++) {
       const h = hh.n++;
@@ -177,6 +302,32 @@ export function buildWorld(config: RunConfig): SimState {
       hh.dwelling[h] = k;
       hh.status[h] = HouseholdStatus.HOUSED;
       hh.prefZone[h] = zi;
+    }
+  });
+  // Units under construction at the start: a steady-state pipeline (lags length-biased, ages
+  // uniform), so completions flow from the first month.
+  plan.forEach((p, zi) => {
+    const zspec = scenario.zones[zi]!;
+    const rentalShare = zspec.renterHouseholds / Math.max(1, zspec.dwellings);
+    const count = Math.round(p.startsBase * meanLag);
+    for (let k = 0; k < count; k++) {
+      const d = dw.n++;
+      dw.key[d] = d;
+      const u = uniform(seed, d, 0, Purpose.INIT_PIPELINE, 0);
+      const lag = Math.sqrt(lagMin * lagMin + u * (lagMax * lagMax - lagMin * lagMin));
+      const remaining = Math.max(1, Math.ceil(lag * uniform(seed, d, 0, Purpose.INIT_PIPELINE, 1)));
+      const forOwner = uniform(seed, d, 0, Purpose.INIT_PIPELINE, 2) >= rentalShare;
+      dw.zone[d] = zi;
+      dw.tenure[d] = Tenure.CONSTRUCTION;
+      dw.hostClass[d] = HostClass.SINGLE;
+      dw.compliant[d] =
+        uniform(seed, d, 0, Purpose.HOST_COMPLIANT) < classCompliance(params, HostClass.SINGLE)
+          ? 1
+          : 0;
+      dw.completeTick[d] = startTick + remaining;
+      dw.forOwner[d] = forOwner ? 1 : 0;
+      dw.rentalKind[d] = forOwner ? RentalKind.INVESTOR : RentalKind.PURPOSE_BUILT;
+      initDwellingTraits(dw, d, params, seed);
     }
   });
 
@@ -193,6 +344,7 @@ export function buildWorld(config: RunConfig): SimState {
   // ---- zone state, steady-state constants
   const turnover = params.rental.moveHazard + params.rental.exitHazard;
   const r = params.host.pReview;
+  const sigma = params.host.gumbelScale;
   const psi = nZones > 1 ? params.rental.searchOtherZoneProb : 0;
   const searchersByPref = new Array<number>(nZones).fill(0);
   for (let h = 0; h < hh.n; h++)
@@ -204,17 +356,25 @@ export function buildWorld(config: RunConfig): SimState {
     const strDemand = (nStr * z.occupancy) / (params.str.occMax - z.occupancy);
     const vac0 = p.nVac / Math.max(1, p.nOcc + p.nVac);
     const strNet0 = strNetRevenue(params, z.occupancy, z.nightlyRate);
-    const dNet = strNet0 - ltrNetRevenue(params, z.marketRent, vac0);
-    // Flow balance for investor units: inflow to STR = P (h*O + r*V), outflow = r*S*(1-P).
-    const pStar = (r * p.nInvStr) / (turnover * p.nOcc + r * p.nVac + r * p.nInvStr);
+    const ltrNet0 = ltrNetRevenue(params, z.marketRent, vac0);
+    // Flow balance for investor units (ADR 0007). Reviewers per month: r (S + V + H) + h O. Each
+    // stock is stationary when the share of reviewers choosing it equals its outflow share.
+    const inv = p.nInvStr + p.nOcc + p.nVac + p.nHeld;
+    const reviewers = Math.max(1, r * (p.nInvStr + p.nVac + p.nHeld) + turnover * p.nOcc);
+    const pStr = Math.max(1e-6, (r * p.nInvStr) / reviewers);
+    const pHeld = Math.max(1e-6, (r * p.nHeld) / reviewers);
+    const pSell = Math.max(1e-6, ((params.host.sellRateAnnual / 12) * inv) / reviewers);
+    const pLtr = Math.max(0.05, 1 - pStr - pHeld - pSell);
     const ascStr = [0, 1, 2].map(
-      (c) => params.host.gumbelScale * logit(pStar) - classBeta(params, c) * dNet,
+      (c) => sigma * Math.log(pStr / pLtr) - classBeta(params, c) * (strNet0 - ltrNet0),
     );
+    const ascVac = sigma * Math.log(pHeld / pLtr) + classBeta(params, 0) * ltrNet0;
+    const ascSell = sigma * Math.log(pSell / pLtr) + classBeta(params, 0) * ltrNet0;
+    // Purchases from owner-occupiers balance sales at the start.
+    const buyProb = ((params.host.sellRateAnnual / 12) * inv) / Math.max(1, p.nOwner);
     // Principal-residence hosts review symmetrically, so the stationary share equals P.
     const sPr = p.nPrStr / Math.max(1, p.nPrStr + p.nOwner);
-    const ascPr =
-      params.host.gumbelScale * logit(sPr) -
-      params.host.prBeta * strNetRevenue(params, z.occupancy, z.nightlyRate);
+    const ascPr = sigma * logit(sPr) - params.host.prBeta * strNet0;
     // Matching efficiency so that matches balance vacancy creation at the start.
     // Searchers from other zones arrive in proportion to this zone's renter stock.
     const wTot = renterWeights.reduce((a, b) => a + b, 0);
@@ -238,6 +398,12 @@ export function buildWorld(config: RunConfig): SimState {
       ascStr,
       ascPr,
       baselineServedStr: nStr * z.occupancy,
+      ascVac,
+      ascSell,
+      buyProb,
+      startsBase: p.startsBase,
+      rentRef: z.marketRent,
+      rentalShare: z.renterHouseholds / Math.max(1, z.dwellings),
     };
   });
 
@@ -263,7 +429,18 @@ export function buildWorld(config: RunConfig): SimState {
     zones,
     dwellings: dw,
     households: hh,
-    derived: { coveredNow: [], detectProb: 0, strNet: [], ltrNet: [], vacancy: [] },
+    derived: {
+      coveredNow: [],
+      detectProb: 0,
+      strNet: [],
+      ltrNet: [],
+      vacancy: [],
+      policyRate: 0,
+      vacancyTaxMonthly: 0,
+      upzoneMult: [],
+      capFactor: [],
+      shock: { ...NO_SHOCK },
+    },
     base: {
       cpiQualityRent: qRent / Math.max(1, nRented),
       askingRent: askingBase,
@@ -271,12 +448,25 @@ export function buildWorld(config: RunConfig): SimState {
       askingIndexBase: askingBase,
       arrivalsPerMonth: baseArrivals(params, scenario, renterWeights, nRented),
       renterWeights,
+      rentalCompletionsPerMonth: zones.reduce((a, z) => a + z.startsBase * z.rentalShare, 0),
     },
     history: [],
-    acc: { fines: 0 },
+    acc: emptyAcc(nZones),
   };
   updateDerived(state);
+  for (let d = 0; d < dw.n; d++)
+    if (dw.tenure[d] === Tenure.OWNER_OCC) scheduleBuy(state, d, startTick);
   return state;
+}
+
+export function emptyAcc(nZones: number): SimState['acc'] {
+  return {
+    fines: 0,
+    vacancyTax: 0,
+    starts: new Array<number>(nZones).fill(0),
+    completions: new Array<number>(nZones).fill(0),
+    sales: new Array<number>(nZones).fill(0),
+  };
 }
 
 /**
@@ -325,13 +515,14 @@ export function assignHostClass(
   seed: number,
 ): void {
   let c: number = HostClass.SINGLE;
-  if (!principalRes && uniform(seed, d, 0, Purpose.INIT_CLASS, 0) < multiShareInv) {
+  const k = dw.key[d]!;
+  if (!principalRes && uniform(seed, k, 0, Purpose.INIT_CLASS, 0) < multiShareInv) {
     c =
-      uniform(seed, d, 0, Purpose.INIT_CLASS, 1) < params.host.commercialShareOfMulti
+      uniform(seed, k, 0, Purpose.INIT_CLASS, 1) < params.host.commercialShareOfMulti
         ? HostClass.COMMERCIAL
         : HostClass.MULTI;
   }
   dw.hostClass[d] = c;
   dw.compliant[d] =
-    uniform(seed, d, 0, Purpose.HOST_COMPLIANT) < classCompliance(params, c) ? 1 : 0;
+    uniform(seed, k, 0, Purpose.HOST_COMPLIANT) < classCompliance(params, c) ? 1 : 0;
 }
