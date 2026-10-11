@@ -1,0 +1,157 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta
+      name="description"
+      content="About Zoned Out: what the housing-policy simulator is and is not, data sources, licences and privacy."
+    />
+    <title>About Zoned Out</title>
+    <style>
+      :root {
+        --bg: #f7f5f0;
+        --panel: #ffffff;
+        --ink: #1b1b1b;
+        --muted: #5c5c5c;
+        --line: #d8d4cc;
+        --accent: #0072b2;
+        --focus: #d55e00;
+        font-family:
+          system-ui,
+          -apple-system,
+          'Segoe UI',
+          sans-serif;
+        font-size: 16px;
+        line-height: 1.5;
+        color: var(--ink);
+        background: var(--bg);
+      }
+      body {
+        margin: 0;
+        background: var(--bg);
+      }
+      main {
+        max-width: 46rem;
+        margin: 0 auto;
+        padding: 1.5rem 1rem 3rem;
+      }
+      section {
+        background: var(--panel);
+        border: 1px solid var(--line);
+        padding: 0.5rem 1.25rem 1rem;
+        margin: 1rem 0;
+      }
+      h1 {
+        font-size: 1.6rem;
+      }
+      h2 {
+        font-size: 1.15rem;
+        margin: 0.75rem 0 0.25rem;
+      }
+      a {
+        color: #005a8c;
+      }
+      :focus-visible {
+        outline: 3px solid var(--focus);
+        outline-offset: 2px;
+      }
+      .muted {
+        color: var(--muted);
+      }
+      dt {
+        font-weight: 600;
+        margin-top: 0.5rem;
+      }
+      dd {
+        margin: 0;
+      }
+    </style>
+  </head>
+  <body>
+    <main>
+      <p><a href="./">← Back to the game</a></p>
+      <h1>About Zoned Out</h1>
+      <p>
+        Zoned Out is a browser game about housing policy in a stylised Greater Victoria, BC. Under
+        the game is an agent-based model of short-term rentals, long-term rentals, owners and
+        developers, calibrated to the measured effects of BC's 2023 short-term rental law (Bill 35)
+        from an earlier study,
+        <a href="https://github.com/haji5/bc-str-ban-analysis">bc-str-ban-analysis</a>
+        (<a href="https://haji5.github.io/bc-str-ban-analysis/">dashboard</a>).
+      </p>
+
+      <section aria-labelledby="not-h">
+        <h2 id="not-h">What it is not</h2>
+        <p>
+          It is a simplified, calibrated model, not a forecast and not a faithful digital twin of
+          Victoria. It is <strong>not policy advice</strong>. It is
+          <strong>not affiliated with or commissioned by the Government of British Columbia</strong
+          >. Effects marked "Assumed" in the game rest on modelling assumptions, not measurements.
+          The real data show that the rule cut short-term rental listings, while its effect on rents
+          was too small to detect.
+        </p>
+      </section>
+
+      <section aria-labelledby="privacy-h">
+        <h2 id="privacy-h">Privacy</h2>
+        <p>
+          No analytics, no cookies, no accounts and no server: the whole simulation runs in your
+          browser, and the page loads files only from this site. One setting is kept in your
+          browser's local storage: whether you skipped the tutorial.
+        </p>
+      </section>
+
+      <section aria-labelledby="data-h">
+        <h2 id="data-h">Data and attribution</h2>
+        <p>
+          Only aggregate calibration targets are used; no raw listing data is included. Sources,
+          through the first project or directly:
+        </p>
+        <dl>
+          <dt>Inside Airbnb</dt>
+          <dd>
+            Short-term rental listing snapshots (via the first project's aggregates).
+            <a href="https://insideairbnb.com/">insideairbnb.com</a>, licensed
+            <a href="https://creativecommons.org/licenses/by/4.0/">CC BY 4.0</a>.
+          </dd>
+          <dt>Statistics Canada</dt>
+          <dd>
+            Consumer price index (rented accommodation) and Census counts. Contains information
+            licensed under the
+            <a href="https://www.statcan.gc.ca/en/reference/licence"
+              >Open Government Licence – Canada</a
+            >.
+          </dd>
+          <dt>Canada Mortgage and Housing Corporation (CMHC)</dt>
+          <dd>Rental market vacancy and rent benchmarks (via the first project's fixtures).</dd>
+          <dt>Bank of Canada</dt>
+          <dd>Published neutral policy-rate range, used as a reference interest rate.</dd>
+        </dl>
+        <p class="muted">
+          Every number and its source is listed in the project's
+          <code>docs/ASSUMPTIONS.md</code>, tagged DATA, LITERATURE, ASSUMED or VERIFY (not yet
+          checked at source).
+        </p>
+      </section>
+
+      <section aria-labelledby="lic-h">
+        <h2 id="lic-h">Licences and credits</h2>
+        <ul>
+          <li>Code: MIT licence.</li>
+          <li>
+            Art: all sprites, tiles, icons, the UI kit and the pixel font ("Zoned Out Mono") are
+            original, generated by code in this project, and licensed
+            <a href="https://creativecommons.org/licenses/by/4.0/">CC BY 4.0</a>. No third-party art
+            or fonts are used; the interface text uses your system font.
+          </li>
+          <li>
+            Software: <a href="https://preactjs.com/">Preact</a> (MIT) in the page; built with Vite
+            and TypeScript; tested with Vitest, fast-check, Playwright and axe-core; model
+            calibration in Python with NumPy, pandas, SciPy, pyfixest and matplotlib.
+          </li>
+        </ul>
+      </section>
+    </main>
+  </body>
+</html>

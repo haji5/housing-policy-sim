@@ -7,7 +7,7 @@ Every number or functional form used by the model is listed here with a provenan
 | **DATA**       | Taken from a dataset or from `bc-str-ban-analysis`, verified against that repo, with a pointer. |
 | **LITERATURE** | From a cited published source.                                                                  |
 | **ASSUMED**    | A modelling choice or placeholder with no direct empirical anchor. Expect wide uncertainty.     |
-| **VERIFY**     | A real-world number that has not yet been checked. Must not ship in calibrated results.         |
+| **VERIFY**     | A real-world number not yet checked at source. Listed as a README limitation; check it first.   |
 
 Money is in $k per month unless stated. "Calibrated in M3" means the value is a placeholder that
 the calibration will replace with an ensemble.

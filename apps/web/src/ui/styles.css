@@ -452,29 +452,34 @@ button:disabled {
   border: 8px solid transparent;
   border-image: url('/atlas/ui/ui_panel.png') 4 fill / 8px stretch;
   image-rendering: pixelated;
-  background: none;
+  /* Same colour as the image's fill, under it: a fallback if the image fails, and what
+     contrast checkers (axe) can see. Clipped to the padding box so the pixel corners stay. */
+  background: #ffffff padding-box;
 }
 button {
   border: 8px solid transparent;
   border-image: url('/atlas/ui/ui_button.png') 4 fill / 8px stretch;
   image-rendering: pixelated;
-  background: none;
+  background: #f2e9d6 padding-box;
   padding: 0.2rem 0.8rem;
 }
 button:hover:not(:disabled) {
   border-image-source: url('/atlas/ui/ui_button_hover.png');
+  background-color: #ffffff;
 }
 button:active:not(:disabled) {
   border-image-source: url('/atlas/ui/ui_button_pressed.png');
+  background-color: #cdbf9f;
 }
 button:disabled {
   border-image-source: url('/atlas/ui/ui_button_disabled.png');
+  background-color: #cfd2d7;
   color: var(--muted);
   opacity: 1;
 }
 button.primary {
   border-image-source: url('/atlas/ui/ui_button_primary.png');
-  background: none;
+  background: #0072b2 padding-box;
   color: #fff;
 }
 button.primary:hover:not(:disabled),
@@ -499,4 +504,8 @@ button.primary:disabled {
   image-rendering: pixelated;
   vertical-align: middle;
   margin-right: 0.35rem;
+}
+
+a {
+  color: #005a8c;
 }

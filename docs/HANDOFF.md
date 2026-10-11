@@ -26,7 +26,7 @@ then `WORKING_AGREEMENTS.md` and `docs/PLAN.md`._
 | M5 full mechanics           | done: validation + Sobol written up in VALIDATION.md §1.1-2 (§3)      | m5   |
 | M6 art pass                 | done: icons, delisting stamp, dust, 1:1 canvas fix, review round (§4) | m6   |
 | M7 debrief/onboarding       | done: wired, a11y checklist, ADR 0011, 3 review rounds (§5)           | m7   |
-| **M8 polish, docs, launch** | **next (§6)**                                                         | -    |
+| **M8 polish, docs, launch** | **done locally; only the deploy is left, which needs the owner (§6)** | -    |
 
 Git: `main`, no remote (GitHub MCP auth fails; nothing pushed; Pages deploy untested).
 Order of commits this session: `eb2ed3b` m5 → `m6 (WIP)` → `m7 (WIP)` drafts + this file.
@@ -164,16 +164,36 @@ Checks and fixes:
 - e2e: `a11y.spec.ts` moved into `e2e/`; new `debrief.spec.ts` (tutorial, badges, tooltips,
   debrief numbers, honesty rule, screenshots `docs/screenshots/m7`).
 
-## 6. M8 reminders
+## 6. M8: done locally, not tagged (deploy needs the owner)
 
-README per PLAN §12 (pitch, GIF, 3 headline results, link to the first project, model summary,
-limitations, "not policy advice; not affiliated with the Government of BC", reproduce steps,
-licences + data attribution: Inside Airbnb CC BY 4.0, StatCan OGL-Canada, Bank of Canada, CMHC);
-docs complete (ODD, ASSUMPTIONS, CALIBRATION, VALIDATION); performance budgets (PLAN §11: bundle
-< 400 KB gz — page script now 48.5 KB gz because the debrief imports the ensemble, + two ~150 KB
-workers; atlas < 300 KB — 6.4 KB; consider lazy-loading the debrief); Lighthouse/axe; attribution
-page; check CSS `url('/atlas/...')` paths under a Pages base path; GitHub remote + Pages need the
-user (create the repo / authorise GitHub).
+Done (committed after `m7`):
+
+- README per PLAN §12: pitch, GIF (`docs/media/zoned-out.gif`, from `e2e/media.spec.ts` with
+  `MEDIA=1` + `scripts/make_gif.py`, Pillow from the calibration venv), hook, three headline
+  results with figures (calibration fit, listings-vs-rents, DiD bias), link to the first
+  project, ten-line model summary, limitations + disclaimer, reproduce steps, performance table,
+  tech stack, licences and data attribution. Bill 35 numbers re-checked against
+  `bc-str-ban-analysis/README.md` (−0.390, 32%, p = 0.011, 1.7%, −0.4% to −3.3%, 3,133 → 2,033).
+- `apps/web/public/about.html` (disclaimer, privacy, data attribution, licences), linked from
+  the start screen; meta description.
+- Accessibility: `e2e/axe.spec.ts` (new dev dependency `@axe-core/playwright` 4.13.0, pinned;
+  no release-age exclusion needed): zero WCAG 2.1 A/AA violations on start, About, game,
+  end of term and debrief. Fix it forced: framed elements get a solid background of the image
+  fill colour under the CSS `border-image`.
+- Budgets (`e2e/budgets.spec.ts`): start screen interactive 74 ms, city built 0.9 s, a turn
+  0.11 s; only same-origin requests (privacy). JS 47 KB gz + 2 × 29 KB gz workers; atlas 6.4 KB.
+  **Not met:** Victoria run 361-404 ms vs PLAN's 150 ms (75k agents incl. 24-month spin-up;
+  the 10k-agent M1 budget passes); debrief N=32 in 8-13 s vs PLAN's 200 in < 10 s.
+- Docs: VALIDATION §1 test table completed (moments, researcher, mechanics, game, e2e);
+  ACCESSIBILITY axe results; ASSUMPTIONS' VERIFY definition matches practice.
+- Pages base path checked: a `BASE_PATH=/housing-policy-sim/` build prefixes JS, CSS and the
+  CSS `url()` atlas paths correctly (in Git Bash set `MSYS_NO_PATHCONV=1`, or the path gets
+  rewritten to `C:/Program Files/Git/...`).
+
+Left (needs the owner): create the GitHub repo `haji5/housing-policy-sim` (PLAN D2), add the
+remote and push `main` with tags, enable Pages with "GitHub Actions" as the source. Then check
+the deployed URL in a clean browser, update README's "Play it" note, and tag `m8`. Stretch goals
+(Vancouver scenario, daily seed, phone layout) were not started.
 
 ## 7. Open issues to report to the user
 
@@ -187,12 +207,17 @@ user (create the repo / authorise GitHub).
 - `pnpm test` can fail `perf.test.ts` on a busy machine when test files run in parallel under
   coverage; `npx vitest run --coverage --no-file-parallelism` in `packages/sim` passes.
 - Debrief uses 32 variants, not PLAN's 200 (ADR 0011).
+- In some ensemble members the rule takes effect almost at once: switching it on in turn 1 cuts
+  covered listings 41% in the first month (seed 5, member 183) because `complianceBase` (weakly
+  identified, up to ~0.79) makes many hosts comply immediately. Consistent with the quarterly
+  calibration data, but it makes turn-1 play look abrupt.
 
 ## 8. Useful commands
 
 ```bash
 pnpm lint && pnpm typecheck && pnpm test     # sim tests include an 85% line-coverage gate
-pnpm build && pnpm e2e                       # Playwright (hello, play, map specs)
+pnpm build && pnpm e2e                       # Playwright: hello, play, map, a11y, debrief, axe, budgets
+(cd packages/sim && npx vitest run --coverage --no-file-parallelism)   # if perf flakes under load
 pnpm art                                     # regenerate the atlas (+ --preview <dir> via node tools/art/src/build.ts)
 pnpm sim playtest --seeds 1,2,3,4,5,6,7,8 --out calibration/reports/playtest.json
 pnpm calibrate | pnpm validate | pnpm sobol | pnpm did-recovery

@@ -69,6 +69,7 @@ button.badge {
   border: 8px solid transparent;
   border-image: url('/atlas/ui/ui_button_primary.png') 4 fill / 8px stretch;
   image-rendering: pixelated;
+  background: #0072b2 padding-box;
   color: #fff;
   padding: 0.25rem 0.5rem;
 }

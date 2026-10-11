@@ -110,6 +110,11 @@ function Setup({ state, start, setMandate }: Game) {
           Take office
         </button>
       </form>
+      <p class="muted about-link">
+        A calibrated model, not a forecast and not policy advice. Not affiliated with the Government
+        of British Columbia.{' '}
+        <a href={`${import.meta.env.BASE_URL}about.html`}>About, data sources and licences</a>
+      </p>
     </main>
   );
 }

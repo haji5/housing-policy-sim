@@ -68,7 +68,7 @@ export function dense(values: readonly number[], x0 = 0): Point[] {
   return values.map((y, i) => ({ x: x0 + i, y }));
 }
 
-/** Minimal SVG line chart (placeholder until the M7 chart pass). */
+/** Minimal SVG line chart with optional fan bands, markers and an accessible text summary. */
 export function LineChart({
   title,
   badge,

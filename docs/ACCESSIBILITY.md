@@ -20,7 +20,12 @@ Checklist for PLAN §6.7, verified at M7 (2026-10-11). "e2e" means a Playwright 
 
 - **No screen-reader session.** Roles, names and live regions were checked through Playwright's
   accessibility tree, not with NVDA, JAWS or VoiceOver.
-- **No Lighthouse/axe audit yet** (planned for M8).
+- **axe-core audit (M8): no WCAG 2.1 A/AA violations** on the start screen, About page, game
+  (with tutorial and mid-term), end of term and debrief (`apps/web/e2e/axe.spec.ts`, every e2e
+  run). It first flagged the pixel-art buttons: their fill is a CSS `border-image`, invisible to
+  contrast checkers and lost if the image fails to load; each framed element now has a solid
+  background of the same colour underneath. Lighthouse itself was not run (it would add a large
+  tool for checks axe already covers); performance budgets are measured separately (README).
 - **Phone layout** is a PLAN stretch goal; the layout is tested at 1366×768 only.
 - The tutorial's blue background is a pixel-art image; its contrast was computed against the
   base colour `#0072b2`, not measured on the rendered image.
