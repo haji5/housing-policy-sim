@@ -14,7 +14,7 @@ import {
 } from '@zoned-out/sim';
 import type { Decision, GameState, MandateId, PolicyEvent, Quote, Scorecard } from '@zoned-out/sim';
 import { SimClient } from './client.ts';
-import type { Snapshot, WorldLayout } from './protocol.ts';
+import type { Final, Snapshot, WorldLayout } from './protocol.ts';
 
 export const TICKS_PER_TURN = RULES.ticksPerTurn;
 export const TOTAL_TURNS = RULES.turns;
@@ -31,6 +31,7 @@ export interface LogEntry {
 export interface FinalResult {
   card: Scorecard;
   composite: number;
+  runs: Final['runs'];
 }
 
 export interface UiState {
@@ -42,6 +43,8 @@ export interface UiState {
   snapshot: Snapshot | null;
   draft: Decision | null;
   log: LogEntry[];
+  /** Every policy event the player committed (replayed in the debrief). */
+  events: PolicyEvent[];
   /** Ticks at which the player changed a lever (chart markers). */
   changes: { tick: number; label: string }[];
   /** Asking-rent data bought so far covers ticks up to this one (-1 = none). */
@@ -64,6 +67,12 @@ export function capName(v: number): string {
 }
 export function upzoneName(v: number): string {
   return UPZONE_NAMES[v] ?? '?';
+}
+
+/** Mandate from ?mandate=id (shared links), else Balanced. */
+export function initialMandate(): MandateId {
+  const q = new URLSearchParams(window.location.search).get('mandate');
+  return q !== null && q in MANDATES ? (q as MandateId) : 'balanced';
 }
 
 /** Seed from ?seed=N, else a fresh random one (randomness is fine in the UI, never in the sim). */
@@ -106,12 +115,13 @@ export function useGame() {
   const [state, setState] = useState<UiState>(() => ({
     phase: 'setup',
     seed: initialSeed(),
-    mandate: 'balanced',
+    mandate: initialMandate(),
     game: null,
     layout: null,
     snapshot: null,
     draft: null,
     log: [],
+    events: [],
     changes: [],
     dataThroughTick: -1,
     currentShock: null,
@@ -130,6 +140,7 @@ export function useGame() {
       seed,
       mandate,
       log: [],
+      events: [],
       changes: [],
       dataThroughTick: -1,
       currentShock: null,
@@ -207,7 +218,7 @@ export function useGame() {
           fiscalBalance: fiscalBalance(game),
           capital: game.capital,
         });
-        final = { card, composite: compositeScore(card, game.mandate) };
+        final = { card, composite: compositeScore(card, game.mandate), runs: f.runs };
       }
       setState((p) => ({
         ...p,
@@ -220,6 +231,7 @@ export function useGame() {
           : p.dataThroughTick,
         currentShock: shock,
         log: [...p.log, ...newLog, ...shockLog],
+        events: [...p.events, ...events],
         changes: [
           ...p.changes,
           ...events.map((e) => ({ tick: e.tick, label: describe(e, layout) })),

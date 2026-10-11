@@ -79,7 +79,15 @@ self.onmessage = (ev: MessageEvent<WorkerRequest>) => {
       reply({
         id: req.id,
         type: 'finish',
-        final: { policy: outcomes(collectOutput(player)), base: outcomes(collectOutput(base)) },
+        final: (() => {
+          const policyRun = collectOutput(player);
+          const baseRun = collectOutput(base);
+          return {
+            policy: outcomes(policyRun),
+            base: outcomes(baseRun),
+            runs: { policyRun, baseRun },
+          };
+        })(),
       });
       return;
     }

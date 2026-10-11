@@ -40,6 +40,8 @@ export interface WorldLayout {
 export interface Final {
   policy: Outcomes;
   base: Outcomes;
+  /** Both full runs (true series), for the debrief. */
+  runs: { policyRun: RunOutput; baseRun: RunOutput };
 }
 
 export type WorkerResponse =

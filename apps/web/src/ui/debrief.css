@@ -1,0 +1,126 @@
+/* M7: evidence badges, glossary terms, tutorial and the debrief. */
+
+/* Tooltip triggers are buttons, but not pixel-framed ones. */
+.tip-wrap {
+  position: relative;
+  display: inline-block;
+}
+button.badge,
+button.term {
+  border: none;
+  border-image: none;
+  background: none;
+  padding: 0;
+  font: inherit;
+  cursor: help;
+}
+button.term {
+  text-decoration: underline dotted;
+  text-underline-offset: 3px;
+  color: inherit;
+}
+button.badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: var(--ink);
+  background: #f0ede6;
+  border-radius: 3px;
+  padding: 0.05rem 0.4rem 0.05rem 0.2rem;
+  vertical-align: middle;
+}
+.badge-icon {
+  display: inline-block;
+  width: 16px;
+  height: 16px;
+  image-rendering: pixelated;
+  background-size: 16px 16px;
+}
+.badge-icon-measured {
+  background-image: url('/atlas/ui/badge_measured.png');
+}
+.badge-icon-literature {
+  background-image: url('/atlas/ui/badge_literature.png');
+}
+.badge-icon-assumed {
+  background-image: url('/atlas/ui/badge_assumed.png');
+}
+.tip {
+  position: absolute;
+  z-index: 20;
+  left: 0;
+  top: calc(100% + 4px);
+  width: max-content;
+  max-width: 22rem;
+  background: var(--ink);
+  color: #fff;
+  font-size: 0.9rem;
+  font-weight: 400;
+  line-height: 1.35;
+  padding: 0.5rem 0.65rem;
+  border-radius: 3px;
+  box-shadow: 0 2px 6px rgb(0 0 0 / 25%);
+}
+
+/* Tutorial */
+.tutorial {
+  border: 8px solid transparent;
+  border-image: url('/atlas/ui/ui_button_primary.png') 4 fill / 8px stretch;
+  image-rendering: pixelated;
+  color: #fff;
+  padding: 0.25rem 0.5rem;
+}
+.tutorial h2 {
+  font-size: 1.05rem;
+}
+.tutorial p {
+  margin: 0.4rem 0;
+}
+.tutorial-actions {
+  display: flex;
+  gap: 0.6rem;
+  align-items: center;
+  flex-wrap: wrap;
+}
+.tutorial .muted {
+  color: #dde9f2;
+}
+
+/* Debrief */
+.debrief h2 {
+  font-size: 1.3rem;
+  margin: 0.25rem 0 0.75rem;
+}
+.debrief h3 {
+  font-size: 1.05rem;
+  margin: 0 0 0.4rem;
+  display: flex;
+  gap: 0.5rem;
+  align-items: center;
+  flex-wrap: wrap;
+}
+.debrief-grid {
+  display: grid;
+  gap: 1rem;
+}
+.lesson {
+  background: #fff8e6;
+}
+.share {
+  display: flex;
+  gap: 0.5rem;
+}
+.share input {
+  flex: 1;
+  font: inherit;
+  font-size: 0.9rem;
+  padding: 0.3rem;
+  min-width: 0;
+}
+.chart .zero {
+  stroke: var(--ink);
+  stroke-width: 1;
+  opacity: 0.6;
+}

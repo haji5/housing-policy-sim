@@ -14,6 +14,14 @@ export interface Line {
   dots?: boolean;
 }
 
+/** A shaded band between lo and hi (fan charts). */
+export interface Band {
+  label: string;
+  points: readonly { x: number; lo: number; hi: number }[];
+  color: string;
+  opacity: number;
+}
+
 export interface Marker {
   x: number;
   label: string;
@@ -22,6 +30,9 @@ export interface Marker {
 interface Props {
   title: string;
   lines: Line[];
+  bands?: Band[];
+  /** Draw a horizontal reference line at this y (e.g. 0 for effects). */
+  zero?: boolean;
   xMax: number;
   xLabel: (x: number) => string;
   markers?: Marker[];
@@ -57,6 +68,8 @@ export function dense(values: readonly number[], x0 = 0): Point[] {
 export function LineChart({
   title,
   lines,
+  bands = [],
+  zero = false,
   xMax,
   xLabel,
   markers = [],
@@ -64,7 +77,11 @@ export function LineChart({
   summary,
   note,
 }: Props) {
-  const all = lines.flatMap((l) => l.points.map((p) => p.y)).filter(Number.isFinite);
+  const all = [
+    ...lines.flatMap((l) => l.points.map((p) => p.y)),
+    ...bands.flatMap((b) => b.points.flatMap((p) => [p.lo, p.hi])),
+    ...(zero ? [0] : []),
+  ].filter(Number.isFinite);
   if (all.length === 0) {
     return (
       <figure class="chart">
@@ -109,6 +126,19 @@ export function LineChart({
             {xLabel(x)}
           </text>
         ))}
+        {bands.map((b) => (
+          <polygon
+            key={b.label}
+            fill={b.color}
+            fill-opacity={b.opacity}
+            stroke="none"
+            points={[
+              ...b.points.map((p) => `${sx(p.x)},${sy(p.hi)}`),
+              ...[...b.points].reverse().map((p) => `${sx(p.x)},${sy(p.lo)}`),
+            ].join(' ')}
+          />
+        ))}
+        {zero && <line x1={M.left} x2={W - M.right} y1={sy(0)} y2={sy(0)} class="zero" />}
         {markers.map((m, i) => (
           <g key={`m${i}`}>
             <line x1={sx(m.x)} x2={sx(m.x)} y1={M.top} y2={M.top + ih} class="marker" />
@@ -160,6 +190,14 @@ export function LineChart({
               />
             </svg>
             {l.label}
+          </li>
+        ))}
+        {bands.map((b) => (
+          <li key={b.label}>
+            <svg width="28" height="10" aria-hidden="true">
+              <rect width="28" height="10" fill={b.color} fill-opacity={b.opacity} />
+            </svg>
+            {b.label}
           </li>
         ))}
         {hasHollow && (
