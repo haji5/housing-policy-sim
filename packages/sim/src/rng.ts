@@ -119,4 +119,9 @@ export const Purpose = {
   INIT_LEASE: 17,
   PR_REVIEW: 18,
   PR_CHOICE: 19,
+  INIT_CLASS: 20, // sub 0: multi vs single, sub 1: commercial vs small multi
+  INIT_EXEMPT_CLAIM: 21,
+  REG_TAKEUP: 22,
+  INVESTOR_ENTRY: 23,
+  ANTICIPATE: 24,
 } as const;

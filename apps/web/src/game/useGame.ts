@@ -5,7 +5,7 @@ import type { Snapshot, WorldLayout } from './protocol.ts';
 
 export const TICKS_PER_TURN = 3;
 export const TOTAL_TURNS = 20;
-export const SCENARIO = 'two-zone';
+export const SCENARIO = 'victoria';
 
 export type Draft = Pick<LeverState, 'strRegime' | 'enforcement'>;
 

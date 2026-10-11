@@ -1,0 +1,7223 @@
+{
+  "meta": {
+    "simVersion": "0.4.0",
+    "created": "2026-10-10",
+    "gitCommit": "b0c4967",
+    "scenario": "victoria",
+    "priorsHash": "9a3017b8162c57a7",
+    "targetsHash": "5c69539c747b68a0",
+    "defaultsHash": "0f89301775d089d3",
+    "scenarioHash": "a999702d005f859a",
+    "seeds": [1, 2, 3, 4],
+    "method": "Sobol stage 1 -> Nelder-Mead stage 2 -> ABC importance sampling stage 3 (PLAN \u00a77.1)",
+    "nStage1": 8192,
+    "nStage3": 4096,
+    "tolerance": 45.0886,
+    "nAccepted": 600,
+    "ess": 146.1,
+    "bestDistance": 19.7023,
+    "smoke": false
+  },
+  "sets": [
+    {
+      "host": {
+        "pReview": 0.230327,
+        "beta": 1.80895,
+        "complianceBase": 0.708661,
+        "multiComplianceShift": -0.327313,
+        "anticipation": 0.218445,
+        "prShare": 0.358319,
+        "investorEntry": 0.00545943
+      },
+      "enforcement": {
+        "detectMax": 0.0888687,
+        "delistProb": 0.165139,
+        "regTakeup": 0.847702,
+        "exemptClaimShare": 0.0768754
+      },
+      "str": {
+        "demandSpillover": 0.0314657,
+        "demandGrowthAnnual": 0.000248956
+      },
+      "rental": {
+        "arrivalRentElasticity": 2.79299
+      }
+    },
+    {
+      "host": {
+        "pReview": 0.273799,
+        "beta": 2.71538,
+        "complianceBase": 0.573675,
+        "multiComplianceShift": -0.295325,
+        "anticipation": 0.220215,
+        "prShare": 0.419951,
+        "investorEntry": 0.0023667
+      },
+      "enforcement": {
+        "detectMax": 0.140577,
+        "delistProb": 0.077459,
+        "regTakeup": 0.668379,
+        "exemptClaimShare": 0.102235
+      },
+      "str": {
+        "demandSpillover": 0.965733,
+        "demandGrowthAnnual": -0.0469516
+      },
+      "rental": {
+        "arrivalRentElasticity": 4.64393
+      }
+    },
+    {
+      "host": {
+        "pReview": 0.273799,
+        "beta": 2.71538,
+        "complianceBase": 0.573675,
+        "multiComplianceShift": -0.295325,
+        "anticipation": 0.220215,
+        "prShare": 0.419951,
+        "investorEntry": 0.0023667
+      },
+      "enforcement": {
+        "detectMax": 0.140577,
+        "delistProb": 0.077459,
+        "regTakeup": 0.668379,
+        "exemptClaimShare": 0.102235
+      },
+      "str": {
+        "demandSpillover": 0.965733,
+        "demandGrowthAnnual": -0.0469516
+      },
+      "rental": {
+        "arrivalRentElasticity": 4.64393
+      }
+    },
+    {
+      "host": {
+        "pReview": 0.236542,
+        "beta": 3.51256,
+        "complianceBase": 0.742198,
+        "multiComplianceShift": -0.236283,
+        "anticipation": 0.284382,
+        "prShare": 0.312301,
+        "investorEntry": 0.00627056
+      },
+      "enforcement": {
+        "detectMax": 0.113863,
+        "delistProb": 0.132001,
+        "regTakeup": 0.846545,
+        "exemptClaimShare": 0.0769093
+      },
+      "str": {
+        "demandSpillover": 0.441413,
+        "demandGrowthAnnual": 0.0699124
+      },
+      "rental": {
+        "arrivalRentElasticity": 2.59591
+      }
+    },
+    {
+      "host": {
+        "pReview": 0.0250504,
+        "beta": 0.854865,
+        "complianceBase": 0.671748,
+        "multiComplianceShift": -0.237332,
+        "anticipation": 0.0995291,
+        "prShare": 0.366114,
+        "investorEntry": 0.00887993
+      },
+      "enforcement": {
+        "detectMax": 0.0233878,
+        "delistProb": 0.0491194,
+        "regTakeup": 0.534496,
+        "exemptClaimShare": 0.0974684
+      },
+      "str": {
+        "demandSpillover": 0.0577274,
+        "demandGrowthAnnual": 0.0835153
+      },
+      "rental": {
+        "arrivalRentElasticity": 1.57054
+      }
+    },
+    {
+      "host": {
+        "pReview": 0.0250504,
+        "beta": 0.854865,
+        "complianceBase": 0.671748,
+        "multiComplianceShift": -0.237332,
+        "anticipation": 0.0995291,
+        "prShare": 0.366114,
+        "investorEntry": 0.00887993
+      },
+      "enforcement": {
+        "detectMax": 0.0233878,
+        "delistProb": 0.0491194,
+        "regTakeup": 0.534496,
+        "exemptClaimShare": 0.0974684
+      },
+      "str": {
+        "demandSpillover": 0.0577274,
+        "demandGrowthAnnual": 0.0835153
+      },
+      "rental": {
+        "arrivalRentElasticity": 1.57054
+      }
+    },
+    {
+      "host": {
+        "pReview": 0.110391,
+        "beta": 3.57496,
+        "complianceBase": 0.502641,
+        "multiComplianceShift": -0.2315,
+        "anticipation": 0.376417,
+        "prShare": 0.338125,
+        "investorEntry": 0.00871594
+      },
+      "enforcement": {
+        "detectMax": 0.0759183,
+        "delistProb": 0.0908114,
+        "regTakeup": 0.444705,
+        "exemptClaimShare": 0.0459285
+      },
+      "str": {
+        "demandSpillover": 0.774538,
+        "demandGrowthAnnual": -0.0195018
+      },
+      "rental": {
+        "arrivalRentElasticity": 0.743933
+      }
+    },
+    {
+      "host": {
+        "pReview": 0.0486674,
+        "beta": 3.37515,
+        "complianceBase": 0.363899,
+        "multiComplianceShift": -0.163827,
+        "anticipation": 0.233079,
+        "prShare": 0.295924,
+        "investorEntry": 0.00581075
+      },
+      "enforcement": {
+        "detectMax": 0.125991,
+        "delistProb": 0.0558796,
+        "regTakeup": 0.806199,
+        "exemptClaimShare": 0.0555038
+      },
+      "str": {
+        "demandSpillover": 0.178358,
+        "demandGrowthAnnual": 0.0831949
+      },
+      "rental": {
+        "arrivalRentElasticity": 1.09452
+      }
+    },
+    {
+      "host": {
+        "pReview": 0.291515,
+        "beta": 0.774409,
+        "complianceBase": 0.606862,
+        "multiComplianceShift": -0.286198,
+        "anticipation": 0.250782,
+        "prShare": 0.331156,
+        "investorEntry": 0.00108964
+      },
+      "enforcement": {
+        "detectMax": 0.121892,
+        "delistProb": 0.172555,
+        "regTakeup": 0.717291,
+        "exemptClaimShare": 0.0369396
+      },
+      "str": {
+        "demandSpillover": 0.591141,
+        "demandGrowthAnnual": 0.05889
+      },
+      "rental": {
+        "arrivalRentElasticity": 0.882708
+      }
+    },
+    {
+      "host": {
+        "pReview": 0.070308,
+        "beta": 0.542968,
+        "complianceBase": 0.600768,
+        "multiComplianceShift": -0.388942,
+        "anticipation": 0.210925,
+        "prShare": 0.268505,
+        "investorEntry": 0.0086483
+      },
+      "enforcement": {
+        "detectMax": 0.0381242,
+        "delistProb": 0.106406,
+        "regTakeup": 0.868279,
+        "exemptClaimShare": 0.0785785
+      },
+      "str": {
+        "demandSpillover": 0.607068,
+        "demandGrowthAnnual": 0.0691062
+      },
+      "rental": {
+        "arrivalRentElasticity": 4.33948
+      }
+    },
+    {
+      "host": {
+        "pReview": 0.250098,
+        "beta": 3.17366,
+        "complianceBase": 0.702016,
+        "multiComplianceShift": -0.350098,
+        "anticipation": 0.157689,
+        "prShare": 0.42965,
+        "investorEntry": 0.00362183
+      },
+      "enforcement": {
+        "detectMax": 0.130867,
+        "delistProb": 0.076805,
+        "regTakeup": 0.698205,
+        "exemptClaimShare": 0.0713619
+      },
+      "str": {
+        "demandSpillover": 0.272799,
+        "demandGrowthAnnual": 0.0932037
+      },
+      "rental": {
+        "arrivalRentElasticity": 3.09492
+      }
+    },
+    {
+      "host": {
+        "pReview": 0.250098,
+        "beta": 3.17366,
+        "complianceBase": 0.702016,
+        "multiComplianceShift": -0.350098,
+        "anticipation": 0.157689,
+        "prShare": 0.42965,
+        "investorEntry": 0.00362183
+      },
+      "enforcement": {
+        "detectMax": 0.130867,
+        "delistProb": 0.076805,
+        "regTakeup": 0.698205,
+        "exemptClaimShare": 0.0713619
+      },
+      "str": {
+        "demandSpillover": 0.272799,
+        "demandGrowthAnnual": 0.0932037
+      },
+      "rental": {
+        "arrivalRentElasticity": 3.09492
+      }
+    },
+    {
+      "host": {
+        "pReview": 0.0540109,
+        "beta": 2.79567,
+        "complianceBase": 0.28879,
+        "multiComplianceShift": -0.00154818,
+        "anticipation": 0.179065,
+        "prShare": 0.367922,
+        "investorEntry": 0.0037031
+      },
+      "enforcement": {
+        "detectMax": 0.0973778,
+        "delistProb": 0.0206255,
+        "regTakeup": 0.577866,
+        "exemptClaimShare": 0.0408338
+      },
+      "str": {
+        "demandSpillover": 0.482383,
+        "demandGrowthAnnual": 0.0427743
+      },
+      "rental": {
+        "arrivalRentElasticity": 2.98833
+      }
+    },
+    {
+      "host": {
+        "pReview": 0.165139,
+        "beta": 4.58614,
+        "complianceBase": 0.0269042,
+        "multiComplianceShift": -0.114071,
+        "anticipation": 0.195761,
+        "prShare": 0.365595,
+        "investorEntry": 0.00110659
+      },
+      "enforcement": {
+        "detectMax": 0.14128,
+        "delistProb": 0.121119,
+        "regTakeup": 0.716624,
+        "exemptClaimShare": 0.0601096
+      },
+      "str": {
+        "demandSpillover": 0.756979,
+        "demandGrowthAnnual": -0.000547761
+      },
+      "rental": {
+        "arrivalRentElasticity": 3.0209
+      }
+    },
+    {
+      "host": {
+        "pReview": 0.098849,
+        "beta": 1.69762,
+        "complianceBase": 0.0777432,
+        "multiComplianceShift": 0.0979403,
+        "anticipation": 0.350303,
+        "prShare": 0.349728,
+        "investorEntry": 0.00999242
+      },
+      "enforcement": {
+        "detectMax": 0.135267,
+        "delistProb": 0.0985048,
+        "regTakeup": 0.590973,
+        "exemptClaimShare": 0.0609776
+      },
+      "str": {
+        "demandSpillover": 0.555218,
+        "demandGrowthAnnual": 0.0364425
+      },
+      "rental": {
+        "arrivalRentElasticity": 3.20068
+      }
+    },
+    {
+      "host": {
+        "pReview": 0.104723,
+        "beta": 3.70594,
+        "complianceBase": 0.172837,
+        "multiComplianceShift": -0.22517,
+        "anticipation": 0.443444,
+        "prShare": 0.351965,
+        "investorEntry": 0.000966187
+      },
+      "enforcement": {
+        "detectMax": 0.126042,
+        "delistProb": 0.0891026,
+        "regTakeup": 0.723843,
+        "exemptClaimShare": 0.044543
+      },
+      "str": {
+        "demandSpillover": 0.772813,
+        "demandGrowthAnnual": 0.0704686
+      },
+      "rental": {
+        "arrivalRentElasticity": 1.93034
+      }
+    },
+    {
+      "host": {
+        "pReview": 0.104723,
+        "beta": 3.70594,
+        "complianceBase": 0.172837,
+        "multiComplianceShift": -0.22517,
+        "anticipation": 0.443444,
+        "prShare": 0.351965,
+        "investorEntry": 0.000966187
+      },
+      "enforcement": {
+        "detectMax": 0.126042,
+        "delistProb": 0.0891026,
+        "regTakeup": 0.723843,
+        "exemptClaimShare": 0.044543
+      },
+      "str": {
+        "demandSpillover": 0.772813,
+        "demandGrowthAnnual": 0.0704686
+      },
+      "rental": {
+        "arrivalRentElasticity": 1.93034
+      }
+    },
+    {
+      "host": {
+        "pReview": 0.292186,
+        "beta": 0.441985,
+        "complianceBase": 0.268887,
+        "multiComplianceShift": -0.177865,
+        "anticipation": 0.197932,
+        "prShare": 0.341357,
+        "investorEntry": 0.00803772
+      },
+      "enforcement": {
+        "detectMax": 0.219174,
+        "delistProb": 0.170941,
+        "regTakeup": 0.686611,
+        "exemptClaimShare": 0.0508997
+      },
+      "str": {
+        "demandSpillover": 0.481042,
+        "demandGrowthAnnual": 0.00531249
+      },
+      "rental": {
+        "arrivalRentElasticity": 4.59204
+      }
+    },
+    {
+      "host": {
+        "pReview": 0.12281,
+        "beta": 0.530097,
+        "complianceBase": 0.650616,
+        "multiComplianceShift": -0.363899,
+        "anticipation": 0.223416,
+        "prShare": 0.379141,
+        "investorEntry": 0.00914351
+      },
+      "enforcement": {
+        "detectMax": 0.0732182,
+        "delistProb": 0.157703,
+        "regTakeup": 0.585389,
+        "exemptClaimShare": 0.095476
+      },
+      "str": {
+        "demandSpillover": 0.421312,
+        "demandGrowthAnnual": -0.00754125
+      },
+      "rental": {
+        "arrivalRentElasticity": 4.73613
+      }
+    },
+    {
+      "host": {
+        "pReview": 0.169792,
+        "beta": 1.69974,
+        "complianceBase": 0.586941,
+        "multiComplianceShift": -0.349681,
+        "anticipation": 0.468942,
+        "prShare": 0.518347,
+        "investorEntry": 0.00891455
+      },
+      "enforcement": {
+        "detectMax": 0.138347,
+        "delistProb": 0.172921,
+        "regTakeup": 0.280994,
+        "exemptClaimShare": 0.0847594
+      },
+      "str": {
+        "demandSpillover": 0.955499,
+        "demandGrowthAnnual": 0.00594377
+      },
+      "rental": {
+        "arrivalRentElasticity": 0.655173
+      }
+    },
+    {
+      "host": {
+        "pReview": 0.12063,
+        "beta": 2.73525,
+        "complianceBase": 0.711343,
+        "multiComplianceShift": -0.330623,
+        "anticipation": 0.0976399,
+        "prShare": 0.343968,
+        "investorEntry": 0.00432377
+      },
+      "enforcement": {
+        "detectMax": 0.0839323,
+        "delistProb": 0.083102,
+        "regTakeup": 0.59395,
+        "exemptClaimShare": 0.109652
+      },
+      "str": {
+        "demandSpillover": 0.0107605,
+        "demandGrowthAnnual": 0.0184984
+      },
+      "rental": {
+        "arrivalRentElasticity": 3.19673
+      }
+    },
+    {
+      "host": {
+        "pReview": 0.176065,
+        "beta": 4.37629,
+        "complianceBase": 0.381235,
+        "multiComplianceShift": -0.010398,
+        "anticipation": 0.118574,
+        "prShare": 0.332972,
+        "investorEntry": 0.00327242
+      },
+      "enforcement": {
+        "detectMax": 0.10128,
+        "delistProb": 0.168761,
+        "regTakeup": 0.85704,
+        "exemptClaimShare": 0.0636621
+      },
+      "str": {
+        "demandSpillover": 0.450518,
+        "demandGrowthAnnual": 0.079052
+      },
+      "rental": {
+        "arrivalRentElasticity": 0.877059
+      }
+    },
+    {
+      "host": {
+        "pReview": 0.174503,
+        "beta": 1.94539,
+        "complianceBase": 0.757462,
+        "multiComplianceShift": -0.103175,
+        "anticipation": 0.255897,
+        "prShare": 0.354748,
+        "investorEntry": 0.005618
+      },
+      "enforcement": {
+        "detectMax": 0.0370977,
+        "delistProb": 0.104361,
+        "regTakeup": 0.403581,
+        "exemptClaimShare": 0.0477081
+      },
+      "str": {
+        "demandSpillover": 0.0679909,
+        "demandGrowthAnnual": 0.0802388
+      },
+      "rental": {
+        "arrivalRentElasticity": 3.34846
+      }
+    },
+    {
+      "host": {
+        "pReview": 0.215601,
+        "beta": 4.31902,
+        "complianceBase": 0.411068,
+        "multiComplianceShift": -0.365908,
+        "anticipation": 0.467841,
+        "prShare": 0.300192,
+        "investorEntry": 0.00231036
+      },
+      "enforcement": {
+        "detectMax": 0.114534,
+        "delistProb": 0.111289,
+        "regTakeup": 0.561592,
+        "exemptClaimShare": 0.0570625
+      },
+      "str": {
+        "demandSpillover": 0.477897,
+        "demandGrowthAnnual": 0.0116702
+      },
+      "rental": {
+        "arrivalRentElasticity": 0.981966
+      }
+    },
+    {
+      "host": {
+        "pReview": 0.299321,
+        "beta": 1.59419,
+        "complianceBase": 0.181469,
+        "multiComplianceShift": 0.180831,
+        "anticipation": 0.415833,
+        "prShare": 0.314025,
+        "investorEntry": 0.00813531
+      },
+      "enforcement": {
+        "detectMax": 0.121254,
+        "delistProb": 0.19835,
+        "regTakeup": 0.849526,
+        "exemptClaimShare": 0.0535376
+      },
+      "str": {
+        "demandSpillover": 0.986766,
+        "demandGrowthAnnual": 0.0366671
+      },
+      "rental": {
+        "arrivalRentElasticity": 4.8517
+      }
+    },
+    {
+      "host": {
+        "pReview": 0.148743,
+        "beta": 0.611677,
+        "complianceBase": 0.679738,
+        "multiComplianceShift": -0.350754,
+        "anticipation": 0.241018,
+        "prShare": 0.436311,
+        "investorEntry": 0.00778032
+      },
+      "enforcement": {
+        "detectMax": 0.0988191,
+        "delistProb": 0.146979,
+        "regTakeup": 0.445492,
+        "exemptClaimShare": 0.0985528
+      },
+      "str": {
+        "demandSpillover": 0.976459,
+        "demandGrowthAnnual": 0.0748279
+      },
+      "rental": {
+        "arrivalRentElasticity": 3.65043
+      }
+    },
+    {
+      "host": {
+        "pReview": 0.223189,
+        "beta": 2.17747,
+        "complianceBase": 0.477592,
+        "multiComplianceShift": -0.211351,
+        "anticipation": 0.282593,
+        "prShare": 0.3188,
+        "investorEntry": 0.00901449
+      },
+      "enforcement": {
+        "detectMax": 0.0929571,
+        "delistProb": 0.193143,
+        "regTakeup": 0.430175,
+        "exemptClaimShare": 0.0602548
+      },
+      "str": {
+        "demandSpillover": 0.246364,
+        "demandGrowthAnnual": 0.0277287
+      },
+      "rental": {
+        "arrivalRentElasticity": 4.04564
+      }
+    },
+    {
+      "host": {
+        "pReview": 0.232708,
+        "beta": 3.46109,
+        "complianceBase": 0.720436,
+        "multiComplianceShift": -0.305036,
+        "anticipation": 0.444678,
+        "prShare": 0.350686,
+        "investorEntry": 0.00357207
+      },
+      "enforcement": {
+        "detectMax": 0.117488,
+        "delistProb": 0.0809337,
+        "regTakeup": 0.535206,
+        "exemptClaimShare": 0.0856504
+      },
+      "str": {
+        "demandSpillover": 0.863301,
+        "demandGrowthAnnual": -0.041273
+      },
+      "rental": {
+        "arrivalRentElasticity": 1.27822
+      }
+    },
+    {
+      "host": {
+        "pReview": 0.101974,
+        "beta": 2.83693,
+        "complianceBase": 0.442859,
+        "multiComplianceShift": -0.251463,
+        "anticipation": 0.485821,
+        "prShare": 0.399959,
+        "investorEntry": 0.00756645
+      },
+      "enforcement": {
+        "detectMax": 0.0897287,
+        "delistProb": 0.0763312,
+        "regTakeup": 0.599017,
+        "exemptClaimShare": 0.0708446
+      },
+      "str": {
+        "demandSpillover": 0.272435,
+        "demandGrowthAnnual": 0.0474649
+      },
+      "rental": {
+        "arrivalRentElasticity": 2.53915
+      }
+    },
+    {
+      "host": {
+        "pReview": 0.156943,
+        "beta": 1.55663,
+        "complianceBase": 0.434236,
+        "multiComplianceShift": 0.00692668,
+        "anticipation": 0.315591,
+        "prShare": 0.262094,
+        "investorEntry": 0.00772616
+      },
+      "enforcement": {
+        "detectMax": 0.0542249,
+        "delistProb": 0.123306,
+        "regTakeup": 0.88643,
+        "exemptClaimShare": 0.0747484
+      },
+      "str": {
+        "demandSpillover": 0.675959,
+        "demandGrowthAnnual": 0.0522277
+      },
+      "rental": {
+        "arrivalRentElasticity": 3.1771
+      }
+    },
+    {
+      "host": {
+        "pReview": 0.231912,
+        "beta": 0.525136,
+        "complianceBase": 0.362862,
+        "multiComplianceShift": -0.378159,
+        "anticipation": 0.258592,
+        "prShare": 0.414404,
+        "investorEntry": 0.00740724
+      },
+      "enforcement": {
+        "detectMax": 0.334201,
+        "delistProb": 0.114332,
+        "regTakeup": 0.433261,
+        "exemptClaimShare": 0.0596308
+      },
+      "str": {
+        "demandSpillover": 0.775357,
+        "demandGrowthAnnual": -0.047769
+      },
+      "rental": {
+        "arrivalRentElasticity": 0.979499
+      }
+    },
+    {
+      "host": {
+        "pReview": 0.205864,
+        "beta": 0.313954,
+        "complianceBase": 0.578308,
+        "multiComplianceShift": -0.269945,
+        "anticipation": 0.331638,
+        "prShare": 0.367519,
+        "investorEntry": 0.00580477
+      },
+      "enforcement": {
+        "detectMax": 0.146587,
+        "delistProb": 0.0417103,
+        "regTakeup": 0.34758,
+        "exemptClaimShare": 0.0601974
+      },
+      "str": {
+        "demandSpillover": 0.254187,
+        "demandGrowthAnnual": 0.0239624
+      },
+      "rental": {
+        "arrivalRentElasticity": 0.670067
+      }
+    },
+    {
+      "host": {
+        "pReview": 0.26435,
+        "beta": 1.45302,
+        "complianceBase": 0.608867,
+        "multiComplianceShift": -0.399576,
+        "anticipation": 0.371876,
+        "prShare": 0.395139,
+        "investorEntry": 0.00561666
+      },
+      "enforcement": {
+        "detectMax": 0.126133,
+        "delistProb": 0.166436,
+        "regTakeup": 0.335151,
+        "exemptClaimShare": 0.0295589
+      },
+      "str": {
+        "demandSpillover": 0.291617,
+        "demandGrowthAnnual": -0.019134
+      },
+      "rental": {
+        "arrivalRentElasticity": 3.92034
+      }
+    },
+    {
+      "host": {
+        "pReview": 0.221321,
+        "beta": 0.451867,
+        "complianceBase": 0.546812,
+        "multiComplianceShift": -0.396024,
+        "anticipation": 0.329559,
+        "prShare": 0.37244,
+        "investorEntry": 0.00945529
+      },
+      "enforcement": {
+        "detectMax": 0.150511,
+        "delistProb": 0.234422,
+        "regTakeup": 0.650187,
+        "exemptClaimShare": 0.0277614
+      },
+      "str": {
+        "demandSpillover": 0.90311,
+        "demandGrowthAnnual": 0.0966381
+      },
+      "rental": {
+        "arrivalRentElasticity": 1.00054
+      }
+    },
+    {
+      "host": {
+        "pReview": 0.221321,
+        "beta": 0.451867,
+        "complianceBase": 0.546812,
+        "multiComplianceShift": -0.396024,
+        "anticipation": 0.329559,
+        "prShare": 0.37244,
+        "investorEntry": 0.00945529
+      },
+      "enforcement": {
+        "detectMax": 0.150511,
+        "delistProb": 0.234422,
+        "regTakeup": 0.650187,
+        "exemptClaimShare": 0.0277614
+      },
+      "str": {
+        "demandSpillover": 0.90311,
+        "demandGrowthAnnual": 0.0966381
+      },
+      "rental": {
+        "arrivalRentElasticity": 1.00054
+      }
+    },
+    {
+      "host": {
+        "pReview": 0.221321,
+        "beta": 0.451867,
+        "complianceBase": 0.546812,
+        "multiComplianceShift": -0.396024,
+        "anticipation": 0.329559,
+        "prShare": 0.37244,
+        "investorEntry": 0.00945529
+      },
+      "enforcement": {
+        "detectMax": 0.150511,
+        "delistProb": 0.234422,
+        "regTakeup": 0.650187,
+        "exemptClaimShare": 0.0277614
+      },
+      "str": {
+        "demandSpillover": 0.90311,
+        "demandGrowthAnnual": 0.0966381
+      },
+      "rental": {
+        "arrivalRentElasticity": 1.00054
+      }
+    },
+    {
+      "host": {
+        "pReview": 0.221321,
+        "beta": 0.451867,
+        "complianceBase": 0.546812,
+        "multiComplianceShift": -0.396024,
+        "anticipation": 0.329559,
+        "prShare": 0.37244,
+        "investorEntry": 0.00945529
+      },
+      "enforcement": {
+        "detectMax": 0.150511,
+        "delistProb": 0.234422,
+        "regTakeup": 0.650187,
+        "exemptClaimShare": 0.0277614
+      },
+      "str": {
+        "demandSpillover": 0.90311,
+        "demandGrowthAnnual": 0.0966381
+      },
+      "rental": {
+        "arrivalRentElasticity": 1.00054
+      }
+    },
+    {
+      "host": {
+        "pReview": 0.0804315,
+        "beta": 2.45973,
+        "complianceBase": 0.643976,
+        "multiComplianceShift": -0.29158,
+        "anticipation": 0.0896445,
+        "prShare": 0.399572,
+        "investorEntry": 0.00860052
+      },
+      "enforcement": {
+        "detectMax": 0.0469961,
+        "delistProb": 0.0795055,
+        "regTakeup": 0.841547,
+        "exemptClaimShare": 0.103948
+      },
+      "str": {
+        "demandSpillover": 0.614507,
+        "demandGrowthAnnual": 0.0507575
+      },
+      "rental": {
+        "arrivalRentElasticity": 1.02597
+      }
+    },
+    {
+      "host": {
+        "pReview": 0.0804315,
+        "beta": 2.45973,
+        "complianceBase": 0.643976,
+        "multiComplianceShift": -0.29158,
+        "anticipation": 0.0896445,
+        "prShare": 0.399572,
+        "investorEntry": 0.00860052
+      },
+      "enforcement": {
+        "detectMax": 0.0469961,
+        "delistProb": 0.0795055,
+        "regTakeup": 0.841547,
+        "exemptClaimShare": 0.103948
+      },
+      "str": {
+        "demandSpillover": 0.614507,
+        "demandGrowthAnnual": 0.0507575
+      },
+      "rental": {
+        "arrivalRentElasticity": 1.02597
+      }
+    },
+    {
+      "host": {
+        "pReview": 0.133053,
+        "beta": 1.34256,
+        "complianceBase": 0.527367,
+        "multiComplianceShift": -0.282213,
+        "anticipation": 0.213264,
+        "prShare": 0.444323,
+        "investorEntry": 0.0088249
+      },
+      "enforcement": {
+        "detectMax": 0.150757,
+        "delistProb": 0.0815553,
+        "regTakeup": 0.341563,
+        "exemptClaimShare": 0.109812
+      },
+      "str": {
+        "demandSpillover": 0.865633,
+        "demandGrowthAnnual": 0.0364056
+      },
+      "rental": {
+        "arrivalRentElasticity": 0.964701
+      }
+    },
+    {
+      "host": {
+        "pReview": 0.0859604,
+        "beta": 2.45132,
+        "complianceBase": 0.691913,
+        "multiComplianceShift": -0.107566,
+        "anticipation": 0.168002,
+        "prShare": 0.332041,
+        "investorEntry": 0.00713555
+      },
+      "enforcement": {
+        "detectMax": 0.0381178,
+        "delistProb": 0.0494108,
+        "regTakeup": 0.833396,
+        "exemptClaimShare": 0.0199594
+      },
+      "str": {
+        "demandSpillover": 0.373732,
+        "demandGrowthAnnual": -0.0405571
+      },
+      "rental": {
+        "arrivalRentElasticity": 1.19803
+      }
+    },
+    {
+      "host": {
+        "pReview": 0.0859604,
+        "beta": 2.45132,
+        "complianceBase": 0.691913,
+        "multiComplianceShift": -0.107566,
+        "anticipation": 0.168002,
+        "prShare": 0.332041,
+        "investorEntry": 0.00713555
+      },
+      "enforcement": {
+        "detectMax": 0.0381178,
+        "delistProb": 0.0494108,
+        "regTakeup": 0.833396,
+        "exemptClaimShare": 0.0199594
+      },
+      "str": {
+        "demandSpillover": 0.373732,
+        "demandGrowthAnnual": -0.0405571
+      },
+      "rental": {
+        "arrivalRentElasticity": 1.19803
+      }
+    },
+    {
+      "host": {
+        "pReview": 0.10927,
+        "beta": 1.8942,
+        "complianceBase": 0.436677,
+        "multiComplianceShift": -0.369181,
+        "anticipation": 0.296601,
+        "prShare": 0.35554,
+        "investorEntry": 0.00860552
+      },
+      "enforcement": {
+        "detectMax": 0.11925,
+        "delistProb": 0.133374,
+        "regTakeup": 0.760078,
+        "exemptClaimShare": 0.0321419
+      },
+      "str": {
+        "demandSpillover": 0.035235,
+        "demandGrowthAnnual": 0.0853331
+      },
+      "rental": {
+        "arrivalRentElasticity": 3.51642
+      }
+    },
+    {
+      "host": {
+        "pReview": 0.226036,
+        "beta": 1.21442,
+        "complianceBase": 0.44293,
+        "multiComplianceShift": 0.0308904,
+        "anticipation": 0.326272,
+        "prShare": 0.307586,
+        "investorEntry": 0.00854301
+      },
+      "enforcement": {
+        "detectMax": 0.067427,
+        "delistProb": 0.175826,
+        "regTakeup": 0.574541,
+        "exemptClaimShare": 0.0488355
+      },
+      "str": {
+        "demandSpillover": 0.61065,
+        "demandGrowthAnnual": 0.044073
+      },
+      "rental": {
+        "arrivalRentElasticity": 2.87036
+      }
+    },
+    {
+      "host": {
+        "pReview": 0.138506,
+        "beta": 0.767765,
+        "complianceBase": 0.590572,
+        "multiComplianceShift": -0.27098,
+        "anticipation": 0.413855,
+        "prShare": 0.446194,
+        "investorEntry": 0.00649563
+      },
+      "enforcement": {
+        "detectMax": 0.10938,
+        "delistProb": 0.202036,
+        "regTakeup": 0.36427,
+        "exemptClaimShare": 0.0622086
+      },
+      "str": {
+        "demandSpillover": 0.894029,
+        "demandGrowthAnnual": 0.0734184
+      },
+      "rental": {
+        "arrivalRentElasticity": 1.03884
+      }
+    },
+    {
+      "host": {
+        "pReview": 0.24729,
+        "beta": 0.462072,
+        "complianceBase": 0.555013,
+        "multiComplianceShift": -0.268386,
+        "anticipation": 0.399366,
+        "prShare": 0.341905,
+        "investorEntry": 0.00528022
+      },
+      "enforcement": {
+        "detectMax": 0.111528,
+        "delistProb": 0.180622,
+        "regTakeup": 0.583038,
+        "exemptClaimShare": 0.0139129
+      },
+      "str": {
+        "demandSpillover": 0.808509,
+        "demandGrowthAnnual": 0.0158042
+      },
+      "rental": {
+        "arrivalRentElasticity": 0.905461
+      }
+    },
+    {
+      "host": {
+        "pReview": 0.0599393,
+        "beta": 3.92067,
+        "complianceBase": 0.661461,
+        "multiComplianceShift": -0.207394,
+        "anticipation": 0.15255,
+        "prShare": 0.417183,
+        "investorEntry": 0.0038238
+      },
+      "enforcement": {
+        "detectMax": 0.0756429,
+        "delistProb": 0.0425687,
+        "regTakeup": 0.227768,
+        "exemptClaimShare": 0.0825671
+      },
+      "str": {
+        "demandSpillover": 0.619899,
+        "demandGrowthAnnual": 0.00344172
+      },
+      "rental": {
+        "arrivalRentElasticity": 1.4567
+      }
+    },
+    {
+      "host": {
+        "pReview": 0.157957,
+        "beta": 1.09888,
+        "complianceBase": 0.496836,
+        "multiComplianceShift": -0.0584481,
+        "anticipation": 0.40772,
+        "prShare": 0.325009,
+        "investorEntry": 0.0095217
+      },
+      "enforcement": {
+        "detectMax": 0.0484144,
+        "delistProb": 0.109492,
+        "regTakeup": 0.440223,
+        "exemptClaimShare": 0.0378818
+      },
+      "str": {
+        "demandSpillover": 0.752974,
+        "demandGrowthAnnual": 0.0138353
+      },
+      "rental": {
+        "arrivalRentElasticity": 2.36943
+      }
+    },
+    {
+      "host": {
+        "pReview": 0.0666418,
+        "beta": 2.50543,
+        "complianceBase": 0.6078,
+        "multiComplianceShift": -0.34666,
+        "anticipation": 0.208866,
+        "prShare": 0.392211,
+        "investorEntry": 0.00864184
+      },
+      "enforcement": {
+        "detectMax": 0.148437,
+        "delistProb": 0.0862537,
+        "regTakeup": 0.355659,
+        "exemptClaimShare": 0.0786225
+      },
+      "str": {
+        "demandSpillover": 0.864511,
+        "demandGrowthAnnual": 0.0845529
+      },
+      "rental": {
+        "arrivalRentElasticity": 3.63506
+      }
+    },
+    {
+      "host": {
+        "pReview": 0.246542,
+        "beta": 0.402104,
+        "complianceBase": 0.403767,
+        "multiComplianceShift": -0.158902,
+        "anticipation": 0.199808,
+        "prShare": 0.391288,
+        "investorEntry": 0.00904658
+      },
+      "enforcement": {
+        "detectMax": 0.221051,
+        "delistProb": 0.0747616,
+        "regTakeup": 0.538602,
+        "exemptClaimShare": 0.115153
+      },
+      "str": {
+        "demandSpillover": 0.598972,
+        "demandGrowthAnnual": 0.0301312
+      },
+      "rental": {
+        "arrivalRentElasticity": 3.53333
+      }
+    },
+    {
+      "host": {
+        "pReview": 0.128254,
+        "beta": 4.47493,
+        "complianceBase": 0.386105,
+        "multiComplianceShift": -0.130601,
+        "anticipation": 0.118663,
+        "prShare": 0.437824,
+        "investorEntry": 0.00954025
+      },
+      "enforcement": {
+        "detectMax": 0.142573,
+        "delistProb": 0.097348,
+        "regTakeup": 0.336118,
+        "exemptClaimShare": 0.0204292
+      },
+      "str": {
+        "demandSpillover": 0.0667285,
+        "demandGrowthAnnual": 0.0618049
+      },
+      "rental": {
+        "arrivalRentElasticity": 2.88691
+      }
+    },
+    {
+      "host": {
+        "pReview": 0.0637695,
+        "beta": 1.88572,
+        "complianceBase": 0.700397,
+        "multiComplianceShift": -0.242967,
+        "anticipation": 0.307104,
+        "prShare": 0.408375,
+        "investorEntry": 0.00916124
+      },
+      "enforcement": {
+        "detectMax": 0.0834569,
+        "delistProb": 0.0216405,
+        "regTakeup": 0.485074,
+        "exemptClaimShare": 0.0928663
+      },
+      "str": {
+        "demandSpillover": 0.448241,
+        "demandGrowthAnnual": 0.0210449
+      },
+      "rental": {
+        "arrivalRentElasticity": 2.13424
+      }
+    },
+    {
+      "host": {
+        "pReview": 0.22243,
+        "beta": 0.836046,
+        "complianceBase": 0.49366,
+        "multiComplianceShift": -0.229403,
+        "anticipation": 0.368868,
+        "prShare": 0.366661,
+        "investorEntry": 0.00116494
+      },
+      "enforcement": {
+        "detectMax": 0.0780329,
+        "delistProb": 0.196945,
+        "regTakeup": 0.591995,
+        "exemptClaimShare": 0.0857012
+      },
+      "str": {
+        "demandSpillover": 0.414193,
+        "demandGrowthAnnual": 0.00714367
+      },
+      "rental": {
+        "arrivalRentElasticity": 2.52454
+      }
+    },
+    {
+      "host": {
+        "pReview": 0.180129,
+        "beta": 0.594981,
+        "complianceBase": 0.422055,
+        "multiComplianceShift": -0.271875,
+        "anticipation": 0.242388,
+        "prShare": 0.338138,
+        "investorEntry": 0.00568065
+      },
+      "enforcement": {
+        "detectMax": 0.213739,
+        "delistProb": 0.0675441,
+        "regTakeup": 0.59407,
+        "exemptClaimShare": 0.131055
+      },
+      "str": {
+        "demandSpillover": 0.352934,
+        "demandGrowthAnnual": 0.0793345
+      },
+      "rental": {
+        "arrivalRentElasticity": 1.71279
+      }
+    },
+    {
+      "host": {
+        "pReview": 0.0754791,
+        "beta": 1.71022,
+        "complianceBase": 0.53968,
+        "multiComplianceShift": -0.260443,
+        "anticipation": 0.158367,
+        "prShare": 0.383491,
+        "investorEntry": 0.00677052
+      },
+      "enforcement": {
+        "detectMax": 0.0549704,
+        "delistProb": 0.062612,
+        "regTakeup": 0.305941,
+        "exemptClaimShare": 0.0792797
+      },
+      "str": {
+        "demandSpillover": 0.842023,
+        "demandGrowthAnnual": -0.000938965
+      },
+      "rental": {
+        "arrivalRentElasticity": 4.83147
+      }
+    },
+    {
+      "host": {
+        "pReview": 0.0533237,
+        "beta": 1.81353,
+        "complianceBase": 0.40536,
+        "multiComplianceShift": -0.212037,
+        "anticipation": 0.144151,
+        "prShare": 0.400365,
+        "investorEntry": 0.00778718
+      },
+      "enforcement": {
+        "detectMax": 0.101361,
+        "delistProb": 0.0601093,
+        "regTakeup": 0.499853,
+        "exemptClaimShare": 0.0941816
+      },
+      "str": {
+        "demandSpillover": 0.111239,
+        "demandGrowthAnnual": -0.0431205
+      },
+      "rental": {
+        "arrivalRentElasticity": 4.3293
+      }
+    },
+    {
+      "host": {
+        "pReview": 0.245225,
+        "beta": 0.457053,
+        "complianceBase": 0.501302,
+        "multiComplianceShift": -0.256112,
+        "anticipation": 0.224663,
+        "prShare": 0.337119,
+        "investorEntry": 0.0085113
+      },
+      "enforcement": {
+        "detectMax": 0.140814,
+        "delistProb": 0.218624,
+        "regTakeup": 0.439316,
+        "exemptClaimShare": 0.0809736
+      },
+      "str": {
+        "demandSpillover": 0.580583,
+        "demandGrowthAnnual": 0.0505752
+      },
+      "rental": {
+        "arrivalRentElasticity": 2.61684
+      }
+    },
+    {
+      "host": {
+        "pReview": 0.17523,
+        "beta": 1.80897,
+        "complianceBase": 0.247781,
+        "multiComplianceShift": -0.0638922,
+        "anticipation": 0.143544,
+        "prShare": 0.32652,
+        "investorEntry": 0.00480873
+      },
+      "enforcement": {
+        "detectMax": 0.121809,
+        "delistProb": 0.15373,
+        "regTakeup": 0.648077,
+        "exemptClaimShare": 0.0297152
+      },
+      "str": {
+        "demandSpillover": 0.394049,
+        "demandGrowthAnnual": 0.0611818
+      },
+      "rental": {
+        "arrivalRentElasticity": 4.15249
+      }
+    },
+    {
+      "host": {
+        "pReview": 0.184849,
+        "beta": 2.18013,
+        "complianceBase": 0.488091,
+        "multiComplianceShift": -0.390637,
+        "anticipation": 0.372658,
+        "prShare": 0.455216,
+        "investorEntry": 0.00552626
+      },
+      "enforcement": {
+        "detectMax": 0.219609,
+        "delistProb": 0.125633,
+        "regTakeup": 0.571976,
+        "exemptClaimShare": 0.0817354
+      },
+      "str": {
+        "demandSpillover": 0.169485,
+        "demandGrowthAnnual": 0.0790008
+      },
+      "rental": {
+        "arrivalRentElasticity": 3.47294
+      }
+    },
+    {
+      "host": {
+        "pReview": 0.18694,
+        "beta": 2.10248,
+        "complianceBase": 0.553304,
+        "multiComplianceShift": -0.218701,
+        "anticipation": 0.373629,
+        "prShare": 0.356982,
+        "investorEntry": 0.00916899
+      },
+      "enforcement": {
+        "detectMax": 0.072547,
+        "delistProb": 0.204574,
+        "regTakeup": 0.432602,
+        "exemptClaimShare": 0.0896898
+      },
+      "str": {
+        "demandSpillover": 0.06899,
+        "demandGrowthAnnual": 0.0590969
+      },
+      "rental": {
+        "arrivalRentElasticity": 3.64907
+      }
+    },
+    {
+      "host": {
+        "pReview": 0.0582579,
+        "beta": 0.647471,
+        "complianceBase": 0.474122,
+        "multiComplianceShift": -0.342612,
+        "anticipation": 0.487275,
+        "prShare": 0.393287,
+        "investorEntry": 0.00503908
+      },
+      "enforcement": {
+        "detectMax": 0.103724,
+        "delistProb": 0.0564839,
+        "regTakeup": 0.572038,
+        "exemptClaimShare": 0.0378633
+      },
+      "str": {
+        "demandSpillover": 0.724227,
+        "demandGrowthAnnual": 0.00891653
+      },
+      "rental": {
+        "arrivalRentElasticity": 1.39757
+      }
+    },
+    {
+      "host": {
+        "pReview": 0.108107,
+        "beta": 1.00198,
+        "complianceBase": 0.432223,
+        "multiComplianceShift": -0.284028,
+        "anticipation": 0.44848,
+        "prShare": 0.367665,
+        "investorEntry": 0.00166798
+      },
+      "enforcement": {
+        "detectMax": 0.0789934,
+        "delistProb": 0.156729,
+        "regTakeup": 0.700442,
+        "exemptClaimShare": 0.0707683
+      },
+      "str": {
+        "demandSpillover": 0.411428,
+        "demandGrowthAnnual": 0.0526484
+      },
+      "rental": {
+        "arrivalRentElasticity": 2.03625
+      }
+    },
+    {
+      "host": {
+        "pReview": 0.172962,
+        "beta": 1.53031,
+        "complianceBase": 0.25888,
+        "multiComplianceShift": -0.36863,
+        "anticipation": 0.364013,
+        "prShare": 0.454844,
+        "investorEntry": 0.00811146
+      },
+      "enforcement": {
+        "detectMax": 0.194943,
+        "delistProb": 0.143131,
+        "regTakeup": 0.735753,
+        "exemptClaimShare": 0.103589
+      },
+      "str": {
+        "demandSpillover": 0.922396,
+        "demandGrowthAnnual": 0.063561
+      },
+      "rental": {
+        "arrivalRentElasticity": 4.82412
+      }
+    },
+    {
+      "host": {
+        "pReview": 0.172962,
+        "beta": 1.53031,
+        "complianceBase": 0.25888,
+        "multiComplianceShift": -0.36863,
+        "anticipation": 0.364013,
+        "prShare": 0.454844,
+        "investorEntry": 0.00811146
+      },
+      "enforcement": {
+        "detectMax": 0.194943,
+        "delistProb": 0.143131,
+        "regTakeup": 0.735753,
+        "exemptClaimShare": 0.103589
+      },
+      "str": {
+        "demandSpillover": 0.922396,
+        "demandGrowthAnnual": 0.063561
+      },
+      "rental": {
+        "arrivalRentElasticity": 4.82412
+      }
+    },
+    {
+      "host": {
+        "pReview": 0.0391193,
+        "beta": 1.55495,
+        "complianceBase": 0.455491,
+        "multiComplianceShift": -0.193465,
+        "anticipation": 0.166281,
+        "prShare": 0.296674,
+        "investorEntry": 0.000483739
+      },
+      "enforcement": {
+        "detectMax": 0.0559534,
+        "delistProb": 0.0350311,
+        "regTakeup": 0.46252,
+        "exemptClaimShare": 0.0731782
+      },
+      "str": {
+        "demandSpillover": 0.142348,
+        "demandGrowthAnnual": -0.0298114
+      },
+      "rental": {
+        "arrivalRentElasticity": 1.80921
+      }
+    },
+    {
+      "host": {
+        "pReview": 0.253828,
+        "beta": 0.966054,
+        "complianceBase": 0.643757,
+        "multiComplianceShift": -0.130666,
+        "anticipation": 0.317481,
+        "prShare": 0.350271,
+        "investorEntry": 0.00794269
+      },
+      "enforcement": {
+        "detectMax": 0.133026,
+        "delistProb": 0.0869656,
+        "regTakeup": 0.768773,
+        "exemptClaimShare": 0.0440314
+      },
+      "str": {
+        "demandSpillover": 0.0472735,
+        "demandGrowthAnnual": 0.0997103
+      },
+      "rental": {
+        "arrivalRentElasticity": 4.02347
+      }
+    },
+    {
+      "host": {
+        "pReview": 0.253828,
+        "beta": 0.966054,
+        "complianceBase": 0.643757,
+        "multiComplianceShift": -0.130666,
+        "anticipation": 0.317481,
+        "prShare": 0.350271,
+        "investorEntry": 0.00794269
+      },
+      "enforcement": {
+        "detectMax": 0.133026,
+        "delistProb": 0.0869656,
+        "regTakeup": 0.768773,
+        "exemptClaimShare": 0.0440314
+      },
+      "str": {
+        "demandSpillover": 0.0472735,
+        "demandGrowthAnnual": 0.0997103
+      },
+      "rental": {
+        "arrivalRentElasticity": 4.02347
+      }
+    },
+    {
+      "host": {
+        "pReview": 0.268228,
+        "beta": 0.437321,
+        "complianceBase": 0.730474,
+        "multiComplianceShift": -0.332939,
+        "anticipation": 0.252013,
+        "prShare": 0.370966,
+        "investorEntry": 0.00543521
+      },
+      "enforcement": {
+        "detectMax": 0.0199706,
+        "delistProb": 0.0956771,
+        "regTakeup": 0.573754,
+        "exemptClaimShare": 0.0474961
+      },
+      "str": {
+        "demandSpillover": 0.0869318,
+        "demandGrowthAnnual": 0.0578118
+      },
+      "rental": {
+        "arrivalRentElasticity": 1.97102
+      }
+    },
+    {
+      "host": {
+        "pReview": 0.268228,
+        "beta": 0.437321,
+        "complianceBase": 0.730474,
+        "multiComplianceShift": -0.332939,
+        "anticipation": 0.252013,
+        "prShare": 0.370966,
+        "investorEntry": 0.00543521
+      },
+      "enforcement": {
+        "detectMax": 0.0199706,
+        "delistProb": 0.0956771,
+        "regTakeup": 0.573754,
+        "exemptClaimShare": 0.0474961
+      },
+      "str": {
+        "demandSpillover": 0.0869318,
+        "demandGrowthAnnual": 0.0578118
+      },
+      "rental": {
+        "arrivalRentElasticity": 1.97102
+      }
+    },
+    {
+      "host": {
+        "pReview": 0.11249,
+        "beta": 4.05054,
+        "complianceBase": 0.524593,
+        "multiComplianceShift": -0.0112769,
+        "anticipation": 0.298896,
+        "prShare": 0.406358,
+        "investorEntry": 0.0029678
+      },
+      "enforcement": {
+        "detectMax": 0.0765884,
+        "delistProb": 0.0675775,
+        "regTakeup": 0.817422,
+        "exemptClaimShare": 0.10737
+      },
+      "str": {
+        "demandSpillover": 0.0845521,
+        "demandGrowthAnnual": -0.0325998
+      },
+      "rental": {
+        "arrivalRentElasticity": 1.88027
+      }
+    },
+    {
+      "host": {
+        "pReview": 0.11249,
+        "beta": 4.05054,
+        "complianceBase": 0.524593,
+        "multiComplianceShift": -0.0112769,
+        "anticipation": 0.298896,
+        "prShare": 0.406358,
+        "investorEntry": 0.0029678
+      },
+      "enforcement": {
+        "detectMax": 0.0765884,
+        "delistProb": 0.0675775,
+        "regTakeup": 0.817422,
+        "exemptClaimShare": 0.10737
+      },
+      "str": {
+        "demandSpillover": 0.0845521,
+        "demandGrowthAnnual": -0.0325998
+      },
+      "rental": {
+        "arrivalRentElasticity": 1.88027
+      }
+    },
+    {
+      "host": {
+        "pReview": 0.0337043,
+        "beta": 3.73691,
+        "complianceBase": 0.260837,
+        "multiComplianceShift": -0.115927,
+        "anticipation": 0.19852,
+        "prShare": 0.297596,
+        "investorEntry": 0.00440684
+      },
+      "enforcement": {
+        "detectMax": 0.0818966,
+        "delistProb": 0.0808377,
+        "regTakeup": 0.577018,
+        "exemptClaimShare": 0.0752181
+      },
+      "str": {
+        "demandSpillover": 0.115521,
+        "demandGrowthAnnual": 0.0904972
+      },
+      "rental": {
+        "arrivalRentElasticity": 2.70737
+      }
+    },
+    {
+      "host": {
+        "pReview": 0.0476555,
+        "beta": 1.69856,
+        "complianceBase": 0.431533,
+        "multiComplianceShift": -0.157058,
+        "anticipation": 0.334935,
+        "prShare": 0.319045,
+        "investorEntry": 0.00468678
+      },
+      "enforcement": {
+        "detectMax": 0.116894,
+        "delistProb": 0.0244614,
+        "regTakeup": 0.565738,
+        "exemptClaimShare": 0.0568156
+      },
+      "str": {
+        "demandSpillover": 0.0078854,
+        "demandGrowthAnnual": -0.0230294
+      },
+      "rental": {
+        "arrivalRentElasticity": 3.90238
+      }
+    },
+    {
+      "host": {
+        "pReview": 0.298158,
+        "beta": 2.64297,
+        "complianceBase": 0.373787,
+        "multiComplianceShift": -0.238839,
+        "anticipation": 0.33285,
+        "prShare": 0.420633,
+        "investorEntry": 0.00123993
+      },
+      "enforcement": {
+        "detectMax": 0.19355,
+        "delistProb": 0.0362857,
+        "regTakeup": 0.312374,
+        "exemptClaimShare": 0.0539488
+      },
+      "str": {
+        "demandSpillover": 0.580189,
+        "demandGrowthAnnual": -0.0350974
+      },
+      "rental": {
+        "arrivalRentElasticity": 4.54566
+      }
+    },
+    {
+      "host": {
+        "pReview": 0.0237727,
+        "beta": 2.26347,
+        "complianceBase": 0.272648,
+        "multiComplianceShift": -0.0696775,
+        "anticipation": 0.171742,
+        "prShare": 0.354576,
+        "investorEntry": 0.0053698
+      },
+      "enforcement": {
+        "detectMax": 0.0893484,
+        "delistProb": 0.0213292,
+        "regTakeup": 0.613914,
+        "exemptClaimShare": 0.101661
+      },
+      "str": {
+        "demandSpillover": 0.800368,
+        "demandGrowthAnnual": 0.0866143
+      },
+      "rental": {
+        "arrivalRentElasticity": 4.84736
+      }
+    },
+    {
+      "host": {
+        "pReview": 0.232695,
+        "beta": 2.52133,
+        "complianceBase": 0.418015,
+        "multiComplianceShift": -0.143874,
+        "anticipation": 0.436123,
+        "prShare": 0.383172,
+        "investorEntry": 0.00400561
+      },
+      "enforcement": {
+        "detectMax": 0.191977,
+        "delistProb": 0.0293244,
+        "regTakeup": 0.412306,
+        "exemptClaimShare": 0.049848
+      },
+      "str": {
+        "demandSpillover": 0.651301,
+        "demandGrowthAnnual": -0.0304002
+      },
+      "rental": {
+        "arrivalRentElasticity": 1.26934
+      }
+    },
+    {
+      "host": {
+        "pReview": 0.0783876,
+        "beta": 1.39023,
+        "complianceBase": 0.144462,
+        "multiComplianceShift": 0.135076,
+        "anticipation": 0.271591,
+        "prShare": 0.392489,
+        "investorEntry": 0.00941049
+      },
+      "enforcement": {
+        "detectMax": 0.0783051,
+        "delistProb": 0.0335115,
+        "regTakeup": 0.552441,
+        "exemptClaimShare": 0.0694842
+      },
+      "str": {
+        "demandSpillover": 0.25927,
+        "demandGrowthAnnual": -0.0448265
+      },
+      "rental": {
+        "arrivalRentElasticity": 4.41421
+      }
+    },
+    {
+      "host": {
+        "pReview": 0.146035,
+        "beta": 1.60287,
+        "complianceBase": 0.475582,
+        "multiComplianceShift": -0.111812,
+        "anticipation": 0.205637,
+        "prShare": 0.262006,
+        "investorEntry": 0.0067419
+      },
+      "enforcement": {
+        "detectMax": 0.0270319,
+        "delistProb": 0.178603,
+        "regTakeup": 0.871657,
+        "exemptClaimShare": 0.0448755
+      },
+      "str": {
+        "demandSpillover": 0.97866,
+        "demandGrowthAnnual": 0.0567822
+      },
+      "rental": {
+        "arrivalRentElasticity": 4.51948
+      }
+    },
+    {
+      "host": {
+        "pReview": 0.0444756,
+        "beta": 2.93459,
+        "complianceBase": 0.390126,
+        "multiComplianceShift": -0.319053,
+        "anticipation": 0.0222793,
+        "prShare": 0.389374,
+        "investorEntry": 0.00445998
+      },
+      "enforcement": {
+        "detectMax": 0.129262,
+        "delistProb": 0.0594804,
+        "regTakeup": 0.434301,
+        "exemptClaimShare": 0.0887886
+      },
+      "str": {
+        "demandSpillover": 0.0513622,
+        "demandGrowthAnnual": 0.0328792
+      },
+      "rental": {
+        "arrivalRentElasticity": 4.35248
+      }
+    },
+    {
+      "host": {
+        "pReview": 0.0842934,
+        "beta": 4.60059,
+        "complianceBase": 0.745889,
+        "multiComplianceShift": -0.142743,
+        "anticipation": 0.113961,
+        "prShare": 0.233739,
+        "investorEntry": 0.0050042
+      },
+      "enforcement": {
+        "detectMax": 0.0195695,
+        "delistProb": 0.143789,
+        "regTakeup": 0.537431,
+        "exemptClaimShare": 0.0263259
+      },
+      "str": {
+        "demandSpillover": 0.715806,
+        "demandGrowthAnnual": -0.040102
+      },
+      "rental": {
+        "arrivalRentElasticity": 3.06974
+      }
+    },
+    {
+      "host": {
+        "pReview": 0.0842934,
+        "beta": 4.60059,
+        "complianceBase": 0.745889,
+        "multiComplianceShift": -0.142743,
+        "anticipation": 0.113961,
+        "prShare": 0.233739,
+        "investorEntry": 0.0050042
+      },
+      "enforcement": {
+        "detectMax": 0.0195695,
+        "delistProb": 0.143789,
+        "regTakeup": 0.537431,
+        "exemptClaimShare": 0.0263259
+      },
+      "str": {
+        "demandSpillover": 0.715806,
+        "demandGrowthAnnual": -0.040102
+      },
+      "rental": {
+        "arrivalRentElasticity": 3.06974
+      }
+    },
+    {
+      "host": {
+        "pReview": 0.0842934,
+        "beta": 4.60059,
+        "complianceBase": 0.745889,
+        "multiComplianceShift": -0.142743,
+        "anticipation": 0.113961,
+        "prShare": 0.233739,
+        "investorEntry": 0.0050042
+      },
+      "enforcement": {
+        "detectMax": 0.0195695,
+        "delistProb": 0.143789,
+        "regTakeup": 0.537431,
+        "exemptClaimShare": 0.0263259
+      },
+      "str": {
+        "demandSpillover": 0.715806,
+        "demandGrowthAnnual": -0.040102
+      },
+      "rental": {
+        "arrivalRentElasticity": 3.06974
+      }
+    },
+    {
+      "host": {
+        "pReview": 0.274329,
+        "beta": 1.91958,
+        "complianceBase": 0.336347,
+        "multiComplianceShift": -0.264634,
+        "anticipation": 0.271608,
+        "prShare": 0.402077,
+        "investorEntry": 0.00728015
+      },
+      "enforcement": {
+        "detectMax": 0.196271,
+        "delistProb": 0.106163,
+        "regTakeup": 0.294434,
+        "exemptClaimShare": 0.0196867
+      },
+      "str": {
+        "demandSpillover": 0.975693,
+        "demandGrowthAnnual": 0.025249
+      },
+      "rental": {
+        "arrivalRentElasticity": 1.19516
+      }
+    },
+    {
+      "host": {
+        "pReview": 0.130416,
+        "beta": 2.10408,
+        "complianceBase": 0.781786,
+        "multiComplianceShift": -0.265526,
+        "anticipation": 0.236421,
+        "prShare": 0.454791,
+        "investorEntry": 0.00721076
+      },
+      "enforcement": {
+        "detectMax": 0.100704,
+        "delistProb": 0.101371,
+        "regTakeup": 0.359774,
+        "exemptClaimShare": 0.0701107
+      },
+      "str": {
+        "demandSpillover": 0.404836,
+        "demandGrowthAnnual": 0.0361544
+      },
+      "rental": {
+        "arrivalRentElasticity": 4.44371
+      }
+    },
+    {
+      "host": {
+        "pReview": 0.179704,
+        "beta": 2.87515,
+        "complianceBase": 0.431256,
+        "multiComplianceShift": -0.397684,
+        "anticipation": 0.361731,
+        "prShare": 0.385539,
+        "investorEntry": 0.00143254
+      },
+      "enforcement": {
+        "detectMax": 0.0935224,
+        "delistProb": 0.164356,
+        "regTakeup": 0.559438,
+        "exemptClaimShare": 0.0486245
+      },
+      "str": {
+        "demandSpillover": 0.488429,
+        "demandGrowthAnnual": 0.0937047
+      },
+      "rental": {
+        "arrivalRentElasticity": 1.74635
+      }
+    },
+    {
+      "host": {
+        "pReview": 0.215428,
+        "beta": 1.57628,
+        "complianceBase": 0.218363,
+        "multiComplianceShift": -0.178568,
+        "anticipation": 0.0657361,
+        "prShare": 0.315958,
+        "investorEntry": 0.001869
+      },
+      "enforcement": {
+        "detectMax": 0.164023,
+        "delistProb": 0.174709,
+        "regTakeup": 0.832663,
+        "exemptClaimShare": 0.0990623
+      },
+      "str": {
+        "demandSpillover": 0.489609,
+        "demandGrowthAnnual": -0.0428876
+      },
+      "rental": {
+        "arrivalRentElasticity": 3.31433
+      }
+    },
+    {
+      "host": {
+        "pReview": 0.274631,
+        "beta": 3.52154,
+        "complianceBase": 0.383576,
+        "multiComplianceShift": -0.316059,
+        "anticipation": 0.196439,
+        "prShare": 0.457473,
+        "investorEntry": 0.0089249
+      },
+      "enforcement": {
+        "detectMax": 0.17383,
+        "delistProb": 0.198762,
+        "regTakeup": 0.273523,
+        "exemptClaimShare": 0.0280751
+      },
+      "str": {
+        "demandSpillover": 0.936468,
+        "demandGrowthAnnual": -0.00261944
+      },
+      "rental": {
+        "arrivalRentElasticity": 1.13968
+      }
+    },
+    {
+      "host": {
+        "pReview": 0.234793,
+        "beta": 4.31903,
+        "complianceBase": 0.167103,
+        "multiComplianceShift": 0.140723,
+        "anticipation": 0.278386,
+        "prShare": 0.432205,
+        "investorEntry": 0.00787123
+      },
+      "enforcement": {
+        "detectMax": 0.164528,
+        "delistProb": 0.103193,
+        "regTakeup": 0.205639,
+        "exemptClaimShare": 0.0557899
+      },
+      "str": {
+        "demandSpillover": 0.646582,
+        "demandGrowthAnnual": 0.00223699
+      },
+      "rental": {
+        "arrivalRentElasticity": 1.24225
+      }
+    },
+    {
+      "host": {
+        "pReview": 0.0799498,
+        "beta": 0.474851,
+        "complianceBase": 0.350354,
+        "multiComplianceShift": -0.143204,
+        "anticipation": 0.166228,
+        "prShare": 0.387399,
+        "investorEntry": 0.0027685
+      },
+      "enforcement": {
+        "detectMax": 0.0940335,
+        "delistProb": 0.0586086,
+        "regTakeup": 0.633304,
+        "exemptClaimShare": 0.0450505
+      },
+      "str": {
+        "demandSpillover": 0.999356,
+        "demandGrowthAnnual": 0.0122133
+      },
+      "rental": {
+        "arrivalRentElasticity": 3.16976
+      }
+    },
+    {
+      "host": {
+        "pReview": 0.0529511,
+        "beta": 1.19314,
+        "complianceBase": 0.242957,
+        "multiComplianceShift": -0.0976193,
+        "anticipation": 0.364103,
+        "prShare": 0.346725,
+        "investorEntry": 0.00499643
+      },
+      "enforcement": {
+        "detectMax": 0.145689,
+        "delistProb": 0.0335479,
+        "regTakeup": 0.839036,
+        "exemptClaimShare": 0.121615
+      },
+      "str": {
+        "demandSpillover": 0.36325,
+        "demandGrowthAnnual": 0.0724473
+      },
+      "rental": {
+        "arrivalRentElasticity": 1.30401
+      }
+    },
+    {
+      "host": {
+        "pReview": 0.0283633,
+        "beta": 2.83074,
+        "complianceBase": 0.227113,
+        "multiComplianceShift": 0.0148062,
+        "anticipation": 0.253025,
+        "prShare": 0.348192,
+        "investorEntry": 0.00267771
+      },
+      "enforcement": {
+        "detectMax": 0.0679403,
+        "delistProb": 0.0273121,
+        "regTakeup": 0.815484,
+        "exemptClaimShare": 0.10097
+      },
+      "str": {
+        "demandSpillover": 0.84745,
+        "demandGrowthAnnual": 0.0347023
+      },
+      "rental": {
+        "arrivalRentElasticity": 2.45282
+      }
+    },
+    {
+      "host": {
+        "pReview": 0.0455606,
+        "beta": 1.00353,
+        "complianceBase": 0.697545,
+        "multiComplianceShift": -0.160213,
+        "anticipation": 0.170961,
+        "prShare": 0.405066,
+        "investorEntry": 0.00543995
+      },
+      "enforcement": {
+        "detectMax": 0.0395307,
+        "delistProb": 0.0345305,
+        "regTakeup": 0.776671,
+        "exemptClaimShare": 0.0838874
+      },
+      "str": {
+        "demandSpillover": 0.245854,
+        "demandGrowthAnnual": 0.011033
+      },
+      "rental": {
+        "arrivalRentElasticity": 4.05222
+      }
+    },
+    {
+      "host": {
+        "pReview": 0.187506,
+        "beta": 0.866975,
+        "complianceBase": 0.526679,
+        "multiComplianceShift": -0.226921,
+        "anticipation": 0.409531,
+        "prShare": 0.461681,
+        "investorEntry": 0.00617856
+      },
+      "enforcement": {
+        "detectMax": 0.0940072,
+        "delistProb": 0.105776,
+        "regTakeup": 0.807257,
+        "exemptClaimShare": 0.0778357
+      },
+      "str": {
+        "demandSpillover": 0.860418,
+        "demandGrowthAnnual": 0.0371428
+      },
+      "rental": {
+        "arrivalRentElasticity": 2.95494
+      }
+    },
+    {
+      "host": {
+        "pReview": 0.294626,
+        "beta": 1.41087,
+        "complianceBase": 0.674856,
+        "multiComplianceShift": -0.375691,
+        "anticipation": 0.396644,
+        "prShare": 0.464985,
+        "investorEntry": 0.00794572
+      },
+      "enforcement": {
+        "detectMax": 0.249444,
+        "delistProb": 0.0538401,
+        "regTakeup": 0.343691,
+        "exemptClaimShare": 0.098663
+      },
+      "str": {
+        "demandSpillover": 0.414346,
+        "demandGrowthAnnual": 0.00652497
+      },
+      "rental": {
+        "arrivalRentElasticity": 4.64963
+      }
+    },
+    {
+      "host": {
+        "pReview": 0.265504,
+        "beta": 2.73393,
+        "complianceBase": 0.616017,
+        "multiComplianceShift": -0.308659,
+        "anticipation": 0.409137,
+        "prShare": 0.393821,
+        "investorEntry": 0.00279422
+      },
+      "enforcement": {
+        "detectMax": 0.173011,
+        "delistProb": 0.046811,
+        "regTakeup": 0.28047,
+        "exemptClaimShare": 0.0982845
+      },
+      "str": {
+        "demandSpillover": 0.508429,
+        "demandGrowthAnnual": 0.0634746
+      },
+      "rental": {
+        "arrivalRentElasticity": 3.72784
+      }
+    },
+    {
+      "host": {
+        "pReview": 0.178419,
+        "beta": 0.350133,
+        "complianceBase": 0.436339,
+        "multiComplianceShift": -0.361585,
+        "anticipation": 0.44017,
+        "prShare": 0.429673,
+        "investorEntry": 0.0059775
+      },
+      "enforcement": {
+        "detectMax": 0.26907,
+        "delistProb": 0.0302342,
+        "regTakeup": 0.292886,
+        "exemptClaimShare": 0.0853646
+      },
+      "str": {
+        "demandSpillover": 0.804723,
+        "demandGrowthAnnual": -0.0299482
+      },
+      "rental": {
+        "arrivalRentElasticity": 1.17915
+      }
+    },
+    {
+      "host": {
+        "pReview": 0.11166,
+        "beta": 3.21686,
+        "complianceBase": 0.528744,
+        "multiComplianceShift": -0.320039,
+        "anticipation": 0.369909,
+        "prShare": 0.40509,
+        "investorEntry": 0.00633041
+      },
+      "enforcement": {
+        "detectMax": 0.11304,
+        "delistProb": 0.0479916,
+        "regTakeup": 0.759996,
+        "exemptClaimShare": 0.145494
+      },
+      "str": {
+        "demandSpillover": 0.867585,
+        "demandGrowthAnnual": -0.0283755
+      },
+      "rental": {
+        "arrivalRentElasticity": 4.17161
+      }
+    },
+    {
+      "host": {
+        "pReview": 0.11166,
+        "beta": 3.21686,
+        "complianceBase": 0.528744,
+        "multiComplianceShift": -0.320039,
+        "anticipation": 0.369909,
+        "prShare": 0.40509,
+        "investorEntry": 0.00633041
+      },
+      "enforcement": {
+        "detectMax": 0.11304,
+        "delistProb": 0.0479916,
+        "regTakeup": 0.759996,
+        "exemptClaimShare": 0.145494
+      },
+      "str": {
+        "demandSpillover": 0.867585,
+        "demandGrowthAnnual": -0.0283755
+      },
+      "rental": {
+        "arrivalRentElasticity": 4.17161
+      }
+    },
+    {
+      "host": {
+        "pReview": 0.11166,
+        "beta": 3.21686,
+        "complianceBase": 0.528744,
+        "multiComplianceShift": -0.320039,
+        "anticipation": 0.369909,
+        "prShare": 0.40509,
+        "investorEntry": 0.00633041
+      },
+      "enforcement": {
+        "detectMax": 0.11304,
+        "delistProb": 0.0479916,
+        "regTakeup": 0.759996,
+        "exemptClaimShare": 0.145494
+      },
+      "str": {
+        "demandSpillover": 0.867585,
+        "demandGrowthAnnual": -0.0283755
+      },
+      "rental": {
+        "arrivalRentElasticity": 4.17161
+      }
+    },
+    {
+      "host": {
+        "pReview": 0.0210247,
+        "beta": 0.624334,
+        "complianceBase": 0.673105,
+        "multiComplianceShift": -0.354228,
+        "anticipation": 0.08897,
+        "prShare": 0.256328,
+        "investorEntry": 0.00827897
+      },
+      "enforcement": {
+        "detectMax": 0.0274136,
+        "delistProb": 0.0558955,
+        "regTakeup": 0.438193,
+        "exemptClaimShare": 0.0140337
+      },
+      "str": {
+        "demandSpillover": 0.0406748,
+        "demandGrowthAnnual": 0.0899419
+      },
+      "rental": {
+        "arrivalRentElasticity": 3.56845
+      }
+    },
+    {
+      "host": {
+        "pReview": 0.0210247,
+        "beta": 0.624334,
+        "complianceBase": 0.673105,
+        "multiComplianceShift": -0.354228,
+        "anticipation": 0.08897,
+        "prShare": 0.256328,
+        "investorEntry": 0.00827897
+      },
+      "enforcement": {
+        "detectMax": 0.0274136,
+        "delistProb": 0.0558955,
+        "regTakeup": 0.438193,
+        "exemptClaimShare": 0.0140337
+      },
+      "str": {
+        "demandSpillover": 0.0406748,
+        "demandGrowthAnnual": 0.0899419
+      },
+      "rental": {
+        "arrivalRentElasticity": 3.56845
+      }
+    },
+    {
+      "host": {
+        "pReview": 0.0210247,
+        "beta": 0.624334,
+        "complianceBase": 0.673105,
+        "multiComplianceShift": -0.354228,
+        "anticipation": 0.08897,
+        "prShare": 0.256328,
+        "investorEntry": 0.00827897
+      },
+      "enforcement": {
+        "detectMax": 0.0274136,
+        "delistProb": 0.0558955,
+        "regTakeup": 0.438193,
+        "exemptClaimShare": 0.0140337
+      },
+      "str": {
+        "demandSpillover": 0.0406748,
+        "demandGrowthAnnual": 0.0899419
+      },
+      "rental": {
+        "arrivalRentElasticity": 3.56845
+      }
+    },
+    {
+      "host": {
+        "pReview": 0.0210247,
+        "beta": 0.624334,
+        "complianceBase": 0.673105,
+        "multiComplianceShift": -0.354228,
+        "anticipation": 0.08897,
+        "prShare": 0.256328,
+        "investorEntry": 0.00827897
+      },
+      "enforcement": {
+        "detectMax": 0.0274136,
+        "delistProb": 0.0558955,
+        "regTakeup": 0.438193,
+        "exemptClaimShare": 0.0140337
+      },
+      "str": {
+        "demandSpillover": 0.0406748,
+        "demandGrowthAnnual": 0.0899419
+      },
+      "rental": {
+        "arrivalRentElasticity": 3.56845
+      }
+    },
+    {
+      "host": {
+        "pReview": 0.0210247,
+        "beta": 0.624334,
+        "complianceBase": 0.673105,
+        "multiComplianceShift": -0.354228,
+        "anticipation": 0.08897,
+        "prShare": 0.256328,
+        "investorEntry": 0.00827897
+      },
+      "enforcement": {
+        "detectMax": 0.0274136,
+        "delistProb": 0.0558955,
+        "regTakeup": 0.438193,
+        "exemptClaimShare": 0.0140337
+      },
+      "str": {
+        "demandSpillover": 0.0406748,
+        "demandGrowthAnnual": 0.0899419
+      },
+      "rental": {
+        "arrivalRentElasticity": 3.56845
+      }
+    },
+    {
+      "host": {
+        "pReview": 0.127767,
+        "beta": 0.81393,
+        "complianceBase": 0.579551,
+        "multiComplianceShift": -0.38888,
+        "anticipation": 0.403287,
+        "prShare": 0.443495,
+        "investorEntry": 0.00447127
+      },
+      "enforcement": {
+        "detectMax": 0.178124,
+        "delistProb": 0.0536736,
+        "regTakeup": 0.608219,
+        "exemptClaimShare": 0.0538302
+      },
+      "str": {
+        "demandSpillover": 0.557446,
+        "demandGrowthAnnual": 0.0749231
+      },
+      "rental": {
+        "arrivalRentElasticity": 4.44164
+      }
+    },
+    {
+      "host": {
+        "pReview": 0.159415,
+        "beta": 0.320915,
+        "complianceBase": 0.519391,
+        "multiComplianceShift": -0.27739,
+        "anticipation": 0.379502,
+        "prShare": 0.291319,
+        "investorEntry": 0.00994503
+      },
+      "enforcement": {
+        "detectMax": 0.042894,
+        "delistProb": 0.190899,
+        "regTakeup": 0.489929,
+        "exemptClaimShare": 0.0374543
+      },
+      "str": {
+        "demandSpillover": 0.590586,
+        "demandGrowthAnnual": 0.0216008
+      },
+      "rental": {
+        "arrivalRentElasticity": 4.56675
+      }
+    },
+    {
+      "host": {
+        "pReview": 0.0454089,
+        "beta": 3.10018,
+        "complianceBase": 0.292482,
+        "multiComplianceShift": -0.120003,
+        "anticipation": 0.388578,
+        "prShare": 0.318144,
+        "investorEntry": 0.0040071
+      },
+      "enforcement": {
+        "detectMax": 0.104066,
+        "delistProb": 0.0793741,
+        "regTakeup": 0.351502,
+        "exemptClaimShare": 0.0316259
+      },
+      "str": {
+        "demandSpillover": 0.713931,
+        "demandGrowthAnnual": 0.00619254
+      },
+      "rental": {
+        "arrivalRentElasticity": 0.686647
+      }
+    },
+    {
+      "host": {
+        "pReview": 0.250362,
+        "beta": 0.31358,
+        "complianceBase": 0.302941,
+        "multiComplianceShift": -0.000371416,
+        "anticipation": 0.150928,
+        "prShare": 0.371993,
+        "investorEntry": 0.00847775
+      },
+      "enforcement": {
+        "detectMax": 0.194754,
+        "delistProb": 0.139751,
+        "regTakeup": 0.845159,
+        "exemptClaimShare": 0.0255643
+      },
+      "str": {
+        "demandSpillover": 0.514828,
+        "demandGrowthAnnual": 0.014225
+      },
+      "rental": {
+        "arrivalRentElasticity": 4.59103
+      }
+    },
+    {
+      "host": {
+        "pReview": 0.140389,
+        "beta": 0.393667,
+        "complianceBase": 0.677353,
+        "multiComplianceShift": -0.257025,
+        "anticipation": 0.313276,
+        "prShare": 0.389269,
+        "investorEntry": 0.00812518
+      },
+      "enforcement": {
+        "detectMax": 0.0525201,
+        "delistProb": 0.0648913,
+        "regTakeup": 0.379457,
+        "exemptClaimShare": 0.0921387
+      },
+      "str": {
+        "demandSpillover": 0.299709,
+        "demandGrowthAnnual": -0.0073424
+      },
+      "rental": {
+        "arrivalRentElasticity": 1.84687
+      }
+    },
+    {
+      "host": {
+        "pReview": 0.252764,
+        "beta": 1.08849,
+        "complianceBase": 0.158752,
+        "multiComplianceShift": 0.0408322,
+        "anticipation": 0.433768,
+        "prShare": 0.47034,
+        "investorEntry": 0.00418399
+      },
+      "enforcement": {
+        "detectMax": 0.188553,
+        "delistProb": 0.0589451,
+        "regTakeup": 0.864888,
+        "exemptClaimShare": 0.0929524
+      },
+      "str": {
+        "demandSpillover": 0.828838,
+        "demandGrowthAnnual": 0.0280744
+      },
+      "rental": {
+        "arrivalRentElasticity": 2.96862
+      }
+    },
+    {
+      "host": {
+        "pReview": 0.229029,
+        "beta": 1.28634,
+        "complianceBase": 0.660967,
+        "multiComplianceShift": -0.335325,
+        "anticipation": 0.0446279,
+        "prShare": 0.491188,
+        "investorEntry": 0.00657026
+      },
+      "enforcement": {
+        "detectMax": 0.171461,
+        "delistProb": 0.0971464,
+        "regTakeup": 0.246722,
+        "exemptClaimShare": 0.0606672
+      },
+      "str": {
+        "demandSpillover": 0.651661,
+        "demandGrowthAnnual": 0.0221109
+      },
+      "rental": {
+        "arrivalRentElasticity": 2.66583
+      }
+    },
+    {
+      "host": {
+        "pReview": 0.0883432,
+        "beta": 4.49972,
+        "complianceBase": 0.72841,
+        "multiComplianceShift": -0.350514,
+        "anticipation": 0.244624,
+        "prShare": 0.476329,
+        "investorEntry": 0.00731981
+      },
+      "enforcement": {
+        "detectMax": 0.140321,
+        "delistProb": 0.117767,
+        "regTakeup": 0.249106,
+        "exemptClaimShare": 0.0368978
+      },
+      "str": {
+        "demandSpillover": 0.972438,
+        "demandGrowthAnnual": 0.06436
+      },
+      "rental": {
+        "arrivalRentElasticity": 3.32035
+      }
+    },
+    {
+      "host": {
+        "pReview": 0.0883432,
+        "beta": 4.49972,
+        "complianceBase": 0.72841,
+        "multiComplianceShift": -0.350514,
+        "anticipation": 0.244624,
+        "prShare": 0.476329,
+        "investorEntry": 0.00731981
+      },
+      "enforcement": {
+        "detectMax": 0.140321,
+        "delistProb": 0.117767,
+        "regTakeup": 0.249106,
+        "exemptClaimShare": 0.0368978
+      },
+      "str": {
+        "demandSpillover": 0.972438,
+        "demandGrowthAnnual": 0.06436
+      },
+      "rental": {
+        "arrivalRentElasticity": 3.32035
+      }
+    },
+    {
+      "host": {
+        "pReview": 0.0883432,
+        "beta": 4.49972,
+        "complianceBase": 0.72841,
+        "multiComplianceShift": -0.350514,
+        "anticipation": 0.244624,
+        "prShare": 0.476329,
+        "investorEntry": 0.00731981
+      },
+      "enforcement": {
+        "detectMax": 0.140321,
+        "delistProb": 0.117767,
+        "regTakeup": 0.249106,
+        "exemptClaimShare": 0.0368978
+      },
+      "str": {
+        "demandSpillover": 0.972438,
+        "demandGrowthAnnual": 0.06436
+      },
+      "rental": {
+        "arrivalRentElasticity": 3.32035
+      }
+    },
+    {
+      "host": {
+        "pReview": 0.268109,
+        "beta": 0.775906,
+        "complianceBase": 0.34561,
+        "multiComplianceShift": -0.322835,
+        "anticipation": 0.487648,
+        "prShare": 0.340195,
+        "investorEntry": 0.00406587
+      },
+      "enforcement": {
+        "detectMax": 0.2612,
+        "delistProb": 0.15451,
+        "regTakeup": 0.49836,
+        "exemptClaimShare": 0.10347
+      },
+      "str": {
+        "demandSpillover": 0.320066,
+        "demandGrowthAnnual": -0.00367935
+      },
+      "rental": {
+        "arrivalRentElasticity": 3.6504
+      }
+    },
+    {
+      "host": {
+        "pReview": 0.289981,
+        "beta": 0.907355,
+        "complianceBase": 0.405536,
+        "multiComplianceShift": -0.0823116,
+        "anticipation": 0.352792,
+        "prShare": 0.261086,
+        "investorEntry": 0.00870919
+      },
+      "enforcement": {
+        "detectMax": 0.128885,
+        "delistProb": 0.1406,
+        "regTakeup": 0.674684,
+        "exemptClaimShare": 0.0876739
+      },
+      "str": {
+        "demandSpillover": 0.197933,
+        "demandGrowthAnnual": -0.0239808
+      },
+      "rental": {
+        "arrivalRentElasticity": 3.82591
+      }
+    },
+    {
+      "host": {
+        "pReview": 0.286622,
+        "beta": 2.39684,
+        "complianceBase": 0.578963,
+        "multiComplianceShift": -0.173778,
+        "anticipation": 0.119048,
+        "prShare": 0.507983,
+        "investorEntry": 0.00728542
+      },
+      "enforcement": {
+        "detectMax": 0.136497,
+        "delistProb": 0.115072,
+        "regTakeup": 0.264691,
+        "exemptClaimShare": 0.0361455
+      },
+      "str": {
+        "demandSpillover": 0.270337,
+        "demandGrowthAnnual": 0.0113735
+      },
+      "rental": {
+        "arrivalRentElasticity": 2.19704
+      }
+    },
+    {
+      "host": {
+        "pReview": 0.107453,
+        "beta": 2.75206,
+        "complianceBase": 0.61265,
+        "multiComplianceShift": -0.257601,
+        "anticipation": 0.437736,
+        "prShare": 0.405693,
+        "investorEntry": 0.00522938
+      },
+      "enforcement": {
+        "detectMax": 0.0416287,
+        "delistProb": 0.13022,
+        "regTakeup": 0.546118,
+        "exemptClaimShare": 0.0499168
+      },
+      "str": {
+        "demandSpillover": 0.354329,
+        "demandGrowthAnnual": 0.089528
+      },
+      "rental": {
+        "arrivalRentElasticity": 3.46619
+      }
+    },
+    {
+      "host": {
+        "pReview": 0.070083,
+        "beta": 1.56399,
+        "complianceBase": 0.381431,
+        "multiComplianceShift": -0.151328,
+        "anticipation": 0.382833,
+        "prShare": 0.340237,
+        "investorEntry": 0.00298683
+      },
+      "enforcement": {
+        "detectMax": 0.143164,
+        "delistProb": 0.0377404,
+        "regTakeup": 0.370344,
+        "exemptClaimShare": 0.111226
+      },
+      "str": {
+        "demandSpillover": 0.375157,
+        "demandGrowthAnnual": 0.0752909
+      },
+      "rental": {
+        "arrivalRentElasticity": 1.22483
+      }
+    },
+    {
+      "host": {
+        "pReview": 0.251134,
+        "beta": 2.50614,
+        "complianceBase": 0.744556,
+        "multiComplianceShift": -0.394586,
+        "anticipation": 0.004663,
+        "prShare": 0.361574,
+        "investorEntry": 0.00808069
+      },
+      "enforcement": {
+        "detectMax": 0.0740834,
+        "delistProb": 0.255552,
+        "regTakeup": 0.701277,
+        "exemptClaimShare": 0.0856439
+      },
+      "str": {
+        "demandSpillover": 0.27881,
+        "demandGrowthAnnual": 0.00900394
+      },
+      "rental": {
+        "arrivalRentElasticity": 2.58679
+      }
+    },
+    {
+      "host": {
+        "pReview": 0.251134,
+        "beta": 2.50614,
+        "complianceBase": 0.744556,
+        "multiComplianceShift": -0.394586,
+        "anticipation": 0.004663,
+        "prShare": 0.361574,
+        "investorEntry": 0.00808069
+      },
+      "enforcement": {
+        "detectMax": 0.0740834,
+        "delistProb": 0.255552,
+        "regTakeup": 0.701277,
+        "exemptClaimShare": 0.0856439
+      },
+      "str": {
+        "demandSpillover": 0.27881,
+        "demandGrowthAnnual": 0.00900394
+      },
+      "rental": {
+        "arrivalRentElasticity": 2.58679
+      }
+    },
+    {
+      "host": {
+        "pReview": 0.251134,
+        "beta": 2.50614,
+        "complianceBase": 0.744556,
+        "multiComplianceShift": -0.394586,
+        "anticipation": 0.004663,
+        "prShare": 0.361574,
+        "investorEntry": 0.00808069
+      },
+      "enforcement": {
+        "detectMax": 0.0740834,
+        "delistProb": 0.255552,
+        "regTakeup": 0.701277,
+        "exemptClaimShare": 0.0856439
+      },
+      "str": {
+        "demandSpillover": 0.27881,
+        "demandGrowthAnnual": 0.00900394
+      },
+      "rental": {
+        "arrivalRentElasticity": 2.58679
+      }
+    },
+    {
+      "host": {
+        "pReview": 0.251134,
+        "beta": 2.50614,
+        "complianceBase": 0.744556,
+        "multiComplianceShift": -0.394586,
+        "anticipation": 0.004663,
+        "prShare": 0.361574,
+        "investorEntry": 0.00808069
+      },
+      "enforcement": {
+        "detectMax": 0.0740834,
+        "delistProb": 0.255552,
+        "regTakeup": 0.701277,
+        "exemptClaimShare": 0.0856439
+      },
+      "str": {
+        "demandSpillover": 0.27881,
+        "demandGrowthAnnual": 0.00900394
+      },
+      "rental": {
+        "arrivalRentElasticity": 2.58679
+      }
+    },
+    {
+      "host": {
+        "pReview": 0.211414,
+        "beta": 0.989535,
+        "complianceBase": 0.320439,
+        "multiComplianceShift": -0.107102,
+        "anticipation": 0.265259,
+        "prShare": 0.415872,
+        "investorEntry": 0.0030223
+      },
+      "enforcement": {
+        "detectMax": 0.140293,
+        "delistProb": 0.160959,
+        "regTakeup": 0.518084,
+        "exemptClaimShare": 0.087514
+      },
+      "str": {
+        "demandSpillover": 0.962633,
+        "demandGrowthAnnual": 0.0758846
+      },
+      "rental": {
+        "arrivalRentElasticity": 4.60351
+      }
+    },
+    {
+      "host": {
+        "pReview": 0.18138,
+        "beta": 1.41833,
+        "complianceBase": 0.400469,
+        "multiComplianceShift": -0.230155,
+        "anticipation": 0.453403,
+        "prShare": 0.381196,
+        "investorEntry": 0.00323765
+      },
+      "enforcement": {
+        "detectMax": 0.122772,
+        "delistProb": 0.0832865,
+        "regTakeup": 0.817688,
+        "exemptClaimShare": 0.0052534
+      },
+      "str": {
+        "demandSpillover": 0.976496,
+        "demandGrowthAnnual": 0.0547262
+      },
+      "rental": {
+        "arrivalRentElasticity": 4.60709
+      }
+    },
+    {
+      "host": {
+        "pReview": 0.18138,
+        "beta": 1.41833,
+        "complianceBase": 0.400469,
+        "multiComplianceShift": -0.230155,
+        "anticipation": 0.453403,
+        "prShare": 0.381196,
+        "investorEntry": 0.00323765
+      },
+      "enforcement": {
+        "detectMax": 0.122772,
+        "delistProb": 0.0832865,
+        "regTakeup": 0.817688,
+        "exemptClaimShare": 0.0052534
+      },
+      "str": {
+        "demandSpillover": 0.976496,
+        "demandGrowthAnnual": 0.0547262
+      },
+      "rental": {
+        "arrivalRentElasticity": 4.60709
+      }
+    },
+    {
+      "host": {
+        "pReview": 0.18138,
+        "beta": 1.41833,
+        "complianceBase": 0.400469,
+        "multiComplianceShift": -0.230155,
+        "anticipation": 0.453403,
+        "prShare": 0.381196,
+        "investorEntry": 0.00323765
+      },
+      "enforcement": {
+        "detectMax": 0.122772,
+        "delistProb": 0.0832865,
+        "regTakeup": 0.817688,
+        "exemptClaimShare": 0.0052534
+      },
+      "str": {
+        "demandSpillover": 0.976496,
+        "demandGrowthAnnual": 0.0547262
+      },
+      "rental": {
+        "arrivalRentElasticity": 4.60709
+      }
+    },
+    {
+      "host": {
+        "pReview": 0.080055,
+        "beta": 0.576051,
+        "complianceBase": 0.588954,
+        "multiComplianceShift": -0.360189,
+        "anticipation": 0.060255,
+        "prShare": 0.382795,
+        "investorEntry": 0.00343144
+      },
+      "enforcement": {
+        "detectMax": 0.0454542,
+        "delistProb": 0.105847,
+        "regTakeup": 0.571718,
+        "exemptClaimShare": 0.0400895
+      },
+      "str": {
+        "demandSpillover": 0.32633,
+        "demandGrowthAnnual": 0.0471561
+      },
+      "rental": {
+        "arrivalRentElasticity": 3.62398
+      }
+    },
+    {
+      "host": {
+        "pReview": 0.181749,
+        "beta": 1.04096,
+        "complianceBase": 0.797086,
+        "multiComplianceShift": -0.202278,
+        "anticipation": 0.0818295,
+        "prShare": 0.326078,
+        "investorEntry": 0.00457518
+      },
+      "enforcement": {
+        "detectMax": 0.0260308,
+        "delistProb": 0.0503483,
+        "regTakeup": 0.393185,
+        "exemptClaimShare": 0.0720253
+      },
+      "str": {
+        "demandSpillover": 0.662985,
+        "demandGrowthAnnual": -0.00761282
+      },
+      "rental": {
+        "arrivalRentElasticity": 4.90612
+      }
+    },
+    {
+      "host": {
+        "pReview": 0.181749,
+        "beta": 1.04096,
+        "complianceBase": 0.797086,
+        "multiComplianceShift": -0.202278,
+        "anticipation": 0.0818295,
+        "prShare": 0.326078,
+        "investorEntry": 0.00457518
+      },
+      "enforcement": {
+        "detectMax": 0.0260308,
+        "delistProb": 0.0503483,
+        "regTakeup": 0.393185,
+        "exemptClaimShare": 0.0720253
+      },
+      "str": {
+        "demandSpillover": 0.662985,
+        "demandGrowthAnnual": -0.00761282
+      },
+      "rental": {
+        "arrivalRentElasticity": 4.90612
+      }
+    },
+    {
+      "host": {
+        "pReview": 0.0988803,
+        "beta": 1.43668,
+        "complianceBase": 0.195389,
+        "multiComplianceShift": -0.312289,
+        "anticipation": 0.499539,
+        "prShare": 0.455197,
+        "investorEntry": 0.00461833
+      },
+      "enforcement": {
+        "detectMax": 0.160404,
+        "delistProb": 0.0393454,
+        "regTakeup": 0.49315,
+        "exemptClaimShare": 0.0554761
+      },
+      "str": {
+        "demandSpillover": 0.624425,
+        "demandGrowthAnnual": 0.080332
+      },
+      "rental": {
+        "arrivalRentElasticity": 2.39163
+      }
+    },
+    {
+      "host": {
+        "pReview": 0.19183,
+        "beta": 1.88134,
+        "complianceBase": 0.169133,
+        "multiComplianceShift": -0.0879126,
+        "anticipation": 0.239903,
+        "prShare": 0.471088,
+        "investorEntry": 0.00261478
+      },
+      "enforcement": {
+        "detectMax": 0.223449,
+        "delistProb": 0.0505211,
+        "regTakeup": 0.438778,
+        "exemptClaimShare": 0.073133
+      },
+      "str": {
+        "demandSpillover": 0.660012,
+        "demandGrowthAnnual": 0.0311546
+      },
+      "rental": {
+        "arrivalRentElasticity": 3.00441
+      }
+    },
+    {
+      "host": {
+        "pReview": 0.263897,
+        "beta": 1.07334,
+        "complianceBase": 0.194193,
+        "multiComplianceShift": -0.0435525,
+        "anticipation": 0.418689,
+        "prShare": 0.357609,
+        "investorEntry": 0.00785365
+      },
+      "enforcement": {
+        "detectMax": 0.21002,
+        "delistProb": 0.109708,
+        "regTakeup": 0.47871,
+        "exemptClaimShare": 0.119713
+      },
+      "str": {
+        "demandSpillover": 0.882001,
+        "demandGrowthAnnual": -0.0305595
+      },
+      "rental": {
+        "arrivalRentElasticity": 0.825106
+      }
+    },
+    {
+      "host": {
+        "pReview": 0.191088,
+        "beta": 2.5461,
+        "complianceBase": 0.214865,
+        "multiComplianceShift": 0.170548,
+        "anticipation": 0.0889659,
+        "prShare": 0.421532,
+        "investorEntry": 0.00518624
+      },
+      "enforcement": {
+        "detectMax": 0.133196,
+        "delistProb": 0.152809,
+        "regTakeup": 0.532448,
+        "exemptClaimShare": 0.046017
+      },
+      "str": {
+        "demandSpillover": 0.736291,
+        "demandGrowthAnnual": 0.0648754
+      },
+      "rental": {
+        "arrivalRentElasticity": 2.54837
+      }
+    },
+    {
+      "host": {
+        "pReview": 0.172185,
+        "beta": 1.44766,
+        "complianceBase": 0.216358,
+        "multiComplianceShift": 0.163984,
+        "anticipation": 0.429736,
+        "prShare": 0.383306,
+        "investorEntry": 0.00849708
+      },
+      "enforcement": {
+        "detectMax": 0.151437,
+        "delistProb": 0.0420316,
+        "regTakeup": 0.666383,
+        "exemptClaimShare": 0.0283227
+      },
+      "str": {
+        "demandSpillover": 0.548897,
+        "demandGrowthAnnual": 0.0469881
+      },
+      "rental": {
+        "arrivalRentElasticity": 4.03895
+      }
+    },
+    {
+      "host": {
+        "pReview": 0.242983,
+        "beta": 1.36233,
+        "complianceBase": 0.409322,
+        "multiComplianceShift": 0.0111577,
+        "anticipation": 0.3823,
+        "prShare": 0.310751,
+        "investorEntry": 0.00293958
+      },
+      "enforcement": {
+        "detectMax": 0.083368,
+        "delistProb": 0.163935,
+        "regTakeup": 0.52322,
+        "exemptClaimShare": 0.0781403
+      },
+      "str": {
+        "demandSpillover": 0.51288,
+        "demandGrowthAnnual": 0.0709717
+      },
+      "rental": {
+        "arrivalRentElasticity": 2.83989
+      }
+    },
+    {
+      "host": {
+        "pReview": 0.186302,
+        "beta": 2.63121,
+        "complianceBase": 0.141497,
+        "multiComplianceShift": -0.178277,
+        "anticipation": 0.45274,
+        "prShare": 0.443423,
+        "investorEntry": 0.00191627
+      },
+      "enforcement": {
+        "detectMax": 0.195246,
+        "delistProb": 0.0931757,
+        "regTakeup": 0.250927,
+        "exemptClaimShare": 0.0770734
+      },
+      "str": {
+        "demandSpillover": 0.868546,
+        "demandGrowthAnnual": -0.0350591
+      },
+      "rental": {
+        "arrivalRentElasticity": 0.886731
+      }
+    },
+    {
+      "host": {
+        "pReview": 0.21095,
+        "beta": 0.430314,
+        "complianceBase": 0.340981,
+        "multiComplianceShift": 0.0433047,
+        "anticipation": 0.0912332,
+        "prShare": 0.455744,
+        "investorEntry": 0.00927203
+      },
+      "enforcement": {
+        "detectMax": 0.222619,
+        "delistProb": 0.0534145,
+        "regTakeup": 0.381526,
+        "exemptClaimShare": 0.0821729
+      },
+      "str": {
+        "demandSpillover": 0.745797,
+        "demandGrowthAnnual": 0.016214
+      },
+      "rental": {
+        "arrivalRentElasticity": 3.98157
+      }
+    },
+    {
+      "host": {
+        "pReview": 0.0821459,
+        "beta": 3.88004,
+        "complianceBase": 0.476348,
+        "multiComplianceShift": -0.372889,
+        "anticipation": 0.475156,
+        "prShare": 0.428008,
+        "investorEntry": 0.00952228
+      },
+      "enforcement": {
+        "detectMax": 0.0612881,
+        "delistProb": 0.130015,
+        "regTakeup": 0.484248,
+        "exemptClaimShare": 0.0863618
+      },
+      "str": {
+        "demandSpillover": 0.535835,
+        "demandGrowthAnnual": -0.0259205
+      },
+      "rental": {
+        "arrivalRentElasticity": 3.51508
+      }
+    },
+    {
+      "host": {
+        "pReview": 0.0821459,
+        "beta": 3.88004,
+        "complianceBase": 0.476348,
+        "multiComplianceShift": -0.372889,
+        "anticipation": 0.475156,
+        "prShare": 0.428008,
+        "investorEntry": 0.00952228
+      },
+      "enforcement": {
+        "detectMax": 0.0612881,
+        "delistProb": 0.130015,
+        "regTakeup": 0.484248,
+        "exemptClaimShare": 0.0863618
+      },
+      "str": {
+        "demandSpillover": 0.535835,
+        "demandGrowthAnnual": -0.0259205
+      },
+      "rental": {
+        "arrivalRentElasticity": 3.51508
+      }
+    },
+    {
+      "host": {
+        "pReview": 0.0821459,
+        "beta": 3.88004,
+        "complianceBase": 0.476348,
+        "multiComplianceShift": -0.372889,
+        "anticipation": 0.475156,
+        "prShare": 0.428008,
+        "investorEntry": 0.00952228
+      },
+      "enforcement": {
+        "detectMax": 0.0612881,
+        "delistProb": 0.130015,
+        "regTakeup": 0.484248,
+        "exemptClaimShare": 0.0863618
+      },
+      "str": {
+        "demandSpillover": 0.535835,
+        "demandGrowthAnnual": -0.0259205
+      },
+      "rental": {
+        "arrivalRentElasticity": 3.51508
+      }
+    },
+    {
+      "host": {
+        "pReview": 0.0821459,
+        "beta": 3.88004,
+        "complianceBase": 0.476348,
+        "multiComplianceShift": -0.372889,
+        "anticipation": 0.475156,
+        "prShare": 0.428008,
+        "investorEntry": 0.00952228
+      },
+      "enforcement": {
+        "detectMax": 0.0612881,
+        "delistProb": 0.130015,
+        "regTakeup": 0.484248,
+        "exemptClaimShare": 0.0863618
+      },
+      "str": {
+        "demandSpillover": 0.535835,
+        "demandGrowthAnnual": -0.0259205
+      },
+      "rental": {
+        "arrivalRentElasticity": 3.51508
+      }
+    },
+    {
+      "host": {
+        "pReview": 0.149525,
+        "beta": 0.888486,
+        "complianceBase": 0.55709,
+        "multiComplianceShift": -0.355799,
+        "anticipation": 0.333935,
+        "prShare": 0.460486,
+        "investorEntry": 0.00636172
+      },
+      "enforcement": {
+        "detectMax": 0.124127,
+        "delistProb": 0.0857056,
+        "regTakeup": 0.446849,
+        "exemptClaimShare": 0.0577269
+      },
+      "str": {
+        "demandSpillover": 0.505781,
+        "demandGrowthAnnual": 0.0977276
+      },
+      "rental": {
+        "arrivalRentElasticity": 0.547029
+      }
+    },
+    {
+      "host": {
+        "pReview": 0.0495534,
+        "beta": 0.766651,
+        "complianceBase": 0.781207,
+        "multiComplianceShift": -0.229116,
+        "anticipation": 0.119873,
+        "prShare": 0.403799,
+        "investorEntry": 0.00896621
+      },
+      "enforcement": {
+        "detectMax": 0.0117582,
+        "delistProb": 0.0491454,
+        "regTakeup": 0.419877,
+        "exemptClaimShare": 0.0329887
+      },
+      "str": {
+        "demandSpillover": 0.861912,
+        "demandGrowthAnnual": -0.0387247
+      },
+      "rental": {
+        "arrivalRentElasticity": 3.87351
+      }
+    },
+    {
+      "host": {
+        "pReview": 0.0495534,
+        "beta": 0.766651,
+        "complianceBase": 0.781207,
+        "multiComplianceShift": -0.229116,
+        "anticipation": 0.119873,
+        "prShare": 0.403799,
+        "investorEntry": 0.00896621
+      },
+      "enforcement": {
+        "detectMax": 0.0117582,
+        "delistProb": 0.0491454,
+        "regTakeup": 0.419877,
+        "exemptClaimShare": 0.0329887
+      },
+      "str": {
+        "demandSpillover": 0.861912,
+        "demandGrowthAnnual": -0.0387247
+      },
+      "rental": {
+        "arrivalRentElasticity": 3.87351
+      }
+    },
+    {
+      "host": {
+        "pReview": 0.13261,
+        "beta": 0.30599,
+        "complianceBase": 0.287581,
+        "multiComplianceShift": 0.0104924,
+        "anticipation": 0.41941,
+        "prShare": 0.315705,
+        "investorEntry": 0.00519423
+      },
+      "enforcement": {
+        "detectMax": 0.143158,
+        "delistProb": 0.0644109,
+        "regTakeup": 0.606839,
+        "exemptClaimShare": 0.0770105
+      },
+      "str": {
+        "demandSpillover": 0.470121,
+        "demandGrowthAnnual": 0.00782129
+      },
+      "rental": {
+        "arrivalRentElasticity": 4.15451
+      }
+    },
+    {
+      "host": {
+        "pReview": 0.295154,
+        "beta": 1.9636,
+        "complianceBase": 0.439882,
+        "multiComplianceShift": -0.0779711,
+        "anticipation": 0.368217,
+        "prShare": 0.504155,
+        "investorEntry": 0.00819111
+      },
+      "enforcement": {
+        "detectMax": 0.111964,
+        "delistProb": 0.297003,
+        "regTakeup": 0.302104,
+        "exemptClaimShare": 0.0791445
+      },
+      "str": {
+        "demandSpillover": 0.468711,
+        "demandGrowthAnnual": 0.0318214
+      },
+      "rental": {
+        "arrivalRentElasticity": 3.54446
+      }
+    },
+    {
+      "host": {
+        "pReview": 0.0801629,
+        "beta": 0.793591,
+        "complianceBase": 0.370774,
+        "multiComplianceShift": -0.325473,
+        "anticipation": 0.154699,
+        "prShare": 0.233616,
+        "investorEntry": 0.00706158
+      },
+      "enforcement": {
+        "detectMax": 0.11028,
+        "delistProb": 0.074392,
+        "regTakeup": 0.735389,
+        "exemptClaimShare": 0.0748153
+      },
+      "str": {
+        "demandSpillover": 0.346505,
+        "demandGrowthAnnual": 0.0307535
+      },
+      "rental": {
+        "arrivalRentElasticity": 1.62513
+      }
+    },
+    {
+      "host": {
+        "pReview": 0.220844,
+        "beta": 1.3571,
+        "complianceBase": 0.554875,
+        "multiComplianceShift": -0.256067,
+        "anticipation": 0.060193,
+        "prShare": 0.332052,
+        "investorEntry": 0.00463784
+      },
+      "enforcement": {
+        "detectMax": 0.0164811,
+        "delistProb": 0.221315,
+        "regTakeup": 0.744944,
+        "exemptClaimShare": 0.0547875
+      },
+      "str": {
+        "demandSpillover": 0.394182,
+        "demandGrowthAnnual": 0.0285683
+      },
+      "rental": {
+        "arrivalRentElasticity": 3.41232
+      }
+    },
+    {
+      "host": {
+        "pReview": 0.0861554,
+        "beta": 4.15523,
+        "complianceBase": 0.0165888,
+        "multiComplianceShift": -0.163465,
+        "anticipation": 0.00741979,
+        "prShare": 0.363807,
+        "investorEntry": 3.89677e-6
+      },
+      "enforcement": {
+        "detectMax": 0.134846,
+        "delistProb": 0.103164,
+        "regTakeup": 0.419869,
+        "exemptClaimShare": 0.0452894
+      },
+      "str": {
+        "demandSpillover": 0.404741,
+        "demandGrowthAnnual": 0.0321064
+      },
+      "rental": {
+        "arrivalRentElasticity": 3.40944
+      }
+    },
+    {
+      "host": {
+        "pReview": 0.235962,
+        "beta": 0.816592,
+        "complianceBase": 0.334396,
+        "multiComplianceShift": -0.181563,
+        "anticipation": 0.0391716,
+        "prShare": 0.382484,
+        "investorEntry": 0.00641599
+      },
+      "enforcement": {
+        "detectMax": 0.221319,
+        "delistProb": 0.119986,
+        "regTakeup": 0.390734,
+        "exemptClaimShare": 0.0338286
+      },
+      "str": {
+        "demandSpillover": 0.794203,
+        "demandGrowthAnnual": 0.0247616
+      },
+      "rental": {
+        "arrivalRentElasticity": 2.59776
+      }
+    },
+    {
+      "host": {
+        "pReview": 0.056756,
+        "beta": 3.58207,
+        "complianceBase": 0.129775,
+        "multiComplianceShift": -0.060393,
+        "anticipation": 0.220612,
+        "prShare": 0.411747,
+        "investorEntry": 0.00280387
+      },
+      "enforcement": {
+        "detectMax": 0.139179,
+        "delistProb": 0.0284832,
+        "regTakeup": 0.240152,
+        "exemptClaimShare": 0.0683876
+      },
+      "str": {
+        "demandSpillover": 0.761197,
+        "demandGrowthAnnual": 0.070481
+      },
+      "rental": {
+        "arrivalRentElasticity": 3.24506
+      }
+    },
+    {
+      "host": {
+        "pReview": 0.240613,
+        "beta": 0.536418,
+        "complianceBase": 0.62204,
+        "multiComplianceShift": -0.233854,
+        "anticipation": 0.325006,
+        "prShare": 0.383311,
+        "investorEntry": 0.00516586
+      },
+      "enforcement": {
+        "detectMax": 0.0606927,
+        "delistProb": 0.211781,
+        "regTakeup": 0.31446,
+        "exemptClaimShare": 0.0277544
+      },
+      "str": {
+        "demandSpillover": 0.754139,
+        "demandGrowthAnnual": 0.0361325
+      },
+      "rental": {
+        "arrivalRentElasticity": 3.95816
+      }
+    },
+    {
+      "host": {
+        "pReview": 0.0460863,
+        "beta": 2.13057,
+        "complianceBase": 0.554312,
+        "multiComplianceShift": -0.163462,
+        "anticipation": 0.0308957,
+        "prShare": 0.373454,
+        "investorEntry": 0.00997561
+      },
+      "enforcement": {
+        "detectMax": 0.0620144,
+        "delistProb": 0.126867,
+        "regTakeup": 0.49913,
+        "exemptClaimShare": 0.0696926
+      },
+      "str": {
+        "demandSpillover": 0.592501,
+        "demandGrowthAnnual": 0.0396559
+      },
+      "rental": {
+        "arrivalRentElasticity": 1.61724
+      }
+    },
+    {
+      "host": {
+        "pReview": 0.116604,
+        "beta": 1.32216,
+        "complianceBase": 0.480533,
+        "multiComplianceShift": -0.174757,
+        "anticipation": 0.00772984,
+        "prShare": 0.315567,
+        "investorEntry": 0.00349089
+      },
+      "enforcement": {
+        "detectMax": 0.127953,
+        "delistProb": 0.0882476,
+        "regTakeup": 0.682501,
+        "exemptClaimShare": 0.0930829
+      },
+      "str": {
+        "demandSpillover": 0.753265,
+        "demandGrowthAnnual": 0.0162548
+      },
+      "rental": {
+        "arrivalRentElasticity": 2.83426
+      }
+    },
+    {
+      "host": {
+        "pReview": 0.214793,
+        "beta": 4.15676,
+        "complianceBase": 0.190583,
+        "multiComplianceShift": 0.0496245,
+        "anticipation": 0.412706,
+        "prShare": 0.461192,
+        "investorEntry": 0.00472454
+      },
+      "enforcement": {
+        "detectMax": 0.16594,
+        "delistProb": 0.0653573,
+        "regTakeup": 0.435305,
+        "exemptClaimShare": 0.0591138
+      },
+      "str": {
+        "demandSpillover": 0.889711,
+        "demandGrowthAnnual": -0.0330683
+      },
+      "rental": {
+        "arrivalRentElasticity": 4.8606
+      }
+    },
+    {
+      "host": {
+        "pReview": 0.214793,
+        "beta": 4.15676,
+        "complianceBase": 0.190583,
+        "multiComplianceShift": 0.0496245,
+        "anticipation": 0.412706,
+        "prShare": 0.461192,
+        "investorEntry": 0.00472454
+      },
+      "enforcement": {
+        "detectMax": 0.16594,
+        "delistProb": 0.0653573,
+        "regTakeup": 0.435305,
+        "exemptClaimShare": 0.0591138
+      },
+      "str": {
+        "demandSpillover": 0.889711,
+        "demandGrowthAnnual": -0.0330683
+      },
+      "rental": {
+        "arrivalRentElasticity": 4.8606
+      }
+    },
+    {
+      "host": {
+        "pReview": 0.183779,
+        "beta": 0.868073,
+        "complianceBase": 0.663693,
+        "multiComplianceShift": -0.222997,
+        "anticipation": 0.491666,
+        "prShare": 0.461274,
+        "investorEntry": 0.00600785
+      },
+      "enforcement": {
+        "detectMax": 0.0283307,
+        "delistProb": 0.166659,
+        "regTakeup": 0.349481,
+        "exemptClaimShare": 0.065251
+      },
+      "str": {
+        "demandSpillover": 0.587048,
+        "demandGrowthAnnual": 0.0771702
+      },
+      "rental": {
+        "arrivalRentElasticity": 1.6102
+      }
+    },
+    {
+      "host": {
+        "pReview": 0.118081,
+        "beta": 3.05715,
+        "complianceBase": 0.0422135,
+        "multiComplianceShift": 0.143682,
+        "anticipation": 0.253427,
+        "prShare": 0.522326,
+        "investorEntry": 0.00767192
+      },
+      "enforcement": {
+        "detectMax": 0.135031,
+        "delistProb": 0.0503578,
+        "regTakeup": 0.401049,
+        "exemptClaimShare": 0.0589432
+      },
+      "str": {
+        "demandSpillover": 0.542573,
+        "demandGrowthAnnual": 0.0605425
+      },
+      "rental": {
+        "arrivalRentElasticity": 2.65122
+      }
+    },
+    {
+      "host": {
+        "pReview": 0.226958,
+        "beta": 0.687038,
+        "complianceBase": 0.288772,
+        "multiComplianceShift": -0.0355555,
+        "anticipation": 0.411394,
+        "prShare": 0.405882,
+        "investorEntry": 0.00103758
+      },
+      "enforcement": {
+        "detectMax": 0.168367,
+        "delistProb": 0.159512,
+        "regTakeup": 0.843939,
+        "exemptClaimShare": 0.076669
+      },
+      "str": {
+        "demandSpillover": 0.772406,
+        "demandGrowthAnnual": 0.0573249
+      },
+      "rental": {
+        "arrivalRentElasticity": 1.64387
+      }
+    },
+    {
+      "host": {
+        "pReview": 0.162231,
+        "beta": 2.46518,
+        "complianceBase": 0.294122,
+        "multiComplianceShift": 0.145637,
+        "anticipation": 0.354935,
+        "prShare": 0.492621,
+        "investorEntry": 0.00961579
+      },
+      "enforcement": {
+        "detectMax": 0.110044,
+        "delistProb": 0.238327,
+        "regTakeup": 0.2144,
+        "exemptClaimShare": 0.0583344
+      },
+      "str": {
+        "demandSpillover": 0.44096,
+        "demandGrowthAnnual": 0.0784846
+      },
+      "rental": {
+        "arrivalRentElasticity": 2.61724
+      }
+    },
+    {
+      "host": {
+        "pReview": 0.0829088,
+        "beta": 0.510092,
+        "complianceBase": 0.507249,
+        "multiComplianceShift": -0.325098,
+        "anticipation": 0.472955,
+        "prShare": 0.272603,
+        "investorEntry": 0.00562343
+      },
+      "enforcement": {
+        "detectMax": 0.0529363,
+        "delistProb": 0.0633208,
+        "regTakeup": 0.593318,
+        "exemptClaimShare": 0.0764464
+      },
+      "str": {
+        "demandSpillover": 0.590624,
+        "demandGrowthAnnual": -0.00873854
+      },
+      "rental": {
+        "arrivalRentElasticity": 3.73823
+      }
+    },
+    {
+      "host": {
+        "pReview": 0.29575,
+        "beta": 1.03927,
+        "complianceBase": 0.459434,
+        "multiComplianceShift": -0.166019,
+        "anticipation": 0.21779,
+        "prShare": 0.309207,
+        "investorEntry": 0.00856556
+      },
+      "enforcement": {
+        "detectMax": 0.196169,
+        "delistProb": 0.0243977,
+        "regTakeup": 0.577544,
+        "exemptClaimShare": 0.0952358
+      },
+      "str": {
+        "demandSpillover": 0.590661,
+        "demandGrowthAnnual": -0.0429266
+      },
+      "rental": {
+        "arrivalRentElasticity": 2.34584
+      }
+    },
+    {
+      "host": {
+        "pReview": 0.112964,
+        "beta": 2.67519,
+        "complianceBase": 0.222861,
+        "multiComplianceShift": -0.0994246,
+        "anticipation": 0.24562,
+        "prShare": 0.305318,
+        "investorEntry": 0.00941605
+      },
+      "enforcement": {
+        "detectMax": 0.186578,
+        "delistProb": 0.0456277,
+        "regTakeup": 0.86306,
+        "exemptClaimShare": 0.131172
+      },
+      "str": {
+        "demandSpillover": 0.569379,
+        "demandGrowthAnnual": 0.0134756
+      },
+      "rental": {
+        "arrivalRentElasticity": 3.29263
+      }
+    },
+    {
+      "host": {
+        "pReview": 0.245864,
+        "beta": 0.59317,
+        "complianceBase": 0.430595,
+        "multiComplianceShift": -0.365253,
+        "anticipation": 0.441,
+        "prShare": 0.415543,
+        "investorEntry": 0.00568523
+      },
+      "enforcement": {
+        "detectMax": 0.183409,
+        "delistProb": 0.257796,
+        "regTakeup": 0.867618,
+        "exemptClaimShare": 0.101693
+      },
+      "str": {
+        "demandSpillover": 0.128717,
+        "demandGrowthAnnual": 0.0373932
+      },
+      "rental": {
+        "arrivalRentElasticity": 2.91138
+      }
+    },
+    {
+      "host": {
+        "pReview": 0.211519,
+        "beta": 2.69615,
+        "complianceBase": 0.549812,
+        "multiComplianceShift": -0.16224,
+        "anticipation": 0.377991,
+        "prShare": 0.472663,
+        "investorEntry": 0.000628558
+      },
+      "enforcement": {
+        "detectMax": 0.0504665,
+        "delistProb": 0.12647,
+        "regTakeup": 0.334481,
+        "exemptClaimShare": 0.0616353
+      },
+      "str": {
+        "demandSpillover": 0.83847,
+        "demandGrowthAnnual": 0.0190727
+      },
+      "rental": {
+        "arrivalRentElasticity": 4.84383
+      }
+    },
+    {
+      "host": {
+        "pReview": 0.211519,
+        "beta": 2.69615,
+        "complianceBase": 0.549812,
+        "multiComplianceShift": -0.16224,
+        "anticipation": 0.377991,
+        "prShare": 0.472663,
+        "investorEntry": 0.000628558
+      },
+      "enforcement": {
+        "detectMax": 0.0504665,
+        "delistProb": 0.12647,
+        "regTakeup": 0.334481,
+        "exemptClaimShare": 0.0616353
+      },
+      "str": {
+        "demandSpillover": 0.83847,
+        "demandGrowthAnnual": 0.0190727
+      },
+      "rental": {
+        "arrivalRentElasticity": 4.84383
+      }
+    },
+    {
+      "host": {
+        "pReview": 0.15693,
+        "beta": 0.331559,
+        "complianceBase": 0.258876,
+        "multiComplianceShift": 0.0929231,
+        "anticipation": 0.217131,
+        "prShare": 0.375577,
+        "investorEntry": 0.00185246
+      },
+      "enforcement": {
+        "detectMax": 0.148488,
+        "delistProb": 0.0448044,
+        "regTakeup": 0.78521,
+        "exemptClaimShare": 0.077201
+      },
+      "str": {
+        "demandSpillover": 0.410791,
+        "demandGrowthAnnual": 0.037226
+      },
+      "rental": {
+        "arrivalRentElasticity": 2.41805
+      }
+    },
+    {
+      "host": {
+        "pReview": 0.0725194,
+        "beta": 4.02315,
+        "complianceBase": 0.169143,
+        "multiComplianceShift": -0.0646575,
+        "anticipation": 0.421954,
+        "prShare": 0.391112,
+        "investorEntry": 0.0034595
+      },
+      "enforcement": {
+        "detectMax": 0.124347,
+        "delistProb": 0.125576,
+        "regTakeup": 0.829637,
+        "exemptClaimShare": 0.0788266
+      },
+      "str": {
+        "demandSpillover": 0.800561,
+        "demandGrowthAnnual": -0.017934
+      },
+      "rental": {
+        "arrivalRentElasticity": 2.36371
+      }
+    },
+    {
+      "host": {
+        "pReview": 0.227005,
+        "beta": 3.82377,
+        "complianceBase": 0.51108,
+        "multiComplianceShift": -0.242715,
+        "anticipation": 0.191185,
+        "prShare": 0.404498,
+        "investorEntry": 0.00721484
+      },
+      "enforcement": {
+        "detectMax": 0.173538,
+        "delistProb": 0.0270256,
+        "regTakeup": 0.266798,
+        "exemptClaimShare": 0.012776
+      },
+      "str": {
+        "demandSpillover": 0.264482,
+        "demandGrowthAnnual": 0.0449037
+      },
+      "rental": {
+        "arrivalRentElasticity": 3.22027
+      }
+    },
+    {
+      "host": {
+        "pReview": 0.233149,
+        "beta": 0.748226,
+        "complianceBase": 0.74219,
+        "multiComplianceShift": -0.194505,
+        "anticipation": 0.0567482,
+        "prShare": 0.403813,
+        "investorEntry": 0.0044221
+      },
+      "enforcement": {
+        "detectMax": 0.0821539,
+        "delistProb": 0.0957324,
+        "regTakeup": 0.300171,
+        "exemptClaimShare": 0.0825999
+      },
+      "str": {
+        "demandSpillover": 0.657833,
+        "demandGrowthAnnual": 0.0151196
+      },
+      "rental": {
+        "arrivalRentElasticity": 1.41865
+      }
+    },
+    {
+      "host": {
+        "pReview": 0.181575,
+        "beta": 1.5512,
+        "complianceBase": 0.657093,
+        "multiComplianceShift": -0.259434,
+        "anticipation": 0.181628,
+        "prShare": 0.425688,
+        "investorEntry": 0.00682367
+      },
+      "enforcement": {
+        "detectMax": 0.0218143,
+        "delistProb": 0.109085,
+        "regTakeup": 0.816114,
+        "exemptClaimShare": 0.030616
+      },
+      "str": {
+        "demandSpillover": 0.672352,
+        "demandGrowthAnnual": 0.0358982
+      },
+      "rental": {
+        "arrivalRentElasticity": 4.0748
+      }
+    },
+    {
+      "host": {
+        "pReview": 0.211415,
+        "beta": 1.7564,
+        "complianceBase": 0.328288,
+        "multiComplianceShift": 0.00159364,
+        "anticipation": 0.135762,
+        "prShare": 0.345885,
+        "investorEntry": 0.000763389
+      },
+      "enforcement": {
+        "detectMax": 0.127273,
+        "delistProb": 0.0417436,
+        "regTakeup": 0.602144,
+        "exemptClaimShare": 0.0984375
+      },
+      "str": {
+        "demandSpillover": 0.852492,
+        "demandGrowthAnnual": 0.060222
+      },
+      "rental": {
+        "arrivalRentElasticity": 2.6233
+      }
+    },
+    {
+      "host": {
+        "pReview": 0.28656,
+        "beta": 1.45796,
+        "complianceBase": 0.483767,
+        "multiComplianceShift": 0.000513395,
+        "anticipation": 0.270908,
+        "prShare": 0.455705,
+        "investorEntry": 0.000858163
+      },
+      "enforcement": {
+        "detectMax": 0.0841993,
+        "delistProb": 0.13497,
+        "regTakeup": 0.611945,
+        "exemptClaimShare": 0.0692775
+      },
+      "str": {
+        "demandSpillover": 0.86778,
+        "demandGrowthAnnual": 0.045857
+      },
+      "rental": {
+        "arrivalRentElasticity": 1.23779
+      }
+    },
+    {
+      "host": {
+        "pReview": 0.191179,
+        "beta": 1.03645,
+        "complianceBase": 0.715633,
+        "multiComplianceShift": -0.39078,
+        "anticipation": 0.0257622,
+        "prShare": 0.328314,
+        "investorEntry": 0.00709563
+      },
+      "enforcement": {
+        "detectMax": 0.0665022,
+        "delistProb": 0.0370809,
+        "regTakeup": 0.604697,
+        "exemptClaimShare": 0.0293878
+      },
+      "str": {
+        "demandSpillover": 0.31162,
+        "demandGrowthAnnual": -0.0134123
+      },
+      "rental": {
+        "arrivalRentElasticity": 0.747846
+      }
+    },
+    {
+      "host": {
+        "pReview": 0.189875,
+        "beta": 1.02708,
+        "complianceBase": 0.294409,
+        "multiComplianceShift": -0.348604,
+        "anticipation": 0.485588,
+        "prShare": 0.446203,
+        "investorEntry": 0.00847435
+      },
+      "enforcement": {
+        "detectMax": 0.263521,
+        "delistProb": 0.206338,
+        "regTakeup": 0.323725,
+        "exemptClaimShare": 0.0316251
+      },
+      "str": {
+        "demandSpillover": 0.29971,
+        "demandGrowthAnnual": 0.0643657
+      },
+      "rental": {
+        "arrivalRentElasticity": 1.99681
+      }
+    },
+    {
+      "host": {
+        "pReview": 0.145238,
+        "beta": 0.588269,
+        "complianceBase": 0.209053,
+        "multiComplianceShift": -0.0693603,
+        "anticipation": 0.397654,
+        "prShare": 0.40714,
+        "investorEntry": 0.00638204
+      },
+      "enforcement": {
+        "detectMax": 0.256504,
+        "delistProb": 0.148641,
+        "regTakeup": 0.291306,
+        "exemptClaimShare": 0.0653782
+      },
+      "str": {
+        "demandSpillover": 0.81913,
+        "demandGrowthAnnual": 0.0617388
+      },
+      "rental": {
+        "arrivalRentElasticity": 3.30289
+      }
+    },
+    {
+      "host": {
+        "pReview": 0.175313,
+        "beta": 0.352878,
+        "complianceBase": 0.517068,
+        "multiComplianceShift": -0.302389,
+        "anticipation": 0.46801,
+        "prShare": 0.425087,
+        "investorEntry": 0.00613188
+      },
+      "enforcement": {
+        "detectMax": 0.302322,
+        "delistProb": 0.0306593,
+        "regTakeup": 0.870392,
+        "exemptClaimShare": 0.0465813
+      },
+      "str": {
+        "demandSpillover": 0.44791,
+        "demandGrowthAnnual": 0.0636478
+      },
+      "rental": {
+        "arrivalRentElasticity": 4.5938
+      }
+    },
+    {
+      "host": {
+        "pReview": 0.175313,
+        "beta": 0.352878,
+        "complianceBase": 0.517068,
+        "multiComplianceShift": -0.302389,
+        "anticipation": 0.46801,
+        "prShare": 0.425087,
+        "investorEntry": 0.00613188
+      },
+      "enforcement": {
+        "detectMax": 0.302322,
+        "delistProb": 0.0306593,
+        "regTakeup": 0.870392,
+        "exemptClaimShare": 0.0465813
+      },
+      "str": {
+        "demandSpillover": 0.44791,
+        "demandGrowthAnnual": 0.0636478
+      },
+      "rental": {
+        "arrivalRentElasticity": 4.5938
+      }
+    },
+    {
+      "host": {
+        "pReview": 0.175313,
+        "beta": 0.352878,
+        "complianceBase": 0.517068,
+        "multiComplianceShift": -0.302389,
+        "anticipation": 0.46801,
+        "prShare": 0.425087,
+        "investorEntry": 0.00613188
+      },
+      "enforcement": {
+        "detectMax": 0.302322,
+        "delistProb": 0.0306593,
+        "regTakeup": 0.870392,
+        "exemptClaimShare": 0.0465813
+      },
+      "str": {
+        "demandSpillover": 0.44791,
+        "demandGrowthAnnual": 0.0636478
+      },
+      "rental": {
+        "arrivalRentElasticity": 4.5938
+      }
+    },
+    {
+      "host": {
+        "pReview": 0.175313,
+        "beta": 0.352878,
+        "complianceBase": 0.517068,
+        "multiComplianceShift": -0.302389,
+        "anticipation": 0.46801,
+        "prShare": 0.425087,
+        "investorEntry": 0.00613188
+      },
+      "enforcement": {
+        "detectMax": 0.302322,
+        "delistProb": 0.0306593,
+        "regTakeup": 0.870392,
+        "exemptClaimShare": 0.0465813
+      },
+      "str": {
+        "demandSpillover": 0.44791,
+        "demandGrowthAnnual": 0.0636478
+      },
+      "rental": {
+        "arrivalRentElasticity": 4.5938
+      }
+    },
+    {
+      "host": {
+        "pReview": 0.175313,
+        "beta": 0.352878,
+        "complianceBase": 0.517068,
+        "multiComplianceShift": -0.302389,
+        "anticipation": 0.46801,
+        "prShare": 0.425087,
+        "investorEntry": 0.00613188
+      },
+      "enforcement": {
+        "detectMax": 0.302322,
+        "delistProb": 0.0306593,
+        "regTakeup": 0.870392,
+        "exemptClaimShare": 0.0465813
+      },
+      "str": {
+        "demandSpillover": 0.44791,
+        "demandGrowthAnnual": 0.0636478
+      },
+      "rental": {
+        "arrivalRentElasticity": 4.5938
+      }
+    },
+    {
+      "host": {
+        "pReview": 0.175313,
+        "beta": 0.352878,
+        "complianceBase": 0.517068,
+        "multiComplianceShift": -0.302389,
+        "anticipation": 0.46801,
+        "prShare": 0.425087,
+        "investorEntry": 0.00613188
+      },
+      "enforcement": {
+        "detectMax": 0.302322,
+        "delistProb": 0.0306593,
+        "regTakeup": 0.870392,
+        "exemptClaimShare": 0.0465813
+      },
+      "str": {
+        "demandSpillover": 0.44791,
+        "demandGrowthAnnual": 0.0636478
+      },
+      "rental": {
+        "arrivalRentElasticity": 4.5938
+      }
+    },
+    {
+      "host": {
+        "pReview": 0.0788023,
+        "beta": 2.49038,
+        "complianceBase": 0.616445,
+        "multiComplianceShift": -0.347778,
+        "anticipation": 0.188093,
+        "prShare": 0.390368,
+        "investorEntry": 0.00117597
+      },
+      "enforcement": {
+        "detectMax": 0.0616142,
+        "delistProb": 0.151781,
+        "regTakeup": 0.684447,
+        "exemptClaimShare": 0.100427
+      },
+      "str": {
+        "demandSpillover": 0.453713,
+        "demandGrowthAnnual": -0.00878677
+      },
+      "rental": {
+        "arrivalRentElasticity": 3.27046
+      }
+    },
+    {
+      "host": {
+        "pReview": 0.139469,
+        "beta": 0.898444,
+        "complianceBase": 0.478185,
+        "multiComplianceShift": -0.186455,
+        "anticipation": 0.370402,
+        "prShare": 0.41233,
+        "investorEntry": 0.0072738
+      },
+      "enforcement": {
+        "detectMax": 0.0893612,
+        "delistProb": 0.0536074,
+        "regTakeup": 0.436124,
+        "exemptClaimShare": 0.00564428
+      },
+      "str": {
+        "demandSpillover": 0.481241,
+        "demandGrowthAnnual": 0.0274108
+      },
+      "rental": {
+        "arrivalRentElasticity": 1.19323
+      }
+    },
+    {
+      "host": {
+        "pReview": 0.116788,
+        "beta": 2.91739,
+        "complianceBase": 0.19835,
+        "multiComplianceShift": -0.191193,
+        "anticipation": 0.324668,
+        "prShare": 0.333892,
+        "investorEntry": 0.00180136
+      },
+      "enforcement": {
+        "detectMax": 0.119839,
+        "delistProb": 0.162715,
+        "regTakeup": 0.361512,
+        "exemptClaimShare": 0.0556712
+      },
+      "str": {
+        "demandSpillover": 0.188001,
+        "demandGrowthAnnual": 0.0544463
+      },
+      "rental": {
+        "arrivalRentElasticity": 3.23707
+      }
+    },
+    {
+      "host": {
+        "pReview": 0.191815,
+        "beta": 1.47355,
+        "complianceBase": 0.0584079,
+        "multiComplianceShift": 0.0791509,
+        "anticipation": 0.252736,
+        "prShare": 0.25296,
+        "investorEntry": 0.00841797
+      },
+      "enforcement": {
+        "detectMax": 0.220887,
+        "delistProb": 0.0995966,
+        "regTakeup": 0.776698,
+        "exemptClaimShare": 0.0792497
+      },
+      "str": {
+        "demandSpillover": 0.225942,
+        "demandGrowthAnnual": 0.0908339
+      },
+      "rental": {
+        "arrivalRentElasticity": 2.64298
+      }
+    },
+    {
+      "host": {
+        "pReview": 0.249605,
+        "beta": 0.412248,
+        "complianceBase": 0.411348,
+        "multiComplianceShift": -0.300435,
+        "anticipation": 0.257023,
+        "prShare": 0.383463,
+        "investorEntry": 0.00636093
+      },
+      "enforcement": {
+        "detectMax": 0.205556,
+        "delistProb": 0.286208,
+        "regTakeup": 0.607364,
+        "exemptClaimShare": 0.0246518
+      },
+      "str": {
+        "demandSpillover": 0.286416,
+        "demandGrowthAnnual": 0.0518678
+      },
+      "rental": {
+        "arrivalRentElasticity": 3.69091
+      }
+    },
+    {
+      "host": {
+        "pReview": 0.288327,
+        "beta": 1.17808,
+        "complianceBase": 0.564661,
+        "multiComplianceShift": -0.388875,
+        "anticipation": 0.336389,
+        "prShare": 0.336528,
+        "investorEntry": 0.00443972
+      },
+      "enforcement": {
+        "detectMax": 0.147062,
+        "delistProb": 0.0873585,
+        "regTakeup": 0.324796,
+        "exemptClaimShare": 0.0199237
+      },
+      "str": {
+        "demandSpillover": 0.245992,
+        "demandGrowthAnnual": -0.0463
+      },
+      "rental": {
+        "arrivalRentElasticity": 0.620224
+      }
+    },
+    {
+      "host": {
+        "pReview": 0.0828992,
+        "beta": 3.51031,
+        "complianceBase": 0.172138,
+        "multiComplianceShift": -0.147758,
+        "anticipation": 0.447783,
+        "prShare": 0.389719,
+        "investorEntry": 0.00500694
+      },
+      "enforcement": {
+        "detectMax": 0.115579,
+        "delistProb": 0.197947,
+        "regTakeup": 0.431423,
+        "exemptClaimShare": 0.0875165
+      },
+      "str": {
+        "demandSpillover": 0.44599,
+        "demandGrowthAnnual": 0.0572678
+      },
+      "rental": {
+        "arrivalRentElasticity": 2.47118
+      }
+    },
+    {
+      "host": {
+        "pReview": 0.0555441,
+        "beta": 0.962867,
+        "complianceBase": 0.0985934,
+        "multiComplianceShift": -0.0224113,
+        "anticipation": 0.180301,
+        "prShare": 0.398061,
+        "investorEntry": 0.00895499
+      },
+      "enforcement": {
+        "detectMax": 0.130388,
+        "delistProb": 0.0624036,
+        "regTakeup": 0.663287,
+        "exemptClaimShare": 0.106241
+      },
+      "str": {
+        "demandSpillover": 0.641043,
+        "demandGrowthAnnual": 0.062132
+      },
+      "rental": {
+        "arrivalRentElasticity": 4.85927
+      }
+    },
+    {
+      "host": {
+        "pReview": 0.0351656,
+        "beta": 2.94346,
+        "complianceBase": 0.235495,
+        "multiComplianceShift": 0.374549,
+        "anticipation": 0.0960942,
+        "prShare": 0.456006,
+        "investorEntry": 0.00753007
+      },
+      "enforcement": {
+        "detectMax": 0.0403643,
+        "delistProb": 0.0622837,
+        "regTakeup": 0.43298,
+        "exemptClaimShare": 0.0526703
+      },
+      "str": {
+        "demandSpillover": 0.775027,
+        "demandGrowthAnnual": 0.0130148
+      },
+      "rental": {
+        "arrivalRentElasticity": 1.5029
+      }
+    },
+    {
+      "host": {
+        "pReview": 0.0999678,
+        "beta": 1.08597,
+        "complianceBase": 0.60932,
+        "multiComplianceShift": -0.306888,
+        "anticipation": 0.0347347,
+        "prShare": 0.371263,
+        "investorEntry": 0.00540977
+      },
+      "enforcement": {
+        "detectMax": 0.121283,
+        "delistProb": 0.0648314,
+        "regTakeup": 0.614726,
+        "exemptClaimShare": 0.0594003
+      },
+      "str": {
+        "demandSpillover": 0.051366,
+        "demandGrowthAnnual": -0.0194751
+      },
+      "rental": {
+        "arrivalRentElasticity": 1.27305
+      }
+    },
+    {
+      "host": {
+        "pReview": 0.226373,
+        "beta": 1.16162,
+        "complianceBase": 0.577106,
+        "multiComplianceShift": -0.268221,
+        "anticipation": 0.345123,
+        "prShare": 0.495943,
+        "investorEntry": 0.00651909
+      },
+      "enforcement": {
+        "detectMax": 0.181437,
+        "delistProb": 0.0383677,
+        "regTakeup": 0.253845,
+        "exemptClaimShare": 0.0510102
+      },
+      "str": {
+        "demandSpillover": 0.46278,
+        "demandGrowthAnnual": -0.00491395
+      },
+      "rental": {
+        "arrivalRentElasticity": 3.45392
+      }
+    },
+    {
+      "host": {
+        "pReview": 0.0772649,
+        "beta": 0.799514,
+        "complianceBase": 0.379723,
+        "multiComplianceShift": -0.0888508,
+        "anticipation": 0.00119039,
+        "prShare": 0.393147,
+        "investorEntry": 0.00581295
+      },
+      "enforcement": {
+        "detectMax": 0.0794435,
+        "delistProb": 0.0539213,
+        "regTakeup": 0.547991,
+        "exemptClaimShare": 0.0541761
+      },
+      "str": {
+        "demandSpillover": 0.508702,
+        "demandGrowthAnnual": 0.0802376
+      },
+      "rental": {
+        "arrivalRentElasticity": 0.543721
+      }
+    },
+    {
+      "host": {
+        "pReview": 0.0817683,
+        "beta": 2.15391,
+        "complianceBase": 0.597571,
+        "multiComplianceShift": -0.14872,
+        "anticipation": 0.214961,
+        "prShare": 0.431252,
+        "investorEntry": 0.00713174
+      },
+      "enforcement": {
+        "detectMax": 0.065334,
+        "delistProb": 0.06816,
+        "regTakeup": 0.276631,
+        "exemptClaimShare": 0.106235
+      },
+      "str": {
+        "demandSpillover": 0.161083,
+        "demandGrowthAnnual": 0.000495161
+      },
+      "rental": {
+        "arrivalRentElasticity": 2.72826
+      }
+    },
+    {
+      "host": {
+        "pReview": 0.174908,
+        "beta": 0.719254,
+        "complianceBase": 0.48684,
+        "multiComplianceShift": -0.0755195,
+        "anticipation": 0.292403,
+        "prShare": 0.49624,
+        "investorEntry": 0.00898214
+      },
+      "enforcement": {
+        "detectMax": 0.13977,
+        "delistProb": 0.140442,
+        "regTakeup": 0.394249,
+        "exemptClaimShare": 0.105571
+      },
+      "str": {
+        "demandSpillover": 0.796326,
+        "demandGrowthAnnual": 0.0165081
+      },
+      "rental": {
+        "arrivalRentElasticity": 2.84405
+      }
+    },
+    {
+      "host": {
+        "pReview": 0.180471,
+        "beta": 1.29395,
+        "complianceBase": 0.118894,
+        "multiComplianceShift": -0.0939994,
+        "anticipation": 0.497787,
+        "prShare": 0.348232,
+        "investorEntry": 0.00140156
+      },
+      "enforcement": {
+        "detectMax": 0.153958,
+        "delistProb": 0.152618,
+        "regTakeup": 0.439623,
+        "exemptClaimShare": 0.0930938
+      },
+      "str": {
+        "demandSpillover": 0.177166,
+        "demandGrowthAnnual": 0.0129294
+      },
+      "rental": {
+        "arrivalRentElasticity": 2.95969
+      }
+    },
+    {
+      "host": {
+        "pReview": 0.190575,
+        "beta": 0.504781,
+        "complianceBase": 0.537411,
+        "multiComplianceShift": -0.0840918,
+        "anticipation": 0.476752,
+        "prShare": 0.486166,
+        "investorEntry": 0.00962537
+      },
+      "enforcement": {
+        "detectMax": 0.122364,
+        "delistProb": 0.115608,
+        "regTakeup": 0.269166,
+        "exemptClaimShare": 0.0455808
+      },
+      "str": {
+        "demandSpillover": 0.243198,
+        "demandGrowthAnnual": 0.0805537
+      },
+      "rental": {
+        "arrivalRentElasticity": 2.55292
+      }
+    },
+    {
+      "host": {
+        "pReview": 0.236933,
+        "beta": 0.998876,
+        "complianceBase": 0.255652,
+        "multiComplianceShift": -0.264301,
+        "anticipation": 0.260084,
+        "prShare": 0.470112,
+        "investorEntry": 0.00854421
+      },
+      "enforcement": {
+        "detectMax": 0.349403,
+        "delistProb": 0.160028,
+        "regTakeup": 0.265681,
+        "exemptClaimShare": 0.0566603
+      },
+      "str": {
+        "demandSpillover": 0.476014,
+        "demandGrowthAnnual": -0.0189893
+      },
+      "rental": {
+        "arrivalRentElasticity": 0.576339
+      }
+    },
+    {
+      "host": {
+        "pReview": 0.263483,
+        "beta": 0.746322,
+        "complianceBase": 0.542703,
+        "multiComplianceShift": -0.280386,
+        "anticipation": 0.254479,
+        "prShare": 0.465799,
+        "investorEntry": 0.00561241
+      },
+      "enforcement": {
+        "detectMax": 0.210015,
+        "delistProb": 0.142813,
+        "regTakeup": 0.664273,
+        "exemptClaimShare": 0.052451
+      },
+      "str": {
+        "demandSpillover": 0.82405,
+        "demandGrowthAnnual": 0.0251202
+      },
+      "rental": {
+        "arrivalRentElasticity": 0.581098
+      }
+    },
+    {
+      "host": {
+        "pReview": 0.136883,
+        "beta": 4.35133,
+        "complianceBase": 0.152161,
+        "multiComplianceShift": 0.121076,
+        "anticipation": 0.14462,
+        "prShare": 0.443546,
+        "investorEntry": 0.00477765
+      },
+      "enforcement": {
+        "detectMax": 0.122699,
+        "delistProb": 0.116965,
+        "regTakeup": 0.303912,
+        "exemptClaimShare": 0.0112563
+      },
+      "str": {
+        "demandSpillover": 0.960754,
+        "demandGrowthAnnual": 0.074248
+      },
+      "rental": {
+        "arrivalRentElasticity": 3.12565
+      }
+    },
+    {
+      "host": {
+        "pReview": 0.272335,
+        "beta": 2.18657,
+        "complianceBase": 0.190398,
+        "multiComplianceShift": -0.0611401,
+        "anticipation": 0.496958,
+        "prShare": 0.38861,
+        "investorEntry": 0.00231172
+      },
+      "enforcement": {
+        "detectMax": 0.115803,
+        "delistProb": 0.152536,
+        "regTakeup": 0.641373,
+        "exemptClaimShare": 0.0887079
+      },
+      "str": {
+        "demandSpillover": 0.26318,
+        "demandGrowthAnnual": -0.00948053
+      },
+      "rental": {
+        "arrivalRentElasticity": 3.05279
+      }
+    },
+    {
+      "host": {
+        "pReview": 0.189273,
+        "beta": 1.19531,
+        "complianceBase": 0.337024,
+        "multiComplianceShift": 0.0048812,
+        "anticipation": 0.412353,
+        "prShare": 0.436878,
+        "investorEntry": 0.00394145
+      },
+      "enforcement": {
+        "detectMax": 0.149503,
+        "delistProb": 0.124227,
+        "regTakeup": 0.804064,
+        "exemptClaimShare": 0.0867549
+      },
+      "str": {
+        "demandSpillover": 0.65199,
+        "demandGrowthAnnual": -0.00382483
+      },
+      "rental": {
+        "arrivalRentElasticity": 1.99461
+      }
+    },
+    {
+      "host": {
+        "pReview": 0.0719181,
+        "beta": 0.350621,
+        "complianceBase": 0.331693,
+        "multiComplianceShift": -0.193745,
+        "anticipation": 0.42771,
+        "prShare": 0.408891,
+        "investorEntry": 0.00504493
+      },
+      "enforcement": {
+        "detectMax": 0.120848,
+        "delistProb": 0.0969184,
+        "regTakeup": 0.531333,
+        "exemptClaimShare": 0.0797368
+      },
+      "str": {
+        "demandSpillover": 0.759681,
+        "demandGrowthAnnual": -0.0427181
+      },
+      "rental": {
+        "arrivalRentElasticity": 3.94995
+      }
+    },
+    {
+      "host": {
+        "pReview": 0.227782,
+        "beta": 2.27265,
+        "complianceBase": 0.153688,
+        "multiComplianceShift": -0.182562,
+        "anticipation": 0.274489,
+        "prShare": 0.390931,
+        "investorEntry": 0.00687286
+      },
+      "enforcement": {
+        "detectMax": 0.264426,
+        "delistProb": 0.141652,
+        "regTakeup": 0.364924,
+        "exemptClaimShare": 0.0332759
+      },
+      "str": {
+        "demandSpillover": 0.501966,
+        "demandGrowthAnnual": 0.0475559
+      },
+      "rental": {
+        "arrivalRentElasticity": 4.55071
+      }
+    },
+    {
+      "host": {
+        "pReview": 0.234986,
+        "beta": 1.52172,
+        "complianceBase": 0.383034,
+        "multiComplianceShift": -0.0449276,
+        "anticipation": 0.0880783,
+        "prShare": 0.238609,
+        "investorEntry": 0.00635742
+      },
+      "enforcement": {
+        "detectMax": 0.122765,
+        "delistProb": 0.181365,
+        "regTakeup": 0.634006,
+        "exemptClaimShare": 0.0625788
+      },
+      "str": {
+        "demandSpillover": 0.111117,
+        "demandGrowthAnnual": 0.0195454
+      },
+      "rental": {
+        "arrivalRentElasticity": 1.47448
+      }
+    },
+    {
+      "host": {
+        "pReview": 0.144399,
+        "beta": 0.522595,
+        "complianceBase": 0.399483,
+        "multiComplianceShift": -0.107304,
+        "anticipation": 0.181368,
+        "prShare": 0.310688,
+        "investorEntry": 0.0021204
+      },
+      "enforcement": {
+        "detectMax": 0.145702,
+        "delistProb": 0.0856103,
+        "regTakeup": 0.448536,
+        "exemptClaimShare": 0.0880258
+      },
+      "str": {
+        "demandSpillover": 0.581672,
+        "demandGrowthAnnual": -0.0201565
+      },
+      "rental": {
+        "arrivalRentElasticity": 2.85964
+      }
+    },
+    {
+      "host": {
+        "pReview": 0.0499373,
+        "beta": 2.75977,
+        "complianceBase": 0.216316,
+        "multiComplianceShift": -0.0281927,
+        "anticipation": 0.29203,
+        "prShare": 0.369971,
+        "investorEntry": 0.0097147
+      },
+      "enforcement": {
+        "detectMax": 0.159034,
+        "delistProb": 0.0448626,
+        "regTakeup": 0.462283,
+        "exemptClaimShare": 0.0579026
+      },
+      "str": {
+        "demandSpillover": 0.942803,
+        "demandGrowthAnnual": 0.0492012
+      },
+      "rental": {
+        "arrivalRentElasticity": 3.82878
+      }
+    },
+    {
+      "host": {
+        "pReview": 0.173483,
+        "beta": 1.62731,
+        "complianceBase": 0.329998,
+        "multiComplianceShift": -0.215605,
+        "anticipation": 0.158001,
+        "prShare": 0.462938,
+        "investorEntry": 0.00416442
+      },
+      "enforcement": {
+        "detectMax": 0.196444,
+        "delistProb": 0.101097,
+        "regTakeup": 0.705063,
+        "exemptClaimShare": 0.0645938
+      },
+      "str": {
+        "demandSpillover": 0.434129,
+        "demandGrowthAnnual": 0.0313451
+      },
+      "rental": {
+        "arrivalRentElasticity": 0.550874
+      }
+    },
+    {
+      "host": {
+        "pReview": 0.119236,
+        "beta": 1.61855,
+        "complianceBase": 0.164212,
+        "multiComplianceShift": 0.377787,
+        "anticipation": 0.265401,
+        "prShare": 0.483003,
+        "investorEntry": 0.00809864
+      },
+      "enforcement": {
+        "detectMax": 0.0807323,
+        "delistProb": 0.111296,
+        "regTakeup": 0.39675,
+        "exemptClaimShare": 0.0872976
+      },
+      "str": {
+        "demandSpillover": 0.678941,
+        "demandGrowthAnnual": 0.0332903
+      },
+      "rental": {
+        "arrivalRentElasticity": 4.81797
+      }
+    },
+    {
+      "host": {
+        "pReview": 0.0954607,
+        "beta": 2.16776,
+        "complianceBase": 0.782441,
+        "multiComplianceShift": -0.338241,
+        "anticipation": 0.15029,
+        "prShare": 0.455948,
+        "investorEntry": 0.00731317
+      },
+      "enforcement": {
+        "detectMax": 0.0205621,
+        "delistProb": 0.190322,
+        "regTakeup": 0.406476,
+        "exemptClaimShare": 0.0819474
+      },
+      "str": {
+        "demandSpillover": 0.190925,
+        "demandGrowthAnnual": 0.0931582
+      },
+      "rental": {
+        "arrivalRentElasticity": 3.60071
+      }
+    },
+    {
+      "host": {
+        "pReview": 0.199679,
+        "beta": 0.495878,
+        "complianceBase": 0.217825,
+        "multiComplianceShift": -0.366138,
+        "anticipation": 0.425638,
+        "prShare": 0.380463,
+        "investorEntry": 0.00325484
+      },
+      "enforcement": {
+        "detectMax": 0.353077,
+        "delistProb": 0.0838449,
+        "regTakeup": 0.334315,
+        "exemptClaimShare": 0.0760285
+      },
+      "str": {
+        "demandSpillover": 0.872403,
+        "demandGrowthAnnual": 0.0465976
+      },
+      "rental": {
+        "arrivalRentElasticity": 3.72709
+      }
+    },
+    {
+      "host": {
+        "pReview": 0.0637221,
+        "beta": 0.322595,
+        "complianceBase": 0.43265,
+        "multiComplianceShift": -0.133939,
+        "anticipation": 0.158381,
+        "prShare": 0.262787,
+        "investorEntry": 0.00542465
+      },
+      "enforcement": {
+        "detectMax": 0.0432743,
+        "delistProb": 0.081197,
+        "regTakeup": 0.682285,
+        "exemptClaimShare": 0.0101005
+      },
+      "str": {
+        "demandSpillover": 0.811753,
+        "demandGrowthAnnual": 0.0233981
+      },
+      "rental": {
+        "arrivalRentElasticity": 2.76576
+      }
+    },
+    {
+      "host": {
+        "pReview": 0.0670914,
+        "beta": 2.60042,
+        "complianceBase": 0.511822,
+        "multiComplianceShift": -0.34516,
+        "anticipation": 0.0606711,
+        "prShare": 0.284313,
+        "investorEntry": 0.00229152
+      },
+      "enforcement": {
+        "detectMax": 0.0974189,
+        "delistProb": 0.147247,
+        "regTakeup": 0.333241,
+        "exemptClaimShare": 0.0391135
+      },
+      "str": {
+        "demandSpillover": 0.120743,
+        "demandGrowthAnnual": 0.0497753
+      },
+      "rental": {
+        "arrivalRentElasticity": 4.78042
+      }
+    },
+    {
+      "host": {
+        "pReview": 0.215782,
+        "beta": 4.43518,
+        "complianceBase": 0.426754,
+        "multiComplianceShift": 0.00418396,
+        "anticipation": 0.372517,
+        "prShare": 0.329447,
+        "investorEntry": 0.00844584
+      },
+      "enforcement": {
+        "detectMax": 0.124903,
+        "delistProb": 0.118048,
+        "regTakeup": 0.779899,
+        "exemptClaimShare": 0.127867
+      },
+      "str": {
+        "demandSpillover": 0.0746629,
+        "demandGrowthAnnual": -0.000900248
+      },
+      "rental": {
+        "arrivalRentElasticity": 2.91677
+      }
+    },
+    {
+      "host": {
+        "pReview": 0.279458,
+        "beta": 0.64528,
+        "complianceBase": 0.540923,
+        "multiComplianceShift": -0.064057,
+        "anticipation": 0.445707,
+        "prShare": 0.380445,
+        "investorEntry": 0.00793518
+      },
+      "enforcement": {
+        "detectMax": 0.0610332,
+        "delistProb": 0.110733,
+        "regTakeup": 0.416049,
+        "exemptClaimShare": 0.110347
+      },
+      "str": {
+        "demandSpillover": 0.084108,
+        "demandGrowthAnnual": -0.00595425
+      },
+      "rental": {
+        "arrivalRentElasticity": 2.4426
+      }
+    },
+    {
+      "host": {
+        "pReview": 0.188243,
+        "beta": 0.454654,
+        "complianceBase": 0.215864,
+        "multiComplianceShift": 0.189026,
+        "anticipation": 0.45823,
+        "prShare": 0.436422,
+        "investorEntry": 0.00406494
+      },
+      "enforcement": {
+        "detectMax": 0.158253,
+        "delistProb": 0.0431151,
+        "regTakeup": 0.438263,
+        "exemptClaimShare": 0.0926256
+      },
+      "str": {
+        "demandSpillover": 0.81058,
+        "demandGrowthAnnual": 0.00275429
+      },
+      "rental": {
+        "arrivalRentElasticity": 2.07053
+      }
+    },
+    {
+      "host": {
+        "pReview": 0.209824,
+        "beta": 1.07374,
+        "complianceBase": 0.555711,
+        "multiComplianceShift": -0.166758,
+        "anticipation": 0.106927,
+        "prShare": 0.342572,
+        "investorEntry": 0.00158571
+      },
+      "enforcement": {
+        "detectMax": 0.0828108,
+        "delistProb": 0.254091,
+        "regTakeup": 0.507986,
+        "exemptClaimShare": 0.0560596
+      },
+      "str": {
+        "demandSpillover": 0.209537,
+        "demandGrowthAnnual": 0.0699097
+      },
+      "rental": {
+        "arrivalRentElasticity": 3.03369
+      }
+    },
+    {
+      "host": {
+        "pReview": 0.127136,
+        "beta": 1.84983,
+        "complianceBase": 0.556982,
+        "multiComplianceShift": 0.0434679,
+        "anticipation": 0.0152351,
+        "prShare": 0.434126,
+        "investorEntry": 0.00950701
+      },
+      "enforcement": {
+        "detectMax": 0.0790731,
+        "delistProb": 0.060193,
+        "regTakeup": 0.803017,
+        "exemptClaimShare": 0.122605
+      },
+      "str": {
+        "demandSpillover": 0.514125,
+        "demandGrowthAnnual": 0.023439
+      },
+      "rental": {
+        "arrivalRentElasticity": 3.62803
+      }
+    },
+    {
+      "host": {
+        "pReview": 0.211032,
+        "beta": 4.05721,
+        "complianceBase": 0.711687,
+        "multiComplianceShift": -0.176866,
+        "anticipation": 0.386135,
+        "prShare": 0.491907,
+        "investorEntry": 0.00404355
+      },
+      "enforcement": {
+        "detectMax": 0.0821104,
+        "delistProb": 0.155973,
+        "regTakeup": 0.191628,
+        "exemptClaimShare": 0.0779344
+      },
+      "str": {
+        "demandSpillover": 0.770079,
+        "demandGrowthAnnual": 0.0858719
+      },
+      "rental": {
+        "arrivalRentElasticity": 1.65246
+      }
+    },
+    {
+      "host": {
+        "pReview": 0.231207,
+        "beta": 0.60443,
+        "complianceBase": 0.149143,
+        "multiComplianceShift": -0.0377592,
+        "anticipation": 0.433044,
+        "prShare": 0.338653,
+        "investorEntry": 0.00696443
+      },
+      "enforcement": {
+        "detectMax": 0.213121,
+        "delistProb": 0.327899,
+        "regTakeup": 0.520996,
+        "exemptClaimShare": 0.0831632
+      },
+      "str": {
+        "demandSpillover": 0.98251,
+        "demandGrowthAnnual": -0.0155012
+      },
+      "rental": {
+        "arrivalRentElasticity": 1.85216
+      }
+    },
+    {
+      "host": {
+        "pReview": 0.161643,
+        "beta": 3.53286,
+        "complianceBase": 0.0662826,
+        "multiComplianceShift": -0.0362911,
+        "anticipation": 0.420076,
+        "prShare": 0.35369,
+        "investorEntry": 0.000919082
+      },
+      "enforcement": {
+        "detectMax": 0.127781,
+        "delistProb": 0.0737863,
+        "regTakeup": 0.279832,
+        "exemptClaimShare": 0.0437523
+      },
+      "str": {
+        "demandSpillover": 0.439809,
+        "demandGrowthAnnual": -0.0136469
+      },
+      "rental": {
+        "arrivalRentElasticity": 2.45675
+      }
+    },
+    {
+      "host": {
+        "pReview": 0.296438,
+        "beta": 0.993161,
+        "complianceBase": 0.259036,
+        "multiComplianceShift": 0.0427043,
+        "anticipation": 0.351742,
+        "prShare": 0.360507,
+        "investorEntry": 0.00409765
+      },
+      "enforcement": {
+        "detectMax": 0.186404,
+        "delistProb": 0.0980809,
+        "regTakeup": 0.321323,
+        "exemptClaimShare": 0.0591607
+      },
+      "str": {
+        "demandSpillover": 0.746136,
+        "demandGrowthAnnual": 0.0958303
+      },
+      "rental": {
+        "arrivalRentElasticity": 3.98846
+      }
+    },
+    {
+      "host": {
+        "pReview": 0.104048,
+        "beta": 0.8229,
+        "complianceBase": 0.308232,
+        "multiComplianceShift": -0.312534,
+        "anticipation": 0.183853,
+        "prShare": 0.321795,
+        "investorEntry": 0.00812948
+      },
+      "enforcement": {
+        "detectMax": 0.117119,
+        "delistProb": 0.0571808,
+        "regTakeup": 0.382294,
+        "exemptClaimShare": 0.0552278
+      },
+      "str": {
+        "demandSpillover": 0.416,
+        "demandGrowthAnnual": 0.00421053
+      },
+      "rental": {
+        "arrivalRentElasticity": 2.84005
+      }
+    },
+    {
+      "host": {
+        "pReview": 0.283133,
+        "beta": 0.35375,
+        "complianceBase": 0.244845,
+        "multiComplianceShift": -0.27493,
+        "anticipation": 0.496019,
+        "prShare": 0.306592,
+        "investorEntry": 0.00734292
+      },
+      "enforcement": {
+        "detectMax": 0.391316,
+        "delistProb": 0.230722,
+        "regTakeup": 0.519807,
+        "exemptClaimShare": 0.030093
+      },
+      "str": {
+        "demandSpillover": 0.817579,
+        "demandGrowthAnnual": 0.0283654
+      },
+      "rental": {
+        "arrivalRentElasticity": 2.4549
+      }
+    },
+    {
+      "host": {
+        "pReview": 0.283133,
+        "beta": 0.35375,
+        "complianceBase": 0.244845,
+        "multiComplianceShift": -0.27493,
+        "anticipation": 0.496019,
+        "prShare": 0.306592,
+        "investorEntry": 0.00734292
+      },
+      "enforcement": {
+        "detectMax": 0.391316,
+        "delistProb": 0.230722,
+        "regTakeup": 0.519807,
+        "exemptClaimShare": 0.030093
+      },
+      "str": {
+        "demandSpillover": 0.817579,
+        "demandGrowthAnnual": 0.0283654
+      },
+      "rental": {
+        "arrivalRentElasticity": 2.4549
+      }
+    },
+    {
+      "host": {
+        "pReview": 0.229585,
+        "beta": 1.38088,
+        "complianceBase": 0.119178,
+        "multiComplianceShift": 0.331406,
+        "anticipation": 0.187032,
+        "prShare": 0.453615,
+        "investorEntry": 0.00337147
+      },
+      "enforcement": {
+        "detectMax": 0.126835,
+        "delistProb": 0.114198,
+        "regTakeup": 0.523546,
+        "exemptClaimShare": 0.0924944
+      },
+      "str": {
+        "demandSpillover": 0.600238,
+        "demandGrowthAnnual": 0.0768757
+      },
+      "rental": {
+        "arrivalRentElasticity": 1.95302
+      }
+    },
+    {
+      "host": {
+        "pReview": 0.287123,
+        "beta": 1.12583,
+        "complianceBase": 0.353391,
+        "multiComplianceShift": -0.000280753,
+        "anticipation": 0.17584,
+        "prShare": 0.326359,
+        "investorEntry": 0.00332754
+      },
+      "enforcement": {
+        "detectMax": 0.180705,
+        "delistProb": 0.0374503,
+        "regTakeup": 0.788331,
+        "exemptClaimShare": 0.0269803
+      },
+      "str": {
+        "demandSpillover": 0.00108493,
+        "demandGrowthAnnual": 0.0451471
+      },
+      "rental": {
+        "arrivalRentElasticity": 3.0958
+      }
+    },
+    {
+      "host": {
+        "pReview": 0.287123,
+        "beta": 1.12583,
+        "complianceBase": 0.353391,
+        "multiComplianceShift": -0.000280753,
+        "anticipation": 0.17584,
+        "prShare": 0.326359,
+        "investorEntry": 0.00332754
+      },
+      "enforcement": {
+        "detectMax": 0.180705,
+        "delistProb": 0.0374503,
+        "regTakeup": 0.788331,
+        "exemptClaimShare": 0.0269803
+      },
+      "str": {
+        "demandSpillover": 0.00108493,
+        "demandGrowthAnnual": 0.0451471
+      },
+      "rental": {
+        "arrivalRentElasticity": 3.0958
+      }
+    },
+    {
+      "host": {
+        "pReview": 0.121867,
+        "beta": 1.6866,
+        "complianceBase": 0.421427,
+        "multiComplianceShift": 0.0487134,
+        "anticipation": 0.431861,
+        "prShare": 0.340492,
+        "investorEntry": 0.00231091
+      },
+      "enforcement": {
+        "detectMax": 0.087825,
+        "delistProb": 0.049055,
+        "regTakeup": 0.465738,
+        "exemptClaimShare": 0.104353
+      },
+      "str": {
+        "demandSpillover": 0.348754,
+        "demandGrowthAnnual": 0.0166077
+      },
+      "rental": {
+        "arrivalRentElasticity": 1.86718
+      }
+    },
+    {
+      "host": {
+        "pReview": 0.138512,
+        "beta": 2.9875,
+        "complianceBase": 0.323695,
+        "multiComplianceShift": -0.15444,
+        "anticipation": 0.126569,
+        "prShare": 0.36581,
+        "investorEntry": 0.00930287
+      },
+      "enforcement": {
+        "detectMax": 0.18874,
+        "delistProb": 0.0361491,
+        "regTakeup": 0.263102,
+        "exemptClaimShare": 0.0346871
+      },
+      "str": {
+        "demandSpillover": 0.287993,
+        "demandGrowthAnnual": 0.0517388
+      },
+      "rental": {
+        "arrivalRentElasticity": 4.74119
+      }
+    },
+    {
+      "host": {
+        "pReview": 0.0458248,
+        "beta": 0.74826,
+        "complianceBase": 0.557672,
+        "multiComplianceShift": -0.237738,
+        "anticipation": 0.421773,
+        "prShare": 0.284868,
+        "investorEntry": 0.00448781
+      },
+      "enforcement": {
+        "detectMax": 0.0879435,
+        "delistProb": 0.0236077,
+        "regTakeup": 0.724481,
+        "exemptClaimShare": 0.0639241
+      },
+      "str": {
+        "demandSpillover": 0.722508,
+        "demandGrowthAnnual": 0.064952
+      },
+      "rental": {
+        "arrivalRentElasticity": 2.29412
+      }
+    },
+    {
+      "host": {
+        "pReview": 0.163931,
+        "beta": 0.662888,
+        "complianceBase": 0.71945,
+        "multiComplianceShift": -0.357377,
+        "anticipation": 0.29371,
+        "prShare": 0.469927,
+        "investorEntry": 0.00929977
+      },
+      "enforcement": {
+        "detectMax": 0.0803852,
+        "delistProb": 0.128831,
+        "regTakeup": 0.178153,
+        "exemptClaimShare": 0.0754506
+      },
+      "str": {
+        "demandSpillover": 0.990182,
+        "demandGrowthAnnual": -0.0168122
+      },
+      "rental": {
+        "arrivalRentElasticity": 1.70425
+      }
+    },
+    {
+      "host": {
+        "pReview": 0.277722,
+        "beta": 0.791187,
+        "complianceBase": 0.368964,
+        "multiComplianceShift": -0.391571,
+        "anticipation": 0.399194,
+        "prShare": 0.314062,
+        "investorEntry": 0.00582155
+      },
+      "enforcement": {
+        "detectMax": 0.339464,
+        "delistProb": 0.120093,
+        "regTakeup": 0.713503,
+        "exemptClaimShare": 0.035093
+      },
+      "str": {
+        "demandSpillover": 0.0704675,
+        "demandGrowthAnnual": -0.0414704
+      },
+      "rental": {
+        "arrivalRentElasticity": 2.88143
+      }
+    },
+    {
+      "host": {
+        "pReview": 0.284298,
+        "beta": 1.27303,
+        "complianceBase": 0.248777,
+        "multiComplianceShift": -0.33548,
+        "anticipation": 0.307571,
+        "prShare": 0.376448,
+        "investorEntry": 0.00261555
+      },
+      "enforcement": {
+        "detectMax": 0.183669,
+        "delistProb": 0.127726,
+        "regTakeup": 0.479708,
+        "exemptClaimShare": 0.0833356
+      },
+      "str": {
+        "demandSpillover": 0.131977,
+        "demandGrowthAnnual": 0.0815292
+      },
+      "rental": {
+        "arrivalRentElasticity": 2.61371
+      }
+    },
+    {
+      "host": {
+        "pReview": 0.212667,
+        "beta": 4.79144,
+        "complianceBase": 0.672624,
+        "multiComplianceShift": -0.292293,
+        "anticipation": 0.414034,
+        "prShare": 0.300063,
+        "investorEntry": 0.00213357
+      },
+      "enforcement": {
+        "detectMax": 0.158216,
+        "delistProb": 0.0415754,
+        "regTakeup": 0.46099,
+        "exemptClaimShare": 0.0681172
+      },
+      "str": {
+        "demandSpillover": 0.0279433,
+        "demandGrowthAnnual": -0.0113179
+      },
+      "rental": {
+        "arrivalRentElasticity": 1.46395
+      }
+    },
+    {
+      "host": {
+        "pReview": 0.0657269,
+        "beta": 1.31076,
+        "complianceBase": 0.406609,
+        "multiComplianceShift": -0.184019,
+        "anticipation": 0.0678243,
+        "prShare": 0.400081,
+        "investorEntry": 0.00265454
+      },
+      "enforcement": {
+        "detectMax": 0.15388,
+        "delistProb": 0.0213563,
+        "regTakeup": 0.451051,
+        "exemptClaimShare": 0.128431
+      },
+      "str": {
+        "demandSpillover": 0.656264,
+        "demandGrowthAnnual": 0.0703494
+      },
+      "rental": {
+        "arrivalRentElasticity": 3.73522
+      }
+    },
+    {
+      "host": {
+        "pReview": 0.234164,
+        "beta": 2.25213,
+        "complianceBase": 0.563735,
+        "multiComplianceShift": 0.171674,
+        "anticipation": 0.228345,
+        "prShare": 0.478256,
+        "investorEntry": 0.0061656
+      },
+      "enforcement": {
+        "detectMax": 0.0391126,
+        "delistProb": 0.170718,
+        "regTakeup": 0.241269,
+        "exemptClaimShare": 0.0637083
+      },
+      "str": {
+        "demandSpillover": 0.373752,
+        "demandGrowthAnnual": 0.0124027
+      },
+      "rental": {
+        "arrivalRentElasticity": 2.50051
+      }
+    },
+    {
+      "host": {
+        "pReview": 0.0932454,
+        "beta": 3.08111,
+        "complianceBase": 0.647567,
+        "multiComplianceShift": -0.252238,
+        "anticipation": 0.255351,
+        "prShare": 0.40587,
+        "investorEntry": 0.00144258
+      },
+      "enforcement": {
+        "detectMax": 0.0511056,
+        "delistProb": 0.102365,
+        "regTakeup": 0.434059,
+        "exemptClaimShare": 0.115033
+      },
+      "str": {
+        "demandSpillover": 0.569031,
+        "demandGrowthAnnual": 0.0246038
+      },
+      "rental": {
+        "arrivalRentElasticity": 1.28368
+      }
+    },
+    {
+      "host": {
+        "pReview": 0.160405,
+        "beta": 0.583992,
+        "complianceBase": 0.27722,
+        "multiComplianceShift": -0.0615112,
+        "anticipation": 0.126019,
+        "prShare": 0.234587,
+        "investorEntry": 0.00792378
+      },
+      "enforcement": {
+        "detectMax": 0.111614,
+        "delistProb": 0.200337,
+        "regTakeup": 0.774996,
+        "exemptClaimShare": 0.0943801
+      },
+      "str": {
+        "demandSpillover": 0.380492,
+        "demandGrowthAnnual": 0.0776964
+      },
+      "rental": {
+        "arrivalRentElasticity": 0.805343
+      }
+    },
+    {
+      "host": {
+        "pReview": 0.160405,
+        "beta": 0.583992,
+        "complianceBase": 0.27722,
+        "multiComplianceShift": -0.0615112,
+        "anticipation": 0.126019,
+        "prShare": 0.234587,
+        "investorEntry": 0.00792378
+      },
+      "enforcement": {
+        "detectMax": 0.111614,
+        "delistProb": 0.200337,
+        "regTakeup": 0.774996,
+        "exemptClaimShare": 0.0943801
+      },
+      "str": {
+        "demandSpillover": 0.380492,
+        "demandGrowthAnnual": 0.0776964
+      },
+      "rental": {
+        "arrivalRentElasticity": 0.805343
+      }
+    },
+    {
+      "host": {
+        "pReview": 0.0611401,
+        "beta": 1.2266,
+        "complianceBase": 0.626604,
+        "multiComplianceShift": -0.22219,
+        "anticipation": 0.188178,
+        "prShare": 0.478674,
+        "investorEntry": 0.00638966
+      },
+      "enforcement": {
+        "detectMax": 0.0665586,
+        "delistProb": 0.0672926,
+        "regTakeup": 0.719013,
+        "exemptClaimShare": 0.0752345
+      },
+      "str": {
+        "demandSpillover": 0.976479,
+        "demandGrowthAnnual": 0.0248435
+      },
+      "rental": {
+        "arrivalRentElasticity": 3.70852
+      }
+    },
+    {
+      "host": {
+        "pReview": 0.171268,
+        "beta": 0.623517,
+        "complianceBase": 0.277912,
+        "multiComplianceShift": -0.156967,
+        "anticipation": 0.336415,
+        "prShare": 0.254608,
+        "investorEntry": 0.000192602
+      },
+      "enforcement": {
+        "detectMax": 0.153462,
+        "delistProb": 0.16722,
+        "regTakeup": 0.592434,
+        "exemptClaimShare": 0.0232627
+      },
+      "str": {
+        "demandSpillover": 0.886422,
+        "demandGrowthAnnual": 0.00430391
+      },
+      "rental": {
+        "arrivalRentElasticity": 2.04293
+      }
+    },
+    {
+      "host": {
+        "pReview": 0.132458,
+        "beta": 1.10515,
+        "complianceBase": 0.784206,
+        "multiComplianceShift": -0.379976,
+        "anticipation": 0.216609,
+        "prShare": 0.309099,
+        "investorEntry": 0.00723336
+      },
+      "enforcement": {
+        "detectMax": 0.0811403,
+        "delistProb": 0.196916,
+        "regTakeup": 0.442603,
+        "exemptClaimShare": 0.0839119
+      },
+      "str": {
+        "demandSpillover": 0.0794793,
+        "demandGrowthAnnual": 0.0940428
+      },
+      "rental": {
+        "arrivalRentElasticity": 1.77629
+      }
+    },
+    {
+      "host": {
+        "pReview": 0.0666068,
+        "beta": 4.35057,
+        "complianceBase": 0.389389,
+        "multiComplianceShift": 0.0317803,
+        "anticipation": 0.093053,
+        "prShare": 0.354577,
+        "investorEntry": 0.00228644
+      },
+      "enforcement": {
+        "detectMax": 0.0669354,
+        "delistProb": 0.0294937,
+        "regTakeup": 0.24663,
+        "exemptClaimShare": 0.0417124
+      },
+      "str": {
+        "demandSpillover": 0.724237,
+        "demandGrowthAnnual": -0.0223709
+      },
+      "rental": {
+        "arrivalRentElasticity": 0.79453
+      }
+    },
+    {
+      "host": {
+        "pReview": 0.062415,
+        "beta": 0.932889,
+        "complianceBase": 0.0221372,
+        "multiComplianceShift": 0.0194903,
+        "anticipation": 0.211133,
+        "prShare": 0.348301,
+        "investorEntry": 0.00992797
+      },
+      "enforcement": {
+        "detectMax": 0.106155,
+        "delistProb": 0.0907842,
+        "regTakeup": 0.376405,
+        "exemptClaimShare": 0.0614696
+      },
+      "str": {
+        "demandSpillover": 0.0954084,
+        "demandGrowthAnnual": 0.0729281
+      },
+      "rental": {
+        "arrivalRentElasticity": 2.83922
+      }
+    },
+    {
+      "host": {
+        "pReview": 0.062415,
+        "beta": 0.932889,
+        "complianceBase": 0.0221372,
+        "multiComplianceShift": 0.0194903,
+        "anticipation": 0.211133,
+        "prShare": 0.348301,
+        "investorEntry": 0.00992797
+      },
+      "enforcement": {
+        "detectMax": 0.106155,
+        "delistProb": 0.0907842,
+        "regTakeup": 0.376405,
+        "exemptClaimShare": 0.0614696
+      },
+      "str": {
+        "demandSpillover": 0.0954084,
+        "demandGrowthAnnual": 0.0729281
+      },
+      "rental": {
+        "arrivalRentElasticity": 2.83922
+      }
+    },
+    {
+      "host": {
+        "pReview": 0.133205,
+        "beta": 2.49651,
+        "complianceBase": 0.472165,
+        "multiComplianceShift": -0.01924,
+        "anticipation": 0.180155,
+        "prShare": 0.354788,
+        "investorEntry": 0.0068596
+      },
+      "enforcement": {
+        "detectMax": 0.039814,
+        "delistProb": 0.192054,
+        "regTakeup": 0.890545,
+        "exemptClaimShare": 0.091878
+      },
+      "str": {
+        "demandSpillover": 0.257652,
+        "demandGrowthAnnual": 0.077367
+      },
+      "rental": {
+        "arrivalRentElasticity": 4.60472
+      }
+    },
+    {
+      "host": {
+        "pReview": 0.173868,
+        "beta": 1.24179,
+        "complianceBase": 0.220342,
+        "multiComplianceShift": -0.390764,
+        "anticipation": 0.376053,
+        "prShare": 0.3866,
+        "investorEntry": 0.0068742
+      },
+      "enforcement": {
+        "detectMax": 0.221724,
+        "delistProb": 0.157864,
+        "regTakeup": 0.43051,
+        "exemptClaimShare": 0.0225686
+      },
+      "str": {
+        "demandSpillover": 0.512835,
+        "demandGrowthAnnual": -0.0103167
+      },
+      "rental": {
+        "arrivalRentElasticity": 4.09016
+      }
+    },
+    {
+      "host": {
+        "pReview": 0.292965,
+        "beta": 1.98481,
+        "complianceBase": 0.297823,
+        "multiComplianceShift": 0.0576057,
+        "anticipation": 0.41754,
+        "prShare": 0.521084,
+        "investorEntry": 0.00117886
+      },
+      "enforcement": {
+        "detectMax": 0.107806,
+        "delistProb": 0.132461,
+        "regTakeup": 0.25005,
+        "exemptClaimShare": 0.0665559
+      },
+      "str": {
+        "demandSpillover": 0.235923,
+        "demandGrowthAnnual": 0.0425636
+      },
+      "rental": {
+        "arrivalRentElasticity": 2.18269
+      }
+    },
+    {
+      "host": {
+        "pReview": 0.185707,
+        "beta": 1.15757,
+        "complianceBase": 0.136087,
+        "multiComplianceShift": 0.131684,
+        "anticipation": 0.185951,
+        "prShare": 0.498266,
+        "investorEntry": 0.00813586
+      },
+      "enforcement": {
+        "detectMax": 0.124555,
+        "delistProb": 0.0858517,
+        "regTakeup": 0.361799,
+        "exemptClaimShare": 0.0429048
+      },
+      "str": {
+        "demandSpillover": 0.360098,
+        "demandGrowthAnnual": -0.0128042
+      },
+      "rental": {
+        "arrivalRentElasticity": 3.92763
+      }
+    },
+    {
+      "host": {
+        "pReview": 0.144322,
+        "beta": 1.31844,
+        "complianceBase": 0.156001,
+        "multiComplianceShift": -0.339113,
+        "anticipation": 0.482816,
+        "prShare": 0.368417,
+        "investorEntry": 0.00518167
+      },
+      "enforcement": {
+        "detectMax": 0.287477,
+        "delistProb": 0.0392546,
+        "regTakeup": 0.449779,
+        "exemptClaimShare": 0.0491951
+      },
+      "str": {
+        "demandSpillover": 0.222263,
+        "demandGrowthAnnual": 0.0520009
+      },
+      "rental": {
+        "arrivalRentElasticity": 4.68509
+      }
+    },
+    {
+      "host": {
+        "pReview": 0.0475291,
+        "beta": 2.45936,
+        "complianceBase": 0.417771,
+        "multiComplianceShift": -0.0301244,
+        "anticipation": 0.0367475,
+        "prShare": 0.343561,
+        "investorEntry": 0.00677695
+      },
+      "enforcement": {
+        "detectMax": 0.0926704,
+        "delistProb": 0.0835299,
+        "regTakeup": 0.238453,
+        "exemptClaimShare": 0.0574768
+      },
+      "str": {
+        "demandSpillover": 0.219476,
+        "demandGrowthAnnual": 0.0823074
+      },
+      "rental": {
+        "arrivalRentElasticity": 3.49914
+      }
+    },
+    {
+      "host": {
+        "pReview": 0.256424,
+        "beta": 1.74279,
+        "complianceBase": 0.435919,
+        "multiComplianceShift": -0.235895,
+        "anticipation": 0.284898,
+        "prShare": 0.264534,
+        "investorEntry": 0.00905589
+      },
+      "enforcement": {
+        "detectMax": 0.186519,
+        "delistProb": 0.0848595,
+        "regTakeup": 0.571098,
+        "exemptClaimShare": 0.0206002
+      },
+      "str": {
+        "demandSpillover": 0.319396,
+        "demandGrowthAnnual": -0.0103986
+      },
+      "rental": {
+        "arrivalRentElasticity": 2.36404
+      }
+    },
+    {
+      "host": {
+        "pReview": 0.042416,
+        "beta": 2.92031,
+        "complianceBase": 0.0807073,
+        "multiComplianceShift": 0.0690536,
+        "anticipation": 0.498568,
+        "prShare": 0.478232,
+        "investorEntry": 0.00992525
+      },
+      "enforcement": {
+        "detectMax": 0.0896061,
+        "delistProb": 0.0738905,
+        "regTakeup": 0.208725,
+        "exemptClaimShare": 0.0537729
+      },
+      "str": {
+        "demandSpillover": 0.717668,
+        "demandGrowthAnnual": 0.0675172
+      },
+      "rental": {
+        "arrivalRentElasticity": 1.783
+      }
+    },
+    {
+      "host": {
+        "pReview": 0.042416,
+        "beta": 2.92031,
+        "complianceBase": 0.0807073,
+        "multiComplianceShift": 0.0690536,
+        "anticipation": 0.498568,
+        "prShare": 0.478232,
+        "investorEntry": 0.00992525
+      },
+      "enforcement": {
+        "detectMax": 0.0896061,
+        "delistProb": 0.0738905,
+        "regTakeup": 0.208725,
+        "exemptClaimShare": 0.0537729
+      },
+      "str": {
+        "demandSpillover": 0.717668,
+        "demandGrowthAnnual": 0.0675172
+      },
+      "rental": {
+        "arrivalRentElasticity": 1.783
+      }
+    },
+    {
+      "host": {
+        "pReview": 0.042416,
+        "beta": 2.92031,
+        "complianceBase": 0.0807073,
+        "multiComplianceShift": 0.0690536,
+        "anticipation": 0.498568,
+        "prShare": 0.478232,
+        "investorEntry": 0.00992525
+      },
+      "enforcement": {
+        "detectMax": 0.0896061,
+        "delistProb": 0.0738905,
+        "regTakeup": 0.208725,
+        "exemptClaimShare": 0.0537729
+      },
+      "str": {
+        "demandSpillover": 0.717668,
+        "demandGrowthAnnual": 0.0675172
+      },
+      "rental": {
+        "arrivalRentElasticity": 1.783
+      }
+    },
+    {
+      "host": {
+        "pReview": 0.042416,
+        "beta": 2.92031,
+        "complianceBase": 0.0807073,
+        "multiComplianceShift": 0.0690536,
+        "anticipation": 0.498568,
+        "prShare": 0.478232,
+        "investorEntry": 0.00992525
+      },
+      "enforcement": {
+        "detectMax": 0.0896061,
+        "delistProb": 0.0738905,
+        "regTakeup": 0.208725,
+        "exemptClaimShare": 0.0537729
+      },
+      "str": {
+        "demandSpillover": 0.717668,
+        "demandGrowthAnnual": 0.0675172
+      },
+      "rental": {
+        "arrivalRentElasticity": 1.783
+      }
+    },
+    {
+      "host": {
+        "pReview": 0.243184,
+        "beta": 1.15227,
+        "complianceBase": 0.500121,
+        "multiComplianceShift": -0.198543,
+        "anticipation": 0.451977,
+        "prShare": 0.356948,
+        "investorEntry": 0.00242929
+      },
+      "enforcement": {
+        "detectMax": 0.0825174,
+        "delistProb": 0.132163,
+        "regTakeup": 0.366325,
+        "exemptClaimShare": 0.0791636
+      },
+      "str": {
+        "demandSpillover": 0.218346,
+        "demandGrowthAnnual": -0.0105923
+      },
+      "rental": {
+        "arrivalRentElasticity": 4.34964
+      }
+    },
+    {
+      "host": {
+        "pReview": 0.10372,
+        "beta": 1.49073,
+        "complianceBase": 0.425316,
+        "multiComplianceShift": 0.00325721,
+        "anticipation": 0.307618,
+        "prShare": 0.352906,
+        "investorEntry": 0.000750119
+      },
+      "enforcement": {
+        "detectMax": 0.0482353,
+        "delistProb": 0.0357119,
+        "regTakeup": 0.846518,
+        "exemptClaimShare": 0.0666118
+      },
+      "str": {
+        "demandSpillover": 0.403529,
+        "demandGrowthAnnual": 0.0798128
+      },
+      "rental": {
+        "arrivalRentElasticity": 4.5162
+      }
+    },
+    {
+      "host": {
+        "pReview": 0.298901,
+        "beta": 1.38997,
+        "complianceBase": 0.488847,
+        "multiComplianceShift": -0.0259566,
+        "anticipation": 0.483048,
+        "prShare": 0.299121,
+        "investorEntry": 0.00623358
+      },
+      "enforcement": {
+        "detectMax": 0.0790068,
+        "delistProb": 0.187,
+        "regTakeup": 0.401913,
+        "exemptClaimShare": 0.0733181
+      },
+      "str": {
+        "demandSpillover": 0.835397,
+        "demandGrowthAnnual": -0.0335108
+      },
+      "rental": {
+        "arrivalRentElasticity": 2.95346
+      }
+    },
+    {
+      "host": {
+        "pReview": 0.146564,
+        "beta": 0.421571,
+        "complianceBase": 0.562796,
+        "multiComplianceShift": -0.340804,
+        "anticipation": 0.000418992,
+        "prShare": 0.36641,
+        "investorEntry": 0.0070423
+      },
+      "enforcement": {
+        "detectMax": 0.162576,
+        "delistProb": 0.10562,
+        "regTakeup": 0.64219,
+        "exemptClaimShare": 0.0677452
+      },
+      "str": {
+        "demandSpillover": 0.176742,
+        "demandGrowthAnnual": 0.0628803
+      },
+      "rental": {
+        "arrivalRentElasticity": 4.8623
+      }
+    },
+    {
+      "host": {
+        "pReview": 0.108911,
+        "beta": 1.43478,
+        "complianceBase": 0.0772148,
+        "multiComplianceShift": -0.0364833,
+        "anticipation": 0.490006,
+        "prShare": 0.455832,
+        "investorEntry": 0.00469717
+      },
+      "enforcement": {
+        "detectMax": 0.159709,
+        "delistProb": 0.212551,
+        "regTakeup": 0.264721,
+        "exemptClaimShare": 0.0674254
+      },
+      "str": {
+        "demandSpillover": 0.65402,
+        "demandGrowthAnnual": 0.0709796
+      },
+      "rental": {
+        "arrivalRentElasticity": 0.857509
+      }
+    },
+    {
+      "host": {
+        "pReview": 0.0551811,
+        "beta": 2.25487,
+        "complianceBase": 0.164962,
+        "multiComplianceShift": 0.154145,
+        "anticipation": 0.350252,
+        "prShare": 0.35461,
+        "investorEntry": 0.00436482
+      },
+      "enforcement": {
+        "detectMax": 0.117385,
+        "delistProb": 0.0595466,
+        "regTakeup": 0.771451,
+        "exemptClaimShare": 0.0993232
+      },
+      "str": {
+        "demandSpillover": 0.180809,
+        "demandGrowthAnnual": -0.0336583
+      },
+      "rental": {
+        "arrivalRentElasticity": 0.837858
+      }
+    },
+    {
+      "host": {
+        "pReview": 0.200539,
+        "beta": 1.67359,
+        "complianceBase": 0.369222,
+        "multiComplianceShift": -0.241946,
+        "anticipation": 0.289316,
+        "prShare": 0.417393,
+        "investorEntry": 0.00991361
+      },
+      "enforcement": {
+        "detectMax": 0.127384,
+        "delistProb": 0.225744,
+        "regTakeup": 0.859413,
+        "exemptClaimShare": 0.0895342
+      },
+      "str": {
+        "demandSpillover": 0.748558,
+        "demandGrowthAnnual": -0.0418907
+      },
+      "rental": {
+        "arrivalRentElasticity": 2.9698
+      }
+    },
+    {
+      "host": {
+        "pReview": 0.266653,
+        "beta": 0.407941,
+        "complianceBase": 0.380338,
+        "multiComplianceShift": -0.325619,
+        "anticipation": 0.432343,
+        "prShare": 0.362716,
+        "investorEntry": 0.00485963
+      },
+      "enforcement": {
+        "detectMax": 0.122351,
+        "delistProb": 0.331635,
+        "regTakeup": 0.838903,
+        "exemptClaimShare": 0.0627968
+      },
+      "str": {
+        "demandSpillover": 0.451372,
+        "demandGrowthAnnual": 0.0467533
+      },
+      "rental": {
+        "arrivalRentElasticity": 3.07733
+      }
+    },
+    {
+      "host": {
+        "pReview": 0.229759,
+        "beta": 0.478031,
+        "complianceBase": 0.236934,
+        "multiComplianceShift": 0.0302528,
+        "anticipation": 0.20283,
+        "prShare": 0.436461,
+        "investorEntry": 0.00655351
+      },
+      "enforcement": {
+        "detectMax": 0.219765,
+        "delistProb": 0.0777567,
+        "regTakeup": 0.324646,
+        "exemptClaimShare": 0.102482
+      },
+      "str": {
+        "demandSpillover": 0.45645,
+        "demandGrowthAnnual": 0.0970087
+      },
+      "rental": {
+        "arrivalRentElasticity": 3.65511
+      }
+    },
+    {
+      "host": {
+        "pReview": 0.161485,
+        "beta": 0.620765,
+        "complianceBase": 0.366851,
+        "multiComplianceShift": -0.368767,
+        "anticipation": 0.435233,
+        "prShare": 0.400794,
+        "investorEntry": 0.00132844
+      },
+      "enforcement": {
+        "detectMax": 0.326138,
+        "delistProb": 0.145317,
+        "regTakeup": 0.77992,
+        "exemptClaimShare": 0.105317
+      },
+      "str": {
+        "demandSpillover": 0.234109,
+        "demandGrowthAnnual": 0.0621224
+      },
+      "rental": {
+        "arrivalRentElasticity": 4.43556
+      }
+    },
+    {
+      "host": {
+        "pReview": 0.161485,
+        "beta": 0.620765,
+        "complianceBase": 0.366851,
+        "multiComplianceShift": -0.368767,
+        "anticipation": 0.435233,
+        "prShare": 0.400794,
+        "investorEntry": 0.00132844
+      },
+      "enforcement": {
+        "detectMax": 0.326138,
+        "delistProb": 0.145317,
+        "regTakeup": 0.77992,
+        "exemptClaimShare": 0.105317
+      },
+      "str": {
+        "demandSpillover": 0.234109,
+        "demandGrowthAnnual": 0.0621224
+      },
+      "rental": {
+        "arrivalRentElasticity": 4.43556
+      }
+    },
+    {
+      "host": {
+        "pReview": 0.282816,
+        "beta": 0.865331,
+        "complianceBase": 0.285558,
+        "multiComplianceShift": -0.0317562,
+        "anticipation": 0.0719953,
+        "prShare": 0.323944,
+        "investorEntry": 0.00662248
+      },
+      "enforcement": {
+        "detectMax": 0.168516,
+        "delistProb": 0.17728,
+        "regTakeup": 0.590696,
+        "exemptClaimShare": 0.107732
+      },
+      "str": {
+        "demandSpillover": 0.937821,
+        "demandGrowthAnnual": 0.0189888
+      },
+      "rental": {
+        "arrivalRentElasticity": 3.09417
+      }
+    },
+    {
+      "host": {
+        "pReview": 0.256775,
+        "beta": 1.31393,
+        "complianceBase": 0.614516,
+        "multiComplianceShift": -0.0790399,
+        "anticipation": 0.392006,
+        "prShare": 0.504967,
+        "investorEntry": 0.00651327
+      },
+      "enforcement": {
+        "detectMax": 0.150566,
+        "delistProb": 0.197063,
+        "regTakeup": 0.321774,
+        "exemptClaimShare": 0.0857748
+      },
+      "str": {
+        "demandSpillover": 0.795352,
+        "demandGrowthAnnual": 0.0692029
+      },
+      "rental": {
+        "arrivalRentElasticity": 1.9306
+      }
+    },
+    {
+      "host": {
+        "pReview": 0.146345,
+        "beta": 0.312968,
+        "complianceBase": 0.061603,
+        "multiComplianceShift": -0.154845,
+        "anticipation": 0.380866,
+        "prShare": 0.295284,
+        "investorEntry": 0.00879486
+      },
+      "enforcement": {
+        "detectMax": 0.284723,
+        "delistProb": 0.156459,
+        "regTakeup": 0.54817,
+        "exemptClaimShare": 0.0614805
+      },
+      "str": {
+        "demandSpillover": 0.785102,
+        "demandGrowthAnnual": 0.0101296
+      },
+      "rental": {
+        "arrivalRentElasticity": 2.80957
+      }
+    },
+    {
+      "host": {
+        "pReview": 0.112022,
+        "beta": 0.516866,
+        "complianceBase": 0.213106,
+        "multiComplianceShift": -0.362058,
+        "anticipation": 0.471984,
+        "prShare": 0.41612,
+        "investorEntry": 0.0097091
+      },
+      "enforcement": {
+        "detectMax": 0.210241,
+        "delistProb": 0.0873076,
+        "regTakeup": 0.836699,
+        "exemptClaimShare": 0.144786
+      },
+      "str": {
+        "demandSpillover": 0.903205,
+        "demandGrowthAnnual": 0.0771247
+      },
+      "rental": {
+        "arrivalRentElasticity": 2.74645
+      }
+    },
+    {
+      "host": {
+        "pReview": 0.112022,
+        "beta": 0.516866,
+        "complianceBase": 0.213106,
+        "multiComplianceShift": -0.362058,
+        "anticipation": 0.471984,
+        "prShare": 0.41612,
+        "investorEntry": 0.0097091
+      },
+      "enforcement": {
+        "detectMax": 0.210241,
+        "delistProb": 0.0873076,
+        "regTakeup": 0.836699,
+        "exemptClaimShare": 0.144786
+      },
+      "str": {
+        "demandSpillover": 0.903205,
+        "demandGrowthAnnual": 0.0771247
+      },
+      "rental": {
+        "arrivalRentElasticity": 2.74645
+      }
+    },
+    {
+      "host": {
+        "pReview": 0.112022,
+        "beta": 0.516866,
+        "complianceBase": 0.213106,
+        "multiComplianceShift": -0.362058,
+        "anticipation": 0.471984,
+        "prShare": 0.41612,
+        "investorEntry": 0.0097091
+      },
+      "enforcement": {
+        "detectMax": 0.210241,
+        "delistProb": 0.0873076,
+        "regTakeup": 0.836699,
+        "exemptClaimShare": 0.144786
+      },
+      "str": {
+        "demandSpillover": 0.903205,
+        "demandGrowthAnnual": 0.0771247
+      },
+      "rental": {
+        "arrivalRentElasticity": 2.74645
+      }
+    },
+    {
+      "host": {
+        "pReview": 0.112022,
+        "beta": 0.516866,
+        "complianceBase": 0.213106,
+        "multiComplianceShift": -0.362058,
+        "anticipation": 0.471984,
+        "prShare": 0.41612,
+        "investorEntry": 0.0097091
+      },
+      "enforcement": {
+        "detectMax": 0.210241,
+        "delistProb": 0.0873076,
+        "regTakeup": 0.836699,
+        "exemptClaimShare": 0.144786
+      },
+      "str": {
+        "demandSpillover": 0.903205,
+        "demandGrowthAnnual": 0.0771247
+      },
+      "rental": {
+        "arrivalRentElasticity": 2.74645
+      }
+    },
+    {
+      "host": {
+        "pReview": 0.112022,
+        "beta": 0.516866,
+        "complianceBase": 0.213106,
+        "multiComplianceShift": -0.362058,
+        "anticipation": 0.471984,
+        "prShare": 0.41612,
+        "investorEntry": 0.0097091
+      },
+      "enforcement": {
+        "detectMax": 0.210241,
+        "delistProb": 0.0873076,
+        "regTakeup": 0.836699,
+        "exemptClaimShare": 0.144786
+      },
+      "str": {
+        "demandSpillover": 0.903205,
+        "demandGrowthAnnual": 0.0771247
+      },
+      "rental": {
+        "arrivalRentElasticity": 2.74645
+      }
+    },
+    {
+      "host": {
+        "pReview": 0.112022,
+        "beta": 0.516866,
+        "complianceBase": 0.213106,
+        "multiComplianceShift": -0.362058,
+        "anticipation": 0.471984,
+        "prShare": 0.41612,
+        "investorEntry": 0.0097091
+      },
+      "enforcement": {
+        "detectMax": 0.210241,
+        "delistProb": 0.0873076,
+        "regTakeup": 0.836699,
+        "exemptClaimShare": 0.144786
+      },
+      "str": {
+        "demandSpillover": 0.903205,
+        "demandGrowthAnnual": 0.0771247
+      },
+      "rental": {
+        "arrivalRentElasticity": 2.74645
+      }
+    },
+    {
+      "host": {
+        "pReview": 0.112022,
+        "beta": 0.516866,
+        "complianceBase": 0.213106,
+        "multiComplianceShift": -0.362058,
+        "anticipation": 0.471984,
+        "prShare": 0.41612,
+        "investorEntry": 0.0097091
+      },
+      "enforcement": {
+        "detectMax": 0.210241,
+        "delistProb": 0.0873076,
+        "regTakeup": 0.836699,
+        "exemptClaimShare": 0.144786
+      },
+      "str": {
+        "demandSpillover": 0.903205,
+        "demandGrowthAnnual": 0.0771247
+      },
+      "rental": {
+        "arrivalRentElasticity": 2.74645
+      }
+    },
+    {
+      "host": {
+        "pReview": 0.112022,
+        "beta": 0.516866,
+        "complianceBase": 0.213106,
+        "multiComplianceShift": -0.362058,
+        "anticipation": 0.471984,
+        "prShare": 0.41612,
+        "investorEntry": 0.0097091
+      },
+      "enforcement": {
+        "detectMax": 0.210241,
+        "delistProb": 0.0873076,
+        "regTakeup": 0.836699,
+        "exemptClaimShare": 0.144786
+      },
+      "str": {
+        "demandSpillover": 0.903205,
+        "demandGrowthAnnual": 0.0771247
+      },
+      "rental": {
+        "arrivalRentElasticity": 2.74645
+      }
+    },
+    {
+      "host": {
+        "pReview": 0.112022,
+        "beta": 0.516866,
+        "complianceBase": 0.213106,
+        "multiComplianceShift": -0.362058,
+        "anticipation": 0.471984,
+        "prShare": 0.41612,
+        "investorEntry": 0.0097091
+      },
+      "enforcement": {
+        "detectMax": 0.210241,
+        "delistProb": 0.0873076,
+        "regTakeup": 0.836699,
+        "exemptClaimShare": 0.144786
+      },
+      "str": {
+        "demandSpillover": 0.903205,
+        "demandGrowthAnnual": 0.0771247
+      },
+      "rental": {
+        "arrivalRentElasticity": 2.74645
+      }
+    },
+    {
+      "host": {
+        "pReview": 0.112022,
+        "beta": 0.516866,
+        "complianceBase": 0.213106,
+        "multiComplianceShift": -0.362058,
+        "anticipation": 0.471984,
+        "prShare": 0.41612,
+        "investorEntry": 0.0097091
+      },
+      "enforcement": {
+        "detectMax": 0.210241,
+        "delistProb": 0.0873076,
+        "regTakeup": 0.836699,
+        "exemptClaimShare": 0.144786
+      },
+      "str": {
+        "demandSpillover": 0.903205,
+        "demandGrowthAnnual": 0.0771247
+      },
+      "rental": {
+        "arrivalRentElasticity": 2.74645
+      }
+    },
+    {
+      "host": {
+        "pReview": 0.112022,
+        "beta": 0.516866,
+        "complianceBase": 0.213106,
+        "multiComplianceShift": -0.362058,
+        "anticipation": 0.471984,
+        "prShare": 0.41612,
+        "investorEntry": 0.0097091
+      },
+      "enforcement": {
+        "detectMax": 0.210241,
+        "delistProb": 0.0873076,
+        "regTakeup": 0.836699,
+        "exemptClaimShare": 0.144786
+      },
+      "str": {
+        "demandSpillover": 0.903205,
+        "demandGrowthAnnual": 0.0771247
+      },
+      "rental": {
+        "arrivalRentElasticity": 2.74645
+      }
+    },
+    {
+      "host": {
+        "pReview": 0.112022,
+        "beta": 0.516866,
+        "complianceBase": 0.213106,
+        "multiComplianceShift": -0.362058,
+        "anticipation": 0.471984,
+        "prShare": 0.41612,
+        "investorEntry": 0.0097091
+      },
+      "enforcement": {
+        "detectMax": 0.210241,
+        "delistProb": 0.0873076,
+        "regTakeup": 0.836699,
+        "exemptClaimShare": 0.144786
+      },
+      "str": {
+        "demandSpillover": 0.903205,
+        "demandGrowthAnnual": 0.0771247
+      },
+      "rental": {
+        "arrivalRentElasticity": 2.74645
+      }
+    },
+    {
+      "host": {
+        "pReview": 0.112022,
+        "beta": 0.516866,
+        "complianceBase": 0.213106,
+        "multiComplianceShift": -0.362058,
+        "anticipation": 0.471984,
+        "prShare": 0.41612,
+        "investorEntry": 0.0097091
+      },
+      "enforcement": {
+        "detectMax": 0.210241,
+        "delistProb": 0.0873076,
+        "regTakeup": 0.836699,
+        "exemptClaimShare": 0.144786
+      },
+      "str": {
+        "demandSpillover": 0.903205,
+        "demandGrowthAnnual": 0.0771247
+      },
+      "rental": {
+        "arrivalRentElasticity": 2.74645
+      }
+    },
+    {
+      "host": {
+        "pReview": 0.112022,
+        "beta": 0.516866,
+        "complianceBase": 0.213106,
+        "multiComplianceShift": -0.362058,
+        "anticipation": 0.471984,
+        "prShare": 0.41612,
+        "investorEntry": 0.0097091
+      },
+      "enforcement": {
+        "detectMax": 0.210241,
+        "delistProb": 0.0873076,
+        "regTakeup": 0.836699,
+        "exemptClaimShare": 0.144786
+      },
+      "str": {
+        "demandSpillover": 0.903205,
+        "demandGrowthAnnual": 0.0771247
+      },
+      "rental": {
+        "arrivalRentElasticity": 2.74645
+      }
+    },
+    {
+      "host": {
+        "pReview": 0.112022,
+        "beta": 0.516866,
+        "complianceBase": 0.213106,
+        "multiComplianceShift": -0.362058,
+        "anticipation": 0.471984,
+        "prShare": 0.41612,
+        "investorEntry": 0.0097091
+      },
+      "enforcement": {
+        "detectMax": 0.210241,
+        "delistProb": 0.0873076,
+        "regTakeup": 0.836699,
+        "exemptClaimShare": 0.144786
+      },
+      "str": {
+        "demandSpillover": 0.903205,
+        "demandGrowthAnnual": 0.0771247
+      },
+      "rental": {
+        "arrivalRentElasticity": 2.74645
+      }
+    },
+    {
+      "host": {
+        "pReview": 0.112022,
+        "beta": 0.516866,
+        "complianceBase": 0.213106,
+        "multiComplianceShift": -0.362058,
+        "anticipation": 0.471984,
+        "prShare": 0.41612,
+        "investorEntry": 0.0097091
+      },
+      "enforcement": {
+        "detectMax": 0.210241,
+        "delistProb": 0.0873076,
+        "regTakeup": 0.836699,
+        "exemptClaimShare": 0.144786
+      },
+      "str": {
+        "demandSpillover": 0.903205,
+        "demandGrowthAnnual": 0.0771247
+      },
+      "rental": {
+        "arrivalRentElasticity": 2.74645
+      }
+    },
+    {
+      "host": {
+        "pReview": 0.16876,
+        "beta": 1.78258,
+        "complianceBase": 0.567878,
+        "multiComplianceShift": -0.363937,
+        "anticipation": 0.119489,
+        "prShare": 0.508099,
+        "investorEntry": 0.009235
+      },
+      "enforcement": {
+        "detectMax": 0.12387,
+        "delistProb": 0.19393,
+        "regTakeup": 0.265566,
+        "exemptClaimShare": 0.0613216
+      },
+      "str": {
+        "demandSpillover": 0.143537,
+        "demandGrowthAnnual": 0.0437351
+      },
+      "rental": {
+        "arrivalRentElasticity": 3.12782
+      }
+    },
+    {
+      "host": {
+        "pReview": 0.144845,
+        "beta": 4.05943,
+        "complianceBase": 0.594224,
+        "multiComplianceShift": 0.0957924,
+        "anticipation": 0.167798,
+        "prShare": 0.340807,
+        "investorEntry": 0.00674043
+      },
+      "enforcement": {
+        "detectMax": 0.0844337,
+        "delistProb": 0.112354,
+        "regTakeup": 0.424253,
+        "exemptClaimShare": 0.0629002
+      },
+      "str": {
+        "demandSpillover": 0.314295,
+        "demandGrowthAnnual": 0.0215694
+      },
+      "rental": {
+        "arrivalRentElasticity": 2.56769
+      }
+    },
+    {
+      "host": {
+        "pReview": 0.237026,
+        "beta": 0.487338,
+        "complianceBase": 0.134358,
+        "multiComplianceShift": -0.124793,
+        "anticipation": 0.210061,
+        "prShare": 0.419245,
+        "investorEntry": 0.00694428
+      },
+      "enforcement": {
+        "detectMax": 0.276451,
+        "delistProb": 0.0822246,
+        "regTakeup": 0.579354,
+        "exemptClaimShare": 0.0509987
+      },
+      "str": {
+        "demandSpillover": 0.166879,
+        "demandGrowthAnnual": 0.0159921
+      },
+      "rental": {
+        "arrivalRentElasticity": 4.48669
+      }
+    },
+    {
+      "host": {
+        "pReview": 0.196516,
+        "beta": 1.6602,
+        "complianceBase": 0.573151,
+        "multiComplianceShift": 0.0383276,
+        "anticipation": 0.189765,
+        "prShare": 0.477967,
+        "investorEntry": 0.00360184
+      },
+      "enforcement": {
+        "detectMax": 0.0259085,
+        "delistProb": 0.043348,
+        "regTakeup": 0.252866,
+        "exemptClaimShare": 0.067248
+      },
+      "str": {
+        "demandSpillover": 0.738252,
+        "demandGrowthAnnual": 0.0438668
+      },
+      "rental": {
+        "arrivalRentElasticity": 1.08284
+      }
+    },
+    {
+      "host": {
+        "pReview": 0.0566926,
+        "beta": 4.62477,
+        "complianceBase": 0.285577,
+        "multiComplianceShift": -0.293168,
+        "anticipation": 0.200785,
+        "prShare": 0.334642,
+        "investorEntry": 0.00346428
+      },
+      "enforcement": {
+        "detectMax": 0.179622,
+        "delistProb": 0.0810726,
+        "regTakeup": 0.502286,
+        "exemptClaimShare": 0.0951575
+      },
+      "str": {
+        "demandSpillover": 0.780115,
+        "demandGrowthAnnual": 0.0731212
+      },
+      "rental": {
+        "arrivalRentElasticity": 2.15127
+      }
+    },
+    {
+      "host": {
+        "pReview": 0.0496019,
+        "beta": 0.933204,
+        "complianceBase": 0.563329,
+        "multiComplianceShift": -0.343896,
+        "anticipation": 0.0391398,
+        "prShare": 0.287585,
+        "investorEntry": 0.00703379
+      },
+      "enforcement": {
+        "detectMax": 0.0937796,
+        "delistProb": 0.0552867,
+        "regTakeup": 0.462446,
+        "exemptClaimShare": 0.0773485
+      },
+      "str": {
+        "demandSpillover": 0.119647,
+        "demandGrowthAnnual": -0.0458926
+      },
+      "rental": {
+        "arrivalRentElasticity": 3.38052
+      }
+    },
+    {
+      "host": {
+        "pReview": 0.213048,
+        "beta": 1.27697,
+        "complianceBase": 0.143494,
+        "multiComplianceShift": 0.125161,
+        "anticipation": 0.306159,
+        "prShare": 0.500545,
+        "investorEntry": 0.00984612
+      },
+      "enforcement": {
+        "detectMax": 0.255956,
+        "delistProb": 0.133472,
+        "regTakeup": 0.163699,
+        "exemptClaimShare": 0.0352576
+      },
+      "str": {
+        "demandSpillover": 0.95836,
+        "demandGrowthAnnual": 0.0301657
+      },
+      "rental": {
+        "arrivalRentElasticity": 1.15973
+      }
+    },
+    {
+      "host": {
+        "pReview": 0.191551,
+        "beta": 2.01443,
+        "complianceBase": 0.43118,
+        "multiComplianceShift": -0.268488,
+        "anticipation": 0.219624,
+        "prShare": 0.499242,
+        "investorEntry": 0.00257709
+      },
+      "enforcement": {
+        "detectMax": 0.155665,
+        "delistProb": 0.110547,
+        "regTakeup": 0.285905,
+        "exemptClaimShare": 0.0676985
+      },
+      "str": {
+        "demandSpillover": 0.110152,
+        "demandGrowthAnnual": 0.0105662
+      },
+      "rental": {
+        "arrivalRentElasticity": 3.17167
+      }
+    },
+    {
+      "host": {
+        "pReview": 0.161377,
+        "beta": 0.423116,
+        "complianceBase": 0.18696,
+        "multiComplianceShift": 0.08628,
+        "anticipation": 0.468515,
+        "prShare": 0.407287,
+        "investorEntry": 0.00746876
+      },
+      "enforcement": {
+        "detectMax": 0.269487,
+        "delistProb": 0.0843602,
+        "regTakeup": 0.570818,
+        "exemptClaimShare": 0.0524892
+      },
+      "str": {
+        "demandSpillover": 0.658446,
+        "demandGrowthAnnual": 0.0708637
+      },
+      "rental": {
+        "arrivalRentElasticity": 4.87708
+      }
+    },
+    {
+      "host": {
+        "pReview": 0.278795,
+        "beta": 0.911413,
+        "complianceBase": 0.629033,
+        "multiComplianceShift": -0.229384,
+        "anticipation": 0.297553,
+        "prShare": 0.446971,
+        "investorEntry": 0.00127286
+      },
+      "enforcement": {
+        "detectMax": 0.161013,
+        "delistProb": 0.140573,
+        "regTakeup": 0.592971,
+        "exemptClaimShare": 0.108321
+      },
+      "str": {
+        "demandSpillover": 0.706471,
+        "demandGrowthAnnual": -0.0187301
+      },
+      "rental": {
+        "arrivalRentElasticity": 3.44237
+      }
+    },
+    {
+      "host": {
+        "pReview": 0.0617959,
+        "beta": 1.65635,
+        "complianceBase": 0.325589,
+        "multiComplianceShift": -0.341956,
+        "anticipation": 0.427938,
+        "prShare": 0.4596,
+        "investorEntry": 0.00613894
+      },
+      "enforcement": {
+        "detectMax": 0.144323,
+        "delistProb": 0.0944964,
+        "regTakeup": 0.255017,
+        "exemptClaimShare": 0.0819611
+      },
+      "str": {
+        "demandSpillover": 0.442458,
+        "demandGrowthAnnual": 0.0163859
+      },
+      "rental": {
+        "arrivalRentElasticity": 1.56027
+      }
+    }
+  ]
+}

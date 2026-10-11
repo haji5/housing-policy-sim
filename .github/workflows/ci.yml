@@ -25,6 +25,13 @@ jobs:
       - run: pnpm build
       - run: pnpm --filter @zoned-out/web exec playwright install --with-deps chromium
       - run: pnpm e2e
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+          cache: pip
+          cache-dependency-path: calibration/requirements.txt
+      - name: Calibration smoke test (PLAN §11)
+        run: node scripts/py.mjs smoke
       - uses: actions/upload-artifact@v4
         if: failure()
         with:

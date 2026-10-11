@@ -1,0 +1,237 @@
+{
+  "_doc": "Calibration targets for the Victoria scenario. Every value was read from the first project's committed outputs on 2026-10-10 and cross-checked against its README. Moment names refer to packages/sim/src/moments.ts. 'se' is the data standard error where the first project reports one; otherwise it is an ASSUMED tolerance (marked se_source = assumed). role: fit = in the distance; constraint = soft penalty; holdout = external validation only; sanity/validation = reported, never fitted.",
+  "source": "bc-str-ban-analysis @ ec77fe1 (D:/Tools/Projects/bc-str-ban-analysis)",
+  "verified": "2026-10-10",
+  "targets": [
+    {
+      "id": "T1",
+      "moment": "didP1",
+      "value": -0.39,
+      "se": 0.0542,
+      "se_source": "data",
+      "weight": 1.0,
+      "role": "fit",
+      "source": "docs/data/estimates.json id 'live|S2a|exemptareas|phase1' (estimate -0.39, se 0.0542, RI p 0.0112)"
+    },
+    {
+      "id": "T1a",
+      "moment": "didAntic",
+      "value": -0.1235,
+      "se": 0.0343,
+      "se_source": "data",
+      "weight": 1.0,
+      "role": "fit",
+      "source": "docs/data/estimates.json id 'live|S2a|exemptareas|anticipation' (estimate -0.1235, se 0.0343, RI p 0.1065)"
+    },
+    {
+      "id": "T2",
+      "moment": "didP2",
+      "value": -0.115,
+      "se": 0.0455,
+      "se_source": "data",
+      "weight": 0.25,
+      "role": "fit",
+      "source": "docs/data/estimates.json id 'live|S2a|exemptareas|phase2' (estimate -0.115, se 0.0455). RI p = 0.2729: not distinguishable from placebo, so down-weighted (PLAN \u00a77.1)."
+    },
+    {
+      "id": "T3",
+      "moment": "coveredPath",
+      "ticks": [
+        3,
+        6,
+        9,
+        12,
+        15,
+        18,
+        21,
+        24,
+        27,
+        33
+      ],
+      "value": [
+        -0.045715,
+        -0.152822,
+        -0.299993,
+        -0.289706,
+        -0.336408,
+        -0.430513,
+        -0.52034,
+        -0.45738,
+        -0.574974,
+        -0.432478
+      ],
+      "se": 0.05,
+      "se_source": "assumed",
+      "weight": 0.2,
+      "role": "fit",
+      "source": "docs/data/victoria_split.json entire_home/covered n_active by snapshot month, log relative to 2023-08 (3,133). Mar 2026 excluded (flagged incomplete).",
+      "levels": {
+        "3": 2993,
+        "6": 2689,
+        "9": 2321,
+        "12": 2345,
+        "15": 2238,
+        "18": 2037,
+        "21": 1862,
+        "24": 1983,
+        "27": 1763,
+        "33": 2033
+      },
+      "ref_level": 3133
+    },
+    {
+      "id": "T4",
+      "moment": "exemptPath",
+      "ticks": [
+        3,
+        6,
+        9,
+        12,
+        15,
+        18,
+        21,
+        24,
+        27,
+        33
+      ],
+      "value": [
+        0.035367,
+        0.007968,
+        0.039221,
+        0.091667,
+        0.088011,
+        0.04879,
+        0.027615,
+        0.052592,
+        -0.020203,
+        0.062035
+      ],
+      "se": 0.07,
+      "se_source": "assumed",
+      "weight": 0.2,
+      "role": "fit",
+      "source": "docs/data/victoria_split.json entire_home/exempt (Juan de Fuca + Southern Gulf Islands) n_active, log relative to 2023-08 (500).",
+      "levels": {
+        "3": 518,
+        "6": 504,
+        "9": 520,
+        "12": 548,
+        "15": 546,
+        "18": 525,
+        "21": 514,
+        "24": 527,
+        "27": 490,
+        "33": 532
+      },
+      "ref_level": 500
+    },
+    {
+      "id": "T5",
+      "moment": "multiShareEnd",
+      "value": 0.3759,
+      "se": 0.02,
+      "se_source": "assumed",
+      "weight": 1.0,
+      "role": "fit",
+      "source": "docs/data/supply.json victoria/entire_home 2026-06 multi_host_share 0.3759 (0.4605 in 2023-08 is the scenario input)."
+    },
+    {
+      "id": "T6a",
+      "moment": "registeredShareEnd",
+      "value": 0.7004,
+      "se": 0.03,
+      "se_source": "assumed",
+      "weight": 1.0,
+      "role": "fit",
+      "source": "docs/data/supply.json victoria/entire_home 2026-06 registration_share 0.7004"
+    },
+    {
+      "id": "T6b",
+      "moment": "exemptClaimShareEnd",
+      "value": 0.0937,
+      "se": 0.02,
+      "se_source": "assumed",
+      "weight": 1.0,
+      "role": "fit",
+      "source": "docs/data/supply.json victoria/entire_home 2026-06 exempt_claim_share 0.0937"
+    },
+    {
+      "id": "T7",
+      "moment": "leads",
+      "value": [
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "se": 0.05,
+      "se_source": "assumed",
+      "weight": 0.25,
+      "role": "constraint",
+      "source": "docs/data/pretrend.json 'live|S2-ES': 4 pre-announcement leads, Wald p 0.2885, RI p 0.9242 -> real leads are ~0; the sim must not create pre-trends."
+    },
+    {
+      "id": "H1",
+      "moment": "optInPath",
+      "ticks": [
+        3,
+        6,
+        9,
+        12,
+        15,
+        18,
+        21,
+        24,
+        27,
+        33
+      ],
+      "value": [
+        -0.039531,
+        -0.035507,
+        0.041752,
+        0.08183,
+        0.038027,
+        -0.068163,
+        -0.02353,
+        -0.003884,
+        -0.084899,
+        -0.02353
+      ],
+      "se": 0.07,
+      "se_source": "assumed",
+      "weight": 0.0,
+      "role": "holdout",
+      "source": "docs/data/victoria_split.json entire_home/salt_spring n_active, log relative to 2023-08 (258). Opt-in 1 Nov 2025 (src/config.py).",
+      "levels": {
+        "3": 248,
+        "6": 249,
+        "9": 269,
+        "12": 280,
+        "15": 268,
+        "18": 241,
+        "21": 252,
+        "24": 257,
+        "27": 237,
+        "33": 252
+      },
+      "ref_level": 258
+    },
+    {
+      "id": "S1",
+      "moment": "cpiChangeEnd",
+      "value": 0.177983,
+      "role": "sanity",
+      "source": "docs/data/headline.json cpi_victoria 100 -> 119.4805 (Sep 2023 -> Jun 2026). Driven by many non-STR factors: a sanity band, not a target."
+    },
+    {
+      "id": "S2",
+      "moment": "effects.askingRent",
+      "band": [
+        -0.0333,
+        -0.0042
+      ],
+      "role": "validation",
+      "source": "docs/data/rent_bound.json victoria: 1,100 lost listings / 66,000 renter households = 1.67% -> rent effect between -0.42% and -3.33%."
+    }
+  ]
+}

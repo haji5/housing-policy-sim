@@ -1,0 +1,10 @@
+{
+  "completenessMean": 0.97,
+  "completenessSd": 0.02,
+  "zoneNoiseSd": 0.04,
+  "truncationProb": 0.077,
+  "truncationKeepMin": 0.4,
+  "truncationKeepMax": 0.7,
+  "flagThreshold": 0.75,
+  "cpiNoiseSd": 2.4
+}

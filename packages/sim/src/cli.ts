@@ -1,36 +1,54 @@
 /**
- * CLI: `pnpm sim run --scenario two-zone --seed 1 --policy historical [--ticks 60]
- *       [--params file.json] [--policy-file events.json] [--out file.json] [--summary]`
- *       `pnpm sim bench [--runs 20]`
+ * CLI (JSON in, JSON out; this is how the Python calibration calls the sim).
  *
- * Prints the run's JSON time series to stdout (or --out). --summary prints a readable table.
- * JSON in (params / policy files), JSON out: this is how the Python calibration calls the sim.
+ *   pnpm sim run   [--scenario victoria] [--seed 1] [--policy historical] [--ticks 60] [--pre 0]
+ *                  [--params p.json | --overrides o.json] [--policy-file events.json]
+ *                  [--out file.json] [--summary]
+ *   pnpm sim bench [--runs 20] ...
+ *   pnpm sim batch --in draws.jsonl --out moments.jsonl [--seeds 1,2,3,4] [--counterfactual]
+ *       Each input line: {"id": any, "params": <ParamOverrides>}. Runs the historical policy
+ *       (and with --counterfactual also "none") over the calibration window for every seed, and
+ *       writes {"id", "moments" (mean over seeds), "sd" (sd over seeds), "effects"?} per line.
  */
 import { readFileSync, writeFileSync } from 'node:fs';
 import { parseArgs } from 'node:util';
-import { DEFAULT_PARAMS, runSim } from './index.ts';
-import type { Params, PolicyEvent, RunOutput } from './index.ts';
+import { computeMoments, DEFAULT_PARAMS, mergeParams, runSim } from './index.ts';
+import type { Moments, ParamOverrides, Params, PolicyEvent, RunOutput } from './index.ts';
+
+/** Calibration window: Jun 2022 (tick -15) to Jun 2026 (tick 33). */
+const CAL_PRE = 15;
+const CAL_TICKS = 49;
 
 function main(argv: string[]): void {
   const [command = 'run', ...rest] = argv;
   const { values } = parseArgs({
     args: rest,
     options: {
-      scenario: { type: 'string', default: 'two-zone' },
+      scenario: { type: 'string', default: 'victoria' },
       seed: { type: 'string', default: '1' },
+      seeds: { type: 'string', default: '1,2,3,4' },
       policy: { type: 'string', default: 'historical' },
       'policy-file': { type: 'string' },
       params: { type: 'string' },
+      overrides: { type: 'string' },
       ticks: { type: 'string', default: '60' },
+      pre: { type: 'string', default: '0' },
+      in: { type: 'string' },
       out: { type: 'string' },
       summary: { type: 'boolean', default: false },
+      counterfactual: { type: 'boolean', default: false },
       runs: { type: 'string', default: '20' },
     },
   });
 
-  const params: Params = values.params
+  let params: Params = values.params
     ? (JSON.parse(readFileSync(values.params, 'utf8')) as Params)
     : DEFAULT_PARAMS;
+  if (values.overrides)
+    params = mergeParams(
+      params,
+      JSON.parse(readFileSync(values.overrides, 'utf8')) as ParamOverrides,
+    );
   const policy: PolicyEvent[] | string = values['policy-file']
     ? (JSON.parse(readFileSync(values['policy-file'], 'utf8')) as PolicyEvent[])
     : values.policy;
@@ -40,6 +58,7 @@ function main(argv: string[]): void {
     seed: Number(values.seed),
     policy,
     ticks: Number(values.ticks),
+    preTicks: Number(values.pre),
   };
 
   if (command === 'bench') {
@@ -60,18 +79,116 @@ function main(argv: string[]): void {
     );
     return;
   }
-  if (command !== 'run') throw new Error(`Unknown command "${command}" (expected run | bench)`);
 
+  if (command === 'batch') {
+    if (!values.in || !values.out) throw new Error('batch needs --in and --out');
+    const seeds = values.seeds.split(',').map(Number);
+    const lines = readFileSync(values.in, 'utf8')
+      .split(/\r?\n/)
+      .filter((l) => l.trim());
+    const outLines: string[] = [];
+    for (const line of lines) {
+      const draw = JSON.parse(line) as { id: unknown; params: ParamOverrides };
+      const p = mergeParams(params, draw.params);
+      const cal = (seed: number, pol: string) =>
+        runSim({
+          scenario: values.scenario,
+          params: p,
+          seed,
+          policy: pol,
+          ticks: CAL_TICKS,
+          preTicks: CAL_PRE,
+        });
+      const runs = seeds.map((s) => cal(s, 'historical'));
+      const ms = runs.map(computeMoments);
+      const result: Record<string, unknown> = {
+        id: draw.id,
+        moments: meanMoments(ms),
+        sd: sdMoments(ms),
+      };
+      if (values.counterfactual) {
+        const effects = seeds.map((s, i) => trueEffects(runs[i]!, cal(s, 'none')));
+        result.effects = meanRecords(effects);
+      }
+      outLines.push(JSON.stringify(result));
+    }
+    writeFileSync(values.out, outLines.join('\n') + '\n');
+    return;
+  }
+
+  if (command !== 'run')
+    throw new Error(`Unknown command "${command}" (expected run | bench | batch)`);
   const out = runSim(base);
   if (values.summary) process.stdout.write(summarise(out));
   else if (values.out) writeFileSync(values.out, JSON.stringify(out));
   else process.stdout.write(JSON.stringify(out) + '\n');
 }
 
+type Num = number | number[];
+
+function meanRecords<T extends object>(xs: T[]): T {
+  const out: Record<string, Num> = {};
+  for (const [k, v] of Object.entries(xs[0]!) as [string, Num][]) {
+    if (Array.isArray(v))
+      out[k] = v.map(
+        (_, j) =>
+          xs.reduce((a, x) => a + ((x as Record<string, number[]>)[k]![j] ?? 0), 0) / xs.length,
+      );
+    else out[k] = xs.reduce((a, x) => a + (x as Record<string, number>)[k]!, 0) / xs.length;
+  }
+  return out as T;
+}
+
+function meanMoments(ms: Moments[]): Moments {
+  return meanRecords(ms);
+}
+
+function sdMoments(ms: Moments[]): Moments {
+  const m = meanRecords(ms) as unknown as Record<string, Num>;
+  const sq = ms.map((x) => {
+    const r: Record<string, Num> = {};
+    for (const [k, v] of Object.entries(x) as [string, Num][]) {
+      const mk = m[k]!;
+      r[k] = Array.isArray(v)
+        ? v.map((y, j) => (y - (mk as number[])[j]!) ** 2)
+        : (v - (mk as number)) ** 2;
+    }
+    return r;
+  });
+  const n = Math.max(1, ms.length - 1);
+  const v = meanRecords(sq);
+  const out: Record<string, Num> = {};
+  for (const [k, x] of Object.entries(v)) {
+    out[k] = Array.isArray(x)
+      ? x.map((y) => Math.sqrt((y * ms.length) / n))
+      : Math.sqrt((x * ms.length) / n);
+  }
+  return out as unknown as Moments;
+}
+
+/**
+ * True causal effects of the historical policy at the last snapshot, from a paired (same-seed)
+ * no-policy run: covered listings, exempt listings, asking-rent and CPI-style index.
+ */
+function trueEffects(hist: RunOutput, none: RunOutput): Record<string, number> {
+  const end = hist.series.tick.length - 1;
+  const sum = (o: RunOutput, pred: (z: RunOutput['series']['zones'][number]) => boolean) =>
+    o.series.zones.reduce((a, z) => a + (pred(z) ? z.strListings[end]! : 0), 0);
+  const cov = (z: { covered: boolean }) => z.covered;
+  const never = (z: { covered: boolean; optInTick?: number }) =>
+    !z.covered && z.optInTick === undefined;
+  return {
+    coveredListings: Math.log(Math.max(1, sum(hist, cov)) / Math.max(1, sum(none, cov))),
+    exemptListings: Math.log(Math.max(1, sum(hist, never)) / Math.max(1, sum(none, never))),
+    askingRent: Math.log(hist.series.askingRentIndex[end]! / none.series.askingRentIndex[end]!),
+    cpiRent: Math.log(hist.series.cpiRentIndex[end]! / none.series.cpiRentIndex[end]!),
+  };
+}
+
 function summarise(out: RunOutput): string {
   const s = out.series;
   const lines: string[] = [];
-  const zoneHeads = s.zones.map((z) => `${z.name}${z.covered ? '*' : ''}`.padStart(10));
+  const zoneHeads = s.zones.map((z) => `${z.name.slice(0, 9)}${z.covered ? '*' : ''}`.padStart(11));
   lines.push(
     `scenario=${out.meta.scenario} seed=${out.meta.seed} agents=${out.meta.agents} params=${out.meta.paramsHash}`,
     `policy=${JSON.stringify(out.meta.policy)}`,
@@ -79,7 +196,7 @@ function summarise(out: RunOutput): string {
     `  date   ${zoneHeads.join('')}  askIdx  cpiIdx  search  dbl  gone`,
   );
   for (let t = 0; t < s.tick.length; t += 3) {
-    const zs = s.zones.map((z) => String(z.strListings[t]).padStart(10)).join('');
+    const zs = s.zones.map((z) => String(z.strListings[t]).padStart(11)).join('');
     lines.push(
       `  ${s.date[t]}${zs}  ${s.askingRentIndex[t]!.toFixed(1).padStart(6)}  ${s.cpiRentIndex[t]!.toFixed(1).padStart(6)}` +
         `  ${String(s.searching[t]).padStart(6)} ${String(s.doubledUp[t]).padStart(4)} ${String(s.gone[t]).padStart(5)}`,

@@ -1,12 +1,13 @@
 import { hash32, Purpose, uniform } from '../rng.ts';
 import type { SimState } from '../types.ts';
 import { HouseholdStatus, Tenure } from '../types.ts';
+import { pickWeighted } from '../world.ts';
 
 /**
  * Rental market (PLAN §5.5), M1 version.
  *
- * 1. Each searching household targets its preferred zone, or another zone with probability
- *    searchOtherZoneProb.
+ * 1. Each searching household targets its preferred zone, or with probability
+ *    searchOtherZoneProb another zone chosen in proportion to renter stock.
  * 2. Per zone, M = min(S, V, A * sqrt(S * V)) matches (stochastically rounded). Searchers are taken
  *    in a hashed random order; each takes the first affordable vacant unit (new-lease rent
  *    <= maxRentShare * income) scanning from a hashed start position.
@@ -36,8 +37,9 @@ export function rentalMarket(state: SimState): void {
     if (st !== HouseholdStatus.SEARCHING && st !== HouseholdStatus.DOUBLED_UP) continue;
     let z = hh.prefZone[h]!;
     if (nZ > 1 && uniform(seed, h, tick, Purpose.SEARCH_ZONE) < psi) {
-      const other = Math.floor(uniform(seed, h, tick, Purpose.SEARCH_ZONE, 1) * (nZ - 1));
-      z = other >= z ? other + 1 : other;
+      // Another zone, in proportion to its renter stock.
+      const w = state.base.renterWeights.map((x, zi) => (zi === z ? 0 : x));
+      z = pickWeighted(w, uniform(seed, h, tick, Purpose.SEARCH_ZONE, 1));
     }
     searchers[z]!.push(h);
   }

@@ -1,5 +1,5 @@
 import type { SimState, TickRecord } from './types.ts';
-import { HouseholdStatus, Tenure } from './types.ts';
+import { HostClass, HouseholdStatus, RegStatus, Tenure } from './types.ts';
 
 /**
  * Observation (PLAN §5.3 step 7): the true ("god view") state at the end of a tick.
@@ -16,6 +16,9 @@ export function observe(state: SimState): TickRecord {
     ownerOcc: 0,
     marketRent: z.marketRent,
     occupancy: z.occupancy,
+    strRegistered: 0,
+    strExemptClaim: 0,
+    strMulti: 0,
   }));
   let qRent = 0;
   for (let d = 0; d < dw.n; d++) {
@@ -25,6 +28,9 @@ export function observe(state: SimState): TickRecord {
         r.strListings++;
         if (dw.principalRes[d]) r.strPrincipal++;
         else if (derived.coveredNow[dw.zone[d]!]) r.strIllegal++;
+        if (dw.hostClass[d] !== HostClass.SINGLE) r.strMulti++;
+        if (dw.registered[d] === RegStatus.REGISTERED) r.strRegistered++;
+        else if (dw.registered[d] === RegStatus.EXEMPT_CLAIM) r.strExemptClaim++;
         break;
       case Tenure.LTR:
         if (dw.tenant[d]! >= 0) {
@@ -72,8 +78,8 @@ export function observe(state: SimState): TickRecord {
     doubledUp,
     gone,
     left,
-    cpiRentIndex: (100 * qRent) / Math.max(1, occupied) / state.base.cpiQualityRent,
-    askingRentIndex: (100 * asking) / state.base.askingRent,
+    cpiRentIndex: (100 * qRent) / Math.max(1, occupied) / state.base.cpiIndexBase,
+    askingRentIndex: (100 * asking) / state.base.askingIndexBase,
     rentBurdenShare: burdened / Math.max(1, housed),
     fines: state.acc.fines,
   };

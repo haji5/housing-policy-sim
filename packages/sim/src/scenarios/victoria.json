@@ -1,0 +1,123 @@
+{
+  "id": "victoria",
+  "name": "Victoria CRD 2023 (stylised, 8 zones)",
+  "start": {
+    "year": 2023,
+    "month": 9
+  },
+  "multiHostShare": 0.4605,
+  "spinUpMonths": 24,
+  "initialSearchingShare": 0.03,
+  "rentDriftAnnual": 0,
+  "observation": {
+    "snapshotTicks": [
+      -15,
+      -12,
+      -9,
+      -3,
+      -1,
+      3,
+      6,
+      9,
+      12,
+      15,
+      18,
+      21,
+      24,
+      27,
+      33
+    ],
+    "refTick": -1
+  },
+  "zones": [
+    {
+      "name": "Downtown & James Bay",
+      "covered": true,
+      "dwellings": 8891,
+      "renterHouseholds": 6117,
+      "strListings": 847,
+      "marketRent": 2,
+      "nightlyRate": 0.179,
+      "occupancy": 0.5,
+      "capacity": 9780
+    },
+    {
+      "name": "Inner Victoria & Esquimalt",
+      "covered": true,
+      "dwellings": 49648,
+      "renterHouseholds": 25049,
+      "strListings": 520,
+      "marketRent": 2,
+      "nightlyRate": 0.179,
+      "occupancy": 0.5,
+      "capacity": 54613
+    },
+    {
+      "name": "Saanich & Oak Bay",
+      "covered": true,
+      "dwellings": 65676,
+      "renterHouseholds": 18074,
+      "strListings": 711,
+      "marketRent": 2,
+      "nightlyRate": 0.179,
+      "occupancy": 0.5,
+      "capacity": 72244
+    },
+    {
+      "name": "Westshore & Sooke",
+      "covered": true,
+      "dwellings": 42669,
+      "renterHouseholds": 10960,
+      "strListings": 756,
+      "marketRent": 2,
+      "nightlyRate": 0.179,
+      "occupancy": 0.5,
+      "capacity": 46936
+    },
+    {
+      "name": "Saanich Peninsula",
+      "covered": true,
+      "dwellings": 20293,
+      "renterHouseholds": 4096,
+      "strListings": 299,
+      "marketRent": 2,
+      "nightlyRate": 0.179,
+      "occupancy": 0.5,
+      "capacity": 22322
+    },
+    {
+      "name": "Juan de Fuca",
+      "covered": false,
+      "dwellings": 2676,
+      "renterHouseholds": 368,
+      "strListings": 334,
+      "marketRent": 2,
+      "nightlyRate": 0.179,
+      "occupancy": 0.5,
+      "capacity": 2944
+    },
+    {
+      "name": "Southern Gulf Islands",
+      "covered": false,
+      "dwellings": 2952,
+      "renterHouseholds": 406,
+      "strListings": 166,
+      "marketRent": 2,
+      "nightlyRate": 0.179,
+      "occupancy": 0.5,
+      "capacity": 3247
+    },
+    {
+      "name": "Salt Spring Island",
+      "covered": false,
+      "optInTick": 26,
+      "dwellings": 5630,
+      "renterHouseholds": 930,
+      "strListings": 258,
+      "marketRent": 2,
+      "nightlyRate": 0.179,
+      "occupancy": 0.5,
+      "capacity": 6193
+    }
+  ]
+}

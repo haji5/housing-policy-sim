@@ -23,6 +23,9 @@ export interface WorldLayout {
   zoneNames: string[];
   zoneCovered: boolean[];
   start: { year: number; month: number };
+  /** Calibrated parameter set used for this game (-1 = uncalibrated defaults). */
+  ensembleMember: number;
+  ensembleSize: number;
 }
 
 export type WorkerResponse =

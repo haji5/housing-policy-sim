@@ -1,0 +1,103 @@
+{
+  "_doc": "Priors for the free parameters (PLAN §7.1). Uniform or log-uniform on [lo, hi]. Names are dotted paths into Params (packages/sim/src/types.ts). Everything else stays at packages/sim/src/params/defaults.json.",
+  "parameters": [
+    {
+      "name": "host.pReview",
+      "dist": "loguniform",
+      "lo": 0.02,
+      "hi": 0.3,
+      "note": "speed of host response"
+    },
+    {
+      "name": "host.beta",
+      "dist": "loguniform",
+      "lo": 0.3,
+      "hi": 5,
+      "note": "utility per $k/month"
+    },
+    {
+      "name": "host.complianceBase",
+      "dist": "uniform",
+      "lo": 0,
+      "hi": 0.8,
+      "note": "share of single-listing investors who comply at once"
+    },
+    {
+      "name": "host.multiComplianceShift",
+      "dist": "uniform",
+      "lo": -0.4,
+      "hi": 0.4,
+      "note": "compliance difference for multi-listing/commercial hosts"
+    },
+    {
+      "name": "host.anticipation",
+      "dist": "uniform",
+      "lo": 0,
+      "hi": 0.5,
+      "note": "monthly exit hazard of law-abiding hosts between announcement and Phase 1 (also weights the anticipated penalty for others)"
+    },
+    {
+      "name": "host.prShare",
+      "dist": "uniform",
+      "lo": 0.2,
+      "hi": 0.53,
+      "note": "principal-residence share of 2023 listings (unobserved); must be < 1 - 0.4605"
+    },
+    {
+      "name": "host.investorEntry",
+      "dist": "uniform",
+      "lo": 0,
+      "hi": 0.01,
+      "note": "investor purchases in zones without the rule (spillover)"
+    },
+    {
+      "name": "enforcement.detectMax",
+      "dist": "uniform",
+      "lo": 0.01,
+      "hi": 0.4,
+      "note": "monthly detection ceiling"
+    },
+    {
+      "name": "enforcement.delistProb",
+      "dist": "uniform",
+      "lo": 0.02,
+      "hi": 0.9,
+      "note": "platform de-listing of unregistered listings"
+    },
+    {
+      "name": "enforcement.regTakeup",
+      "dist": "loguniform",
+      "lo": 0.05,
+      "hi": 0.9,
+      "note": "monthly registration of legal listings"
+    },
+    {
+      "name": "enforcement.exemptClaimShare",
+      "dist": "uniform",
+      "lo": 0,
+      "hi": 0.2,
+      "note": "hosts showing 'Exempt'"
+    },
+    {
+      "name": "str.demandSpillover",
+      "dist": "uniform",
+      "lo": 0,
+      "hi": 1,
+      "note": "displaced tourist demand moving to exempt zones"
+    },
+    {
+      "name": "str.demandGrowthAnnual",
+      "dist": "uniform",
+      "lo": -0.05,
+      "hi": 0.1,
+      "note": "common tourist-demand trend"
+    },
+    {
+      "name": "rental.arrivalRentElasticity",
+      "dist": "uniform",
+      "lo": 0.5,
+      "hi": 5,
+      "note": "renter arrivals vs asking rents; not identified by listing moments, kept to carry rent-effect uncertainty"
+    }
+  ]
+}

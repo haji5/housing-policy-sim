@@ -3,7 +3,7 @@ import { hashObject } from './hash.ts';
 import { sortEvents } from './policy.ts';
 import { stepSim } from './step.ts';
 import type { PolicyEvent, RunConfig, RunOutput, SimState } from './types.ts';
-import { createSim } from './world.ts';
+import { createSim } from './create.ts';
 
 export interface RunSimConfig extends RunConfig {
   ticks: number;
@@ -22,6 +22,8 @@ export function addPolicyEvents(state: SimState, events: readonly PolicyEvent[])
 /** Columnar time series of everything recorded so far. */
 export function collectOutput(state: SimState): RunOutput {
   const H = state.history;
+  // History starts at the first simulated tick (negative when the run has pre-ticks).
+  const t0 = state.tick - H.length;
   const col = <T>(f: (r: (typeof H)[number]) => T) => H.map(f);
   return {
     meta: {
@@ -32,13 +34,16 @@ export function collectOutput(state: SimState): RunOutput {
       agents: state.dwellings.n + state.households.n,
       paramsHash: hashObject(state.params),
       policy: state.policy,
+      firstTick: t0,
+      ...(state.scenario.observation ? { observation: state.scenario.observation } : {}),
     },
     series: {
-      tick: H.map((_, i) => i),
-      date: H.map((_, i) => tickToLabel(state.scenario.start, i)),
+      tick: H.map((_, i) => t0 + i),
+      date: H.map((_, i) => tickToLabel(state.scenario.start, t0 + i)),
       zones: state.zones.map((z, zi) => ({
         name: z.spec.name,
         covered: z.spec.covered,
+        ...(z.spec.optInTick !== undefined ? { optInTick: z.spec.optInTick } : {}),
         strListings: col((r) => r.zones[zi]!.strListings),
         strPrincipal: col((r) => r.zones[zi]!.strPrincipal),
         strIllegal: col((r) => r.zones[zi]!.strIllegal),
@@ -47,6 +52,9 @@ export function collectOutput(state: SimState): RunOutput {
         ownerOcc: col((r) => r.zones[zi]!.ownerOcc),
         marketRent: col((r) => r.zones[zi]!.marketRent),
         occupancy: col((r) => r.zones[zi]!.occupancy),
+        strRegistered: col((r) => r.zones[zi]!.strRegistered),
+        strExemptClaim: col((r) => r.zones[zi]!.strExemptClaim),
+        strMulti: col((r) => r.zones[zi]!.strMulti),
       })),
       housed: col((r) => r.housed),
       searching: col((r) => r.searching),
@@ -64,6 +72,6 @@ export function collectOutput(state: SimState): RunOutput {
 /** Build a world and run it for `ticks` months. */
 export function runSim(config: RunSimConfig): RunOutput {
   const state = createSim(config);
-  for (let t = 0; t < config.ticks; t++) stepSim(state);
+  for (let i = 0; i < config.ticks; i++) stepSim(state);
   return collectOutput(state);
 }

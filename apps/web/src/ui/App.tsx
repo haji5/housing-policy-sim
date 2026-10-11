@@ -39,8 +39,8 @@ export function App() {
   };
   const s = snapshot.series;
   const zones = s.zones;
-  const covered = zones.findIndex((z) => z.covered);
-  const exempt = zones.findIndex((z) => !z.covered);
+  const coveredSeries = sumZones(zones, (z) => z.covered);
+  const exemptSeries = sumZones(zones, (z) => !z.covered);
   const first = (xs: number[]) => xs[0] ?? 0;
   const lastv = (xs: number[]) => xs[xs.length - 1] ?? 0;
   const dirty =
@@ -62,7 +62,11 @@ export function App() {
           Rule in force: <strong>{regimeName(snapshot.levers.strRegime)}</strong>, enforcement{' '}
           {snapshot.levers.enforcement}/5
         </span>
-        <span class="seed">seed {state.seed}</span>
+        <span class="seed">
+          seed {state.seed}
+          {layout.ensembleMember >= 0 &&
+            ` · model variant ${layout.ensembleMember + 1} of ${layout.ensembleSize}`}
+        </span>
       </header>
 
       <main class="layout">
@@ -75,19 +79,10 @@ export function App() {
               xLabel={label}
               markers={state.changes.map((c) => ({ x: c.tick, label: c.label }))}
               lines={[
-                {
-                  label: `${zones[covered]!.name} (covered zone)`,
-                  values: zones[covered]!.strListings,
-                  color: '#d55e00',
-                },
-                {
-                  label: `${zones[exempt]!.name} (exempt zone)`,
-                  values: zones[exempt]!.strListings,
-                  color: '#009e73',
-                  dash: '6 4',
-                },
+                { label: 'Covered areas', values: coveredSeries, color: '#d55e00' },
+                { label: 'Exempt areas', values: exemptSeries, color: '#009e73', dash: '6 4' },
               ]}
-              summary={`Covered zone listings ${pct(first(zones[covered]!.strListings), lastv(zones[covered]!.strListings))} since the start; exempt zone ${pct(first(zones[exempt]!.strListings), lastv(zones[exempt]!.strListings))}.`}
+              summary={`Covered-area listings ${pct(first(coveredSeries), lastv(coveredSeries))} since the start; exempt areas ${pct(first(exemptSeries), lastv(exemptSeries))}.`}
             />
             <LineChart
               title="Rent indices (start = 100)"
@@ -168,12 +163,14 @@ function Summary({ state }: { state: GameState }) {
     <section class="panel" aria-labelledby="sum-h">
       <h2 id="sum-h">Since you took office</h2>
       <dl class="kpis">
-        {z.map((zone) => (
-          <div key={zone.name}>
-            <dt>{zone.name} listings</dt>
+        {[
+          { name: 'Covered-area listings', values: sumZones(z, (x) => x.covered) },
+          { name: 'Exempt-area listings', values: sumZones(z, (x) => !x.covered) },
+        ].map((g) => (
+          <div key={g.name}>
+            <dt>{g.name}</dt>
             <dd>
-              {first(zone.strListings)} → {lastv(zone.strListings)} (
-              {pct(first(zone.strListings), lastv(zone.strListings))})
+              {first(g.values)} → {lastv(g.values)} ({pct(first(g.values), lastv(g.values))})
             </dd>
           </div>
         ))}
@@ -199,4 +196,15 @@ function Summary({ state }: { state: GameState }) {
       )}
     </section>
   );
+}
+
+/** Element-wise sum of listings over the zones matching `pred`. */
+function sumZones(
+  zones: { covered: boolean; strListings: number[] }[],
+  pred: (z: { covered: boolean }) => boolean,
+): number[] {
+  const n = zones[0]?.strListings.length ?? 0;
+  const out = new Array<number>(n).fill(0);
+  for (const z of zones) if (pred(z)) for (let i = 0; i < n; i++) out[i]! += z.strListings[i]!;
+  return out;
 }

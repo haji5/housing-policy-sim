@@ -1,0 +1,6 @@
+# Pinned to the versions used by bc-str-ban-analysis, so the DiD estimator is identical.
+numpy==2.4.6
+pandas==3.0.6
+scipy==1.17.1
+pyfixest==0.60.0
+matplotlib==3.11.2

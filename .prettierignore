@@ -6,3 +6,10 @@ test-results/
 playwright-report/
 docs/PLAN.md
 WORKING_AGREEMENTS.md
+.venv/
+calibration/reports/
+docs/handoff/staged/
+calibration/priors.json
+calibration/inputs/
+packages/sim/src/params/
+packages/sim/src/scenarios/

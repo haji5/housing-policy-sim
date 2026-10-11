@@ -10,18 +10,27 @@
     "ltrUpkeep": 0.25,
     "anticipation": 0,
     "prReview": 0.05,
-    "prBeta": 0.5
+    "prBeta": 0.5,
+    "prShare": 0.4,
+    "multiComplianceShift": 0,
+    "commercialShareOfMulti": 0.5,
+    "commercialBetaMult": 1.5,
+    "investorEntry": 0
   },
   "enforcement": {
     "detectMax": 0.3,
     "detectK": 0.4,
     "fine": 1.5,
     "delistProb": 0.85,
-    "registrationCost": 0.02
+    "registrationCost": 0.02,
+    "regTakeup": 0.2,
+    "exemptClaimShare": 0.05,
+    "delistLagTicks": 1
   },
   "str": {
     "occMax": 0.85,
-    "demandSpillover": 0.2
+    "demandSpillover": 0.2,
+    "demandGrowthAnnual": 0
   },
   "rental": {
     "vStar": 0.03,

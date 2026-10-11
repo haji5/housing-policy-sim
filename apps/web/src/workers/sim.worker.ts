@@ -4,6 +4,9 @@ import {
   collectOutput,
   createSim,
   DEFAULT_PARAMS,
+  ENSEMBLE,
+  ensembleIndexForSeed,
+  ensembleParams,
   leversAt,
   stepSim,
   tickToLabel,
@@ -42,12 +45,10 @@ self.onmessage = (ev: MessageEvent<WorkerRequest>) => {
   const req = ev.data;
   try {
     if (req.type === 'init') {
-      sim = createSim({
-        scenario: req.scenario,
-        params: DEFAULT_PARAMS,
-        seed: req.seed,
-        policy: [],
-      });
+      // Each seed plays one calibrated parameter set, so model uncertainty varies across games.
+      const member = ENSEMBLE.sets.length > 0 ? ensembleIndexForSeed(req.seed) : -1;
+      const params = member >= 0 ? ensembleParams(member) : DEFAULT_PARAMS;
+      sim = createSim({ scenario: req.scenario, params, seed: req.seed, policy: [] });
       const snap = snapshot(sim);
       reply(
         {
@@ -58,6 +59,8 @@ self.onmessage = (ev: MessageEvent<WorkerRequest>) => {
             zoneNames: sim.zones.map((z) => z.spec.name),
             zoneCovered: sim.zones.map((z) => z.spec.covered),
             start: sim.scenario.start,
+            ensembleMember: member,
+            ensembleSize: ENSEMBLE.sets.length,
           },
           snapshot: snap,
         },

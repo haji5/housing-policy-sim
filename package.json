@@ -17,7 +17,11 @@
     "lint": "eslint . && prettier --check .",
     "format": "prettier --write .",
     "typecheck": "pnpm -r --if-present typecheck",
-    "sim": "node packages/sim/src/cli.ts"
+    "sim": "node packages/sim/src/cli.ts",
+    "calibrate": "node scripts/py.mjs calibrate",
+    "calibrate:smoke": "node scripts/py.mjs smoke",
+    "validate": "node scripts/py.mjs validate",
+    "did-recovery": "node scripts/py.mjs did"
   },
   "devDependencies": {
     "@eslint/js": "10.0.1",

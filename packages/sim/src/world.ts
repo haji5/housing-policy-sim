@@ -11,7 +11,7 @@ import type {
   SimState,
   ZoneState,
 } from './types.ts';
-import { HouseholdStatus, Tenure } from './types.ts';
+import { HostClass, HouseholdStatus, Tenure } from './types.ts';
 
 const NO_ONE = -1;
 
@@ -91,12 +91,13 @@ export function pickWeighted(weights: readonly number[], u: number): number {
  * alternative-specific constants and matching efficiencies are solved here so that, with no
  * policy change, the starting state is a flow-balanced steady state (see ADR 0002).
  */
-export function createSim(config: RunConfig): SimState {
+export function buildWorld(config: RunConfig): SimState {
   const scenario =
     typeof config.scenario === 'string' ? loadScenario(config.scenario) : config.scenario;
   const params = config.params;
   const seed = config.seed >>> 0;
   const sc = params.scale;
+  const startTick = -Math.max(0, Math.floor(config.preTicks ?? 0));
   const nZones = scenario.zones.length;
   if (nZones > 255) throw new Error('At most 255 zones');
 
@@ -104,7 +105,7 @@ export function createSim(config: RunConfig): SimState {
   const plan = scenario.zones.map((z, zi) => {
     const nD = Math.round(z.dwellings * sc);
     const nStr = Math.round(z.strListings * sc);
-    const nPrStr = Math.round(nStr * z.prShareOfListings);
+    const nPrStr = Math.round(nStr * (z.prShareOfListings ?? params.host.prShare));
     const nInvStr = nStr - nPrStr;
     const nOcc = Math.round(z.renterHouseholds * sc);
     const nVac = Math.round((nOcc * params.rental.vStar) / (1 - params.rental.vStar));
@@ -115,6 +116,14 @@ export function createSim(config: RunConfig): SimState {
   });
   const totalD = plan.reduce((a, p) => a + p.nD, 0);
   const totalOcc = plan.reduce((a, p) => a + p.nOcc, 0);
+  // Multi-listing hosts: a share m of investor units, chosen so that the multi-host share of all
+  // starting listings matches the scenario (PR hosts are single by definition).
+  const totalStr = plan.reduce((a, p) => a + p.nPrStr + p.nInvStr, 0);
+  const totalInvStr = plan.reduce((a, p) => a + p.nInvStr, 0);
+  const multiShareInv =
+    scenario.multiHostShare === undefined || totalInvStr === 0
+      ? 0
+      : Math.min(1, (scenario.multiHostShare * totalStr) / totalInvStr);
   const nSearch0 = Math.round(totalOcc * scenario.initialSearchingShare);
 
   const dw: Dwellings = {
@@ -129,6 +138,8 @@ export function createSim(config: RunConfig): SimState {
     tenant: new Int32Array(totalD).fill(NO_ONE),
     leaseStart: new Int32Array(totalD),
     registered: new Uint8Array(totalD),
+    hostClass: new Uint8Array(totalD),
+    claimsExempt: new Uint8Array(totalD),
   };
   const hh = allocHouseholds((totalOcc + nSearch0) * 3 + 1024);
 
@@ -141,8 +152,11 @@ export function createSim(config: RunConfig): SimState {
         dw.zone[d] = zi;
         dw.tenure[d] = tenure;
         dw.principalRes[d] = pr ? 1 : 0;
-        dw.compliant[d] =
-          uniform(seed, d, 0, Purpose.HOST_COMPLIANT) < params.host.complianceBase ? 1 : 0;
+        assignHostClass(dw, d, pr, multiShareInv, params, seed);
+        dw.claimsExempt[d] =
+          uniform(seed, d, 0, Purpose.INIT_EXEMPT_CLAIM) < params.enforcement.exemptClaimShare
+            ? 1
+            : 0;
         dw.quality[d] = 1 - s + 2 * s * uniform(seed, d, 0, Purpose.INIT_QUALITY);
       }
     };
@@ -158,7 +172,7 @@ export function createSim(config: RunConfig): SimState {
       const discount = params.rental.sittingDiscount * uniform(seed, k, 0, Purpose.INIT_RENT);
       dw.rent[k] = zspec.marketRent * dw.quality[k]! * (1 - discount);
       dw.tenant[k] = h;
-      dw.leaseStart[k] = -Math.floor(uniform(seed, k, 0, Purpose.INIT_LEASE) * 12) - 1;
+      dw.leaseStart[k] = startTick - Math.floor(uniform(seed, k, 0, Purpose.INIT_LEASE) * 12) - 1;
       hh.income[h] = drawIncome(params, seed, h);
       hh.dwelling[h] = k;
       hh.status[h] = HouseholdStatus.HOUSED;
@@ -183,35 +197,42 @@ export function createSim(config: RunConfig): SimState {
   const searchersByPref = new Array<number>(nZones).fill(0);
   for (let h = 0; h < hh.n; h++)
     if (hh.status[h] !== HouseholdStatus.HOUSED) searchersByPref[hh.prefZone[h]!]!++;
-  const totalSearch = searchersByPref.reduce((a, b) => a + b, 0);
 
   const zones: ZoneState[] = scenario.zones.map((z, zi) => {
     const p = plan[zi]!;
     const nStr = p.nPrStr + p.nInvStr;
     const strDemand = (nStr * z.occupancy) / (params.str.occMax - z.occupancy);
     const vac0 = p.nVac / Math.max(1, p.nOcc + p.nVac);
-    const dU =
-      params.host.beta *
-      (strNetRevenue(params, z.occupancy, z.nightlyRate) -
-        ltrNetRevenue(params, z.marketRent, vac0));
+    const strNet0 = strNetRevenue(params, z.occupancy, z.nightlyRate);
+    const dNet = strNet0 - ltrNetRevenue(params, z.marketRent, vac0);
     // Flow balance for investor units: inflow to STR = P (h*O + r*V), outflow = r*S*(1-P).
     const pStar = (r * p.nInvStr) / (turnover * p.nOcc + r * p.nVac + r * p.nInvStr);
-    const ascStr = params.host.gumbelScale * logit(pStar) - dU;
+    const ascStr = [0, 1, 2].map(
+      (c) => params.host.gumbelScale * logit(pStar) - classBeta(params, c) * dNet,
+    );
     // Principal-residence hosts review symmetrically, so the stationary share equals P.
     const sPr = p.nPrStr / Math.max(1, p.nPrStr + p.nOwner);
     const ascPr =
       params.host.gumbelScale * logit(sPr) -
       params.host.prBeta * strNetRevenue(params, z.occupancy, z.nightlyRate);
     // Matching efficiency so that matches balance vacancy creation at the start.
-    const expectedSearchers =
-      searchersByPref[zi]! * (1 - psi) +
-      (nZones > 1 ? (psi * (totalSearch - searchersByPref[zi]!)) / (nZones - 1) : 0);
+    // Searchers from other zones arrive in proportion to this zone's renter stock.
+    const wTot = renterWeights.reduce((a, b) => a + b, 0);
+    let inflow = 0;
+    for (let o = 0; o < nZones; o++) {
+      if (o !== zi)
+        inflow +=
+          (psi * searchersByPref[o]! * renterWeights[zi]!) / Math.max(1, wTot - renterWeights[o]!);
+    }
+    const expectedSearchers = searchersByPref[zi]! * (1 - psi) + inflow;
     const matchEff =
       (turnover * p.nOcc) / Math.sqrt(Math.max(1, expectedSearchers) * Math.max(1, p.nVac));
     return {
       spec: z,
       marketRent: z.marketRent,
       strDemand,
+      strDemand0: strDemand,
+      strNet0,
       occupancy: z.occupancy,
       matchEff,
       ascStr,
@@ -234,11 +255,11 @@ export function createSim(config: RunConfig): SimState {
 
   const state: SimState = {
     seed,
-    tick: 0,
+    tick: startTick,
     scenario,
     params,
     policy,
-    levers: leversAt(policy, 0),
+    levers: leversAt(policy, startTick),
     zones,
     dwellings: dw,
     households: hh,
@@ -246,6 +267,8 @@ export function createSim(config: RunConfig): SimState {
     base: {
       cpiQualityRent: qRent / Math.max(1, nRented),
       askingRent: askingBase,
+      cpiIndexBase: qRent / Math.max(1, nRented),
+      askingIndexBase: askingBase,
       arrivalsPerMonth: baseArrivals(params, scenario, renterWeights, nRented),
       renterWeights,
     },
@@ -277,4 +300,38 @@ function baseArrivals(
       (weights[zi]! / total) * normCdf(Math.log(minIncome / incomeMedian) / incomeSigma);
   });
   return (params.rental.exitHazard * housed) / Math.max(0.05, 1 - pUnaffordable);
+}
+
+/** Utility weight on net revenue for a host class (commercial operators may be more sensitive). */
+export function classBeta(params: Params, hostClass: number): number {
+  return (
+    params.host.beta * (hostClass === HostClass.COMMERCIAL ? params.host.commercialBetaMult : 1)
+  );
+}
+
+/** Compliance threshold for a host class (multi-listing hosts are shifted). */
+export function classCompliance(params: Params, hostClass: number): number {
+  const shift = hostClass === HostClass.SINGLE ? 0 : params.host.multiComplianceShift;
+  return Math.min(1, Math.max(0, params.host.complianceBase + shift));
+}
+
+/** Fixed draws for a dwelling's host class and compliance type. */
+export function assignHostClass(
+  dw: Dwellings,
+  d: number,
+  principalRes: boolean,
+  multiShareInv: number,
+  params: Params,
+  seed: number,
+): void {
+  let c: number = HostClass.SINGLE;
+  if (!principalRes && uniform(seed, d, 0, Purpose.INIT_CLASS, 0) < multiShareInv) {
+    c =
+      uniform(seed, d, 0, Purpose.INIT_CLASS, 1) < params.host.commercialShareOfMulti
+        ? HostClass.COMMERCIAL
+        : HostClass.MULTI;
+  }
+  dw.hostClass[d] = c;
+  dw.compliant[d] =
+    uniform(seed, d, 0, Purpose.HOST_COMPLIANT) < classCompliance(params, c) ? 1 : 0;
 }

@@ -25,6 +25,22 @@ export const HouseholdStatus = {
 } as const;
 export type HouseholdStatusCode = (typeof HouseholdStatus)[keyof typeof HouseholdStatus];
 
+/** Host class of an investor unit (principal-residence hosts are SINGLE). */
+export const HostClass = {
+  SINGLE: 0,
+  MULTI: 1,
+  COMMERCIAL: 2,
+} as const;
+export type HostClassCode = (typeof HostClass)[keyof typeof HostClass];
+
+/** Provincial registry status of a listing (Phase 2). */
+export const RegStatus = {
+  NONE: 0,
+  REGISTERED: 1,
+  /** Listing shows "Exempt" instead of a registration number. */
+  EXEMPT_CLAIM: 2,
+} as const;
+
 export const StrRegime = {
   OPEN: 0,
   PRINCIPAL_RESIDENCE: 1,
@@ -46,8 +62,11 @@ export interface ZoneSpec {
   renterHouseholds: number;
   /** Active entire-home STR listings at the start. */
   strListings: number;
-  /** Share of those listings that are hosts' principal residences (legal under the rule). */
-  prShareOfListings: number;
+  /**
+   * Share of those listings that are hosts' principal residences (legal under the rule).
+   * Optional: when absent, params.host.prShare applies (a calibrated parameter).
+   */
+  prShareOfListings?: number;
   /** Asking rent for a new lease, $k/month. */
   marketRent: number;
   /** Average nightly STR rate, $k/night. */
@@ -67,6 +86,20 @@ export interface Scenario {
   initialSearchingShare: number;
   /** Exogenous drift in asking rents, annual (non-STR factors: incomes, rates, migration). */
   rentDriftAnnual: number;
+  /**
+   * Months of model spin-up before the first recorded tick (no policy; ASCs and matching
+   * efficiencies adapt so STR shares and vacancy settle at their observed starting values).
+   */
+  spinUpMonths?: number;
+  /** Share of all starting listings run by multi-listing hosts (DATA where available). */
+  multiHostShare?: number;
+  /** Researcher-view observation calendar used for calibration moments. */
+  observation?: {
+    /** Ticks with an Inside Airbnb-style snapshot (relative to the scenario start). */
+    snapshotTicks: number[];
+    /** Reference snapshot for indices and event studies (last pre-announcement snapshot). */
+    refTick: number;
+  };
 }
 
 // ---------------------------------------------------------------------------------------------
@@ -91,6 +124,19 @@ export interface Params {
     /** Monthly review probability of principal-residence hosts. */
     prReview: number;
     prBeta: number;
+    /** PR share of starting listings in zones whose scenario spec leaves it open. */
+    prShare: number;
+    /** Added to complianceBase for multi-listing and commercial hosts. */
+    multiComplianceShift: number;
+    /** Share of multi-listing investor units run by commercial operators. */
+    commercialShareOfMulti: number;
+    /** Revenue sensitivity multiplier of commercial operators. */
+    commercialBetaMult: number;
+    /**
+     * Investor entry into zones without the rule: monthly probability that a non-listing
+     * owner-occupied home is bought by an investor, per unit of proportional STR profit gain.
+     */
+    investorEntry: number;
   };
   enforcement: {
     /** Monthly detection probability ceiling. */
@@ -103,11 +149,19 @@ export interface Params {
     delistProb: number;
     /** Registration cost for legal hosts, $k/month equivalent. */
     registrationCost: number;
+    /** Months between the registry opening and platforms starting to de-list. */
+    delistLagTicks: number;
+    /** Monthly probability a legal, unregistered listing registers (registry regime). */
+    regTakeup: number;
+    /** Share of hosts who show "Exempt" in place of a registration number (fixed draw). */
+    exemptClaimShare: number;
   };
   str: {
     occMax: number;
     /** Share of tourist demand displaced from covered zones that shifts to exempt zones. */
     demandSpillover: number;
+    /** Common annual growth of tourist STR demand from tick 0 (all zones). */
+    demandGrowthAnnual: number;
   };
   rental: {
     vStar: number;
@@ -172,7 +226,11 @@ export interface Dwellings {
   rent: Float64Array;
   tenant: Int32Array;
   leaseStart: Int32Array;
+  /** RegStatus of the listing. */
   registered: Uint8Array;
+  hostClass: Uint8Array;
+  /** 1 if the host would claim "Exempt" on the registry (fixed draw). */
+  claimsExempt: Uint8Array;
 }
 
 export interface Households {
@@ -192,8 +250,12 @@ export interface ZoneState {
   occupancy: number;
   /** Matching efficiency A in M = A * sqrt(S * V). */
   matchEff: number;
-  /** Alternative-specific constant for investor STR (vs LTR). */
-  ascStr: number;
+  /** Alternative-specific constant for investor STR (vs LTR), per HostClass. */
+  ascStr: number[];
+  /** Tourist demand at tick 0, before common growth. */
+  strDemand0: number;
+  /** Net STR revenue at the start (reference for investor entry). */
+  strNet0: number;
   /** Alternative-specific constant for principal-residence listing (vs not listing). */
   ascPr: number;
   baselineServedStr: number;
@@ -218,6 +280,9 @@ export interface TickRecord {
     ownerOcc: number;
     marketRent: number;
     occupancy: number;
+    strRegistered: number;
+    strExemptClaim: number;
+    strMulti: number;
   }[];
   housed: number;
   searching: number;
@@ -244,7 +309,11 @@ export interface SimState {
   /** Baseline values for indices. */
   base: {
     cpiQualityRent: number;
+    /** Asking-rent level (fixed weights) that renter arrivals respond to. */
     askingRent: number;
+    /** Bases of the reported indices (= 100); reset at the end of spin-up. */
+    cpiIndexBase: number;
+    askingIndexBase: number;
     arrivalsPerMonth: number;
     /** Initial renter households per zone: fixed Laspeyres weights and arrival zone preferences. */
     renterWeights: number[];
@@ -262,11 +331,14 @@ export interface RunConfig {
   params: Params;
   seed: number;
   policy: PolicyEvent[] | string;
+  /** Run this many months before tick 0 (negative ticks), e.g. to observe pre-trends. */
+  preTicks?: number;
 }
 
 export interface ZoneSeries {
   name: string;
   covered: boolean;
+  optInTick?: number;
   strListings: number[];
   strPrincipal: number[];
   strIllegal: number[];
@@ -275,6 +347,9 @@ export interface ZoneSeries {
   ownerOcc: number[];
   marketRent: number[];
   occupancy: number[];
+  strRegistered: number[];
+  strExemptClaim: number[];
+  strMulti: number[];
 }
 
 export interface RunOutput {
@@ -286,6 +361,9 @@ export interface RunOutput {
     agents: number;
     paramsHash: string;
     policy: PolicyEvent[];
+    /** Tick of the first recorded month (negative with pre-ticks). */
+    firstTick: number;
+    observation?: Scenario['observation'];
   };
   series: {
     tick: number[];

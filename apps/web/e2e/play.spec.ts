@@ -43,9 +43,9 @@ test('play a full 20-turn term with the principal-residence rule', async ({ page
 
   // The covered zone's listings fell; the summary says so.
   const summary = page.getByRole('region', { name: 'Since you took office' });
-  await expect(summary.getByText(/Core listings/)).toBeVisible();
+  await expect(summary.getByText(/Covered-area listings/)).toBeVisible();
   const text = (await summary.textContent()) ?? '';
-  const m = /Corelistings(\d+)→(\d+)/.exec(text.replace(/\s+/g, ''));
+  const m = /Covered-arealistings(\d+)→(\d+)/.exec(text.replace(/\s+/g, ''));
   expect(m).not.toBeNull();
   expect(Number(m![2])).toBeLessThan(Number(m![1]) * 0.8);
 });

@@ -43,7 +43,8 @@ describe('common random numbers', () => {
     decoupled.rental.arrivalVacancySemiElasticity = 0;
     decoupled.str.demandSpillover = 0;
     const a = run(8, 'none', 60, decoupled);
-    const b = run(8, 'historical', 60, decoupled);
+    // PR rule only: the Phase 2 registry applies to exempt zones too (ADR 0004), so it is excluded.
+    const b = run(8, ruleAt(8), 60, decoupled);
     expect(b.series.zones[1]!.strListings).toEqual(a.series.zones[1]!.strListings);
     expect(b.series.zones[1]!.ltrVacant).toEqual(a.series.zones[1]!.ltrVacant);
     // ...while the covered zone did respond.
