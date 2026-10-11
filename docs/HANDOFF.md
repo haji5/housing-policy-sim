@@ -190,6 +190,12 @@ Done (committed after `m7`):
   CSS `url()` atlas paths correctly (in Git Bash set `MSYS_NO_PATHCONV=1`, or the path gets
   rewritten to `C:/Program Files/Git/...`).
 
+Status 2026-10-11: the repo exists (`origin` = https://github.com/haji5/housing-policy-sim) and
+`main` was pushed, but the tags were not. The first CI run failed only on the perf test (timed
+inside the coverage suite; fixed in `f0c9bff`: it now runs alone via `vitest.perf.config.ts`);
+the Pages run failed because Pages was not yet enabled (Settings → Pages → Source: GitHub
+Actions). CI's e2e and calibration-smoke steps had not run yet.
+
 Left (needs the owner): create the GitHub repo `haji5/housing-policy-sim` (PLAN D2), add the
 remote and push `main` with tags, enable Pages with "GitHub Actions" as the source. Then check
 the deployed URL in a clean browser, update README's "Play it" note, and tag `m8`. Stretch goals
