@@ -45,11 +45,14 @@ test('play a full 20-turn term with the principal-residence rule', async ({ page
   await endTurn.click();
   await expect(endTurn).toBeEnabled();
   await expect(page.getByTestId('turn')).toHaveText('4');
+  // The decision log lives in the Log tab of the city-hall panel.
+  await page.getByRole('tab', { name: 'Log' }).click();
   await expect(
     page
       .getByRole('region', { name: 'Decisions' })
       .getByText(/STR regime set to "Principal-residence rule"/),
   ).toBeVisible();
+  await page.getByRole('tab', { name: /Policies/ }).click();
   // The STR rules are now in their legislative cooldown.
   await expect(page.getByText(/locked for 3 more turns/)).toBeVisible();
 

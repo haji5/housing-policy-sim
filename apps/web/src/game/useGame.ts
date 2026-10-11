@@ -14,6 +14,9 @@ import {
 } from '@zoned-out/sim';
 import type { Decision, GameState, MandateId, PolicyEvent, Quote, Scorecard } from '@zoned-out/sim';
 import { SimClient } from './client.ts';
+import { makeNews } from './news.ts';
+import type { NewsItem } from './news.ts';
+import { researcherView } from './observe.ts';
 import type { Final, Snapshot, WorldLayout } from './protocol.ts';
 
 export const TICKS_PER_TURN = RULES.ticksPerTurn;
@@ -52,6 +55,10 @@ export interface UiState {
   /** Shock card revealed at the start of the current turn, if any. */
   currentShock: number | null;
   final: FinalResult | null;
+  /** One briefing per completed turn (flavour, news.ts). */
+  news: NewsItem[];
+  /** Change in budget and capital over the last completed turn (HUD floaters). */
+  lastDelta: { turn: number; budget: number; capital: number } | null;
   error?: string;
 }
 
@@ -126,6 +133,8 @@ export function useGame() {
     dataThroughTick: -1,
     currentShock: null,
     final: null,
+    news: [],
+    lastDelta: null,
   }));
 
   useEffect(() => () => client.current?.dispose(), []);
@@ -145,6 +154,8 @@ export function useGame() {
       dataThroughTick: -1,
       currentShock: null,
       final: null,
+      news: [],
+      lastDelta: null,
     }));
     try {
       // The zone count is needed for the game state; Victoria has 8 zones, but ask the sim.
@@ -220,15 +231,30 @@ export function useGame() {
         });
         final = { card, composite: compositeScore(card, game.mandate), runs: f.runs };
       }
+      const dataThroughTick = buyData
+        ? Math.max(s.dataThroughTick, lastTick - TICKS_PER_TURN)
+        : s.dataThroughTick;
+      const news = makeNews({
+        turn: game.turn,
+        events,
+        before: s.game.current,
+        zoneNames: layout.zoneNames,
+        view: researcherView(snapshot, layout, s.seed, dataThroughTick),
+      });
+      const lastDelta = {
+        turn: game.turn,
+        budget: game.budget - s.game.budget,
+        capital: game.capital - s.game.capital,
+      };
       setState((p) => ({
         ...p,
         snapshot,
         game,
+        news: [...p.news, news],
+        lastDelta,
         phase: final ? 'over' : 'playing',
         draft: { ...game.current, upzone: [...game.current.upzone], buyData },
-        dataThroughTick: buyData
-          ? Math.max(p.dataThroughTick, lastTick - TICKS_PER_TURN)
-          : p.dataThroughTick,
+        dataThroughTick,
         currentShock: shock,
         log: [...p.log, ...newLog, ...shockLog],
         events: [...p.events, ...events],

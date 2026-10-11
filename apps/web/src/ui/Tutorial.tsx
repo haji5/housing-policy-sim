@@ -1,4 +1,5 @@
 import { useState } from 'preact/hooks';
+import { AtlasSprite } from './AtlasSprite.tsx';
 
 /**
  * Onboarding (PLAN §6.5): one tip per turn for the first four turns, introducing one idea at a
@@ -11,7 +12,7 @@ const STEPS = [
   },
   {
     title: 'Turn 2: two rent indices',
-    text: 'The published all-tenant rent index moves slowly and is noisy, because most tenants are on old leases. Asking rents for new leases react faster, but you only see them if you buy the data (Data, in the levers panel).',
+    text: 'The published all-tenant rent index moves slowly and is noisy, because most tenants are on old leases. Asking rents for new leases react faster, but you only see them if you buy the data (the Data card in the Policies tab).',
   },
   {
     title: 'Turn 3: shocks and money',
@@ -48,18 +49,24 @@ export function Tutorial({ turn }: { turn: number }) {
   };
   return (
     <aside class="tutorial" aria-labelledby="tut-h" data-testid="tutorial">
-      <h2 id="tut-h">{step.title}</h2>
-      <p>{step.text}</p>
-      <div class="tutorial-actions">
-        <button type="button" onClick={() => setDismissed((d) => [...d, turn])}>
-          Got it
-        </button>
-        <button type="button" onClick={skip}>
-          Skip the tutorial
-        </button>
-        <span class="muted">
-          Tip {turn + 1} of {STEPS.length}
-        </span>
+      <div class="advisor" aria-hidden="true">
+        <AtlasSprite name="face_happy" scale={3} />
+        <span>Advisor</span>
+      </div>
+      <div class="tutorial-body">
+        <h2 id="tut-h">{step.title}</h2>
+        <p>{step.text}</p>
+        <div class="tutorial-actions">
+          <button type="button" onClick={() => setDismissed((d) => [...d, turn])}>
+            Got it
+          </button>
+          <button type="button" onClick={skip}>
+            Skip the tutorial
+          </button>
+          <span class="muted">
+            Tip {turn + 1} of {STEPS.length}
+          </span>
+        </div>
       </div>
     </aside>
   );

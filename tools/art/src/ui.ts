@@ -50,6 +50,11 @@ export function uiSprites(): Record<string, Sprite> {
     ui_button_pressed: frame(C.wallShade, C.white, C.concShade, true),
     ui_button_disabled: frame(C.concLight, C.concLight, C.concShade),
     ui_button_primary: frame(C.ltrBlue, C.glassShade, C.ink),
+    // Game chrome: the dark HUD bar, cream lever cards and the green "end turn" button.
+    ui_panel_dark: frame(C.shadow, C.roofSlate, C.ink),
+    ui_card: frame(C.wallLight, C.white, C.wallShade),
+    ui_button_go: frame(C.forest, C.grass2, C.ink),
+    ui_button_go_pressed: frame(C.forest, C.grass2, C.ink, true),
     ui_tab: tab,
     ui_slider_track: track,
     ui_slider_thumb: thumb,

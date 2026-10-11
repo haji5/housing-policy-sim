@@ -1,0 +1,683 @@
+/*
+ * Game chrome (ADR 0012): a dark HUD and bottom bar, a cream "city hall" side panel with lever
+ * cards, the newspaper briefing, the title screen and the results card. Colours come from the
+ * art palette (tools/art/src/palette.ts); every state that colour marks also has a text, icon or
+ * pattern cue.
+ */
+:root {
+  --bg: #30364a; /* palette shadow */
+  --hud: #1b1b2a; /* palette ink */
+  --hud-edge: #424958; /* roofSlateDark */
+  --hud-text: #f2e9d6; /* wallLight */
+  --hud-muted: #c9cfdb;
+  --card: #f2e9d6; /* wallLight */
+  --card-edge: #cdbf9f; /* wallShade */
+  --go: #3b733d; /* forest */
+  --gold: #f0e442; /* strYellow */
+  background: var(--bg);
+}
+body {
+  background: var(--bg);
+}
+.center {
+  color: var(--hud-text);
+}
+.center [role='alert'] {
+  color: #fff;
+}
+
+/* ---- HUD ------------------------------------------------------------------------------- */
+.hud {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem 1rem;
+  flex-wrap: wrap;
+  padding: 0.35rem 1rem;
+  background: var(--hud);
+  color: var(--hud-text);
+  border-bottom: 3px solid var(--hud-edge);
+  position: relative;
+  z-index: 5;
+}
+.hud h1 {
+  margin-right: 0.25rem;
+}
+.hud strong {
+  color: #fff;
+}
+.hud-item {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 0.45rem;
+  border: 8px solid transparent;
+  border-image: url('/atlas/ui/ui_panel_dark.png') 4 fill / 8px stretch;
+  image-rendering: pixelated;
+  background: #30364a padding-box;
+  padding: 0 0.35rem;
+  line-height: 1.25;
+}
+.hud-stack {
+  display: grid;
+}
+.hud-label {
+  color: var(--hud-muted);
+}
+.hud-label strong {
+  color: #fff;
+}
+.hud-value {
+  font-size: 1.15rem;
+  font-variant-numeric: tabular-nums;
+}
+.hud-date {
+  color: var(--hud-muted);
+}
+.hud button.term {
+  color: var(--hud-muted);
+}
+/* Small laptops: drop the logo (it is on the title screen) and shorten labels. */
+@media (max-width: 1250px) {
+  .hud h1,
+  .hud-long {
+    display: none;
+  }
+}
+
+/* Political capital pips: available (solid), about to be spent by the draft (striped), empty. */
+.pips {
+  display: flex;
+  gap: 2px;
+  margin-top: 3px;
+}
+.pip {
+  width: 12px;
+  height: 12px;
+  border: 2px solid var(--hud);
+  background: var(--hud-edge);
+}
+.pip.full {
+  background: var(--gold);
+}
+.pip.spend {
+  background: repeating-linear-gradient(135deg, var(--gold) 0 3px, var(--hud) 3px 5px);
+}
+
+/* The term: 20 quarters in yearly groups. */
+.track {
+  display: flex;
+  gap: 5px;
+  margin-top: 4px;
+}
+.track-year {
+  display: flex;
+  gap: 2px;
+}
+.seg {
+  width: 9px;
+  height: 8px;
+  background: var(--hud-edge);
+}
+.seg.done {
+  background: #9ba1aa;
+}
+.seg.now {
+  background: var(--gold);
+  box-shadow: 0 0 0 1px #fff;
+}
+
+/* Floating deltas after a turn. */
+.floater {
+  position: absolute;
+  left: 50%;
+  top: calc(100% + 2px);
+  transform: translateX(-50%);
+  padding: 0 0.4rem;
+  background: var(--hud);
+  border: 2px solid var(--hud-edge);
+  font-weight: 700;
+  white-space: nowrap;
+  pointer-events: none;
+  animation: float-up 2.4s ease-out forwards;
+  z-index: 6;
+}
+.floater.up {
+  color: #a6e08a;
+}
+.floater.down {
+  color: #ffb4a6;
+}
+/* Pops up, holds, and is removed on animationend (FloaterOnce). Always opaque. */
+@keyframes float-up {
+  0% {
+    transform: translate(-50%, 10px);
+  }
+  12%,
+  100% {
+    transform: translate(-50%, 0);
+  }
+}
+/* Reduced motion: no movement, just shown for the same time. */
+@keyframes hold {
+  from,
+  to {
+    transform: translateX(-50%);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .floater {
+    animation-name: hold;
+  }
+}
+
+/* ---- Bottom bar -------------------------------------------------------------------------- */
+.bottombar {
+  background: var(--hud);
+  color: var(--hud-text);
+  border-top: 3px solid var(--hud-edge);
+}
+.bottombar .muted {
+  color: var(--hud-muted);
+}
+.bottombar .error {
+  color: #ffb4a6;
+}
+
+/* The big green action button (Take office, End turn). */
+button.go {
+  border-image-source: url('/atlas/ui/ui_button_go.png');
+  background: var(--go) padding-box;
+  color: #fff;
+  font-weight: 700;
+  font-size: 1.2rem;
+  padding: 0.2rem 1.2rem;
+}
+button.go:hover:not(:disabled) {
+  border-image-source: url('/atlas/ui/ui_button_go.png');
+  background-color: var(--go);
+  filter: brightness(1.15);
+}
+button.go:active:not(:disabled) {
+  border-image-source: url('/atlas/ui/ui_button_go_pressed.png');
+  background-color: var(--go);
+}
+
+/* ---- Title screen ------------------------------------------------------------------------- */
+.title {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 1.5rem 2.5rem;
+  flex-wrap: wrap;
+  padding: 1.5rem 1rem;
+  background: radial-gradient(ellipse at 28% 45%, #3d7fb8 0%, #30364a 62%);
+}
+.title-art {
+  max-width: 100%;
+}
+.title-scene {
+  display: block;
+  max-width: 100%;
+  height: auto;
+  image-rendering: pixelated;
+}
+.title-card {
+  max-width: 36rem;
+  border: 8px solid transparent;
+  border-image: url('/atlas/ui/ui_card.png') 4 fill / 8px stretch;
+  image-rendering: pixelated;
+  background: var(--card) padding-box;
+  padding: 0.75rem 1.25rem 1rem;
+}
+.title-card h1 {
+  margin: 0.25rem 0 0.25rem;
+}
+.tagline {
+  font-weight: 700;
+  font-size: 1.15rem;
+  margin: 0.4rem 0;
+}
+.title-card .lede {
+  margin: 0.4rem 0 0.75rem;
+  line-height: 1.45;
+}
+.mandates {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.5rem;
+  margin-bottom: 0.5rem;
+}
+.mandates legend {
+  font-size: 1.05rem;
+}
+.mandate-card {
+  display: flex;
+  gap: 0.45rem;
+  align-items: flex-start;
+  cursor: pointer;
+  border: 8px solid transparent;
+  border-image: url('/atlas/ui/ui_button.png') 4 fill / 8px stretch;
+  image-rendering: pixelated;
+  background: #f2e9d6 padding-box;
+  padding: 0.15rem 0.3rem;
+  line-height: 1.3;
+}
+.mandate-card span {
+  display: grid;
+}
+.mandate-card input {
+  margin: 0.2rem 0 0;
+  flex: none;
+}
+.mandate-card .atlas-sprite {
+  margin: 0;
+  flex: none;
+}
+.mandate-card:hover {
+  border-image-source: url('/atlas/ui/ui_button_hover.png');
+  background-color: #fff;
+}
+.mandate-card:has(input:checked) {
+  border-image-source: url('/atlas/ui/ui_button_primary.png');
+  background-color: #0072b2;
+  color: #fff;
+}
+.mandate-card:has(input:checked) small {
+  color: #fff;
+}
+.title-card .about-link {
+  margin-bottom: 0;
+}
+
+/* ---- Play layout ---------------------------------------------------------------------------- */
+.debrief > h2 {
+  color: var(--hud-text);
+}
+
+/* The city-hall panel: sticky tabs over a cream panel of white lever cards. */
+.side-panel {
+  padding-bottom: 1rem;
+}
+.tablist {
+  position: sticky;
+  top: 0;
+  z-index: 3;
+  display: flex;
+  gap: 4px;
+  background: var(--bg);
+  padding-top: 6px;
+}
+button.tab {
+  border: 2px solid var(--hud);
+  border-bottom: none;
+  border-image: none;
+  background: var(--card-edge);
+  color: var(--ink);
+  padding: 0.25rem 0.8rem;
+  font-weight: 600;
+  box-shadow: inset 2px 2px 0 #e4d9bf;
+}
+button.tab:hover:not(:disabled) {
+  border-image: none;
+  background: #e4d9bf;
+}
+button.tab:active:not(:disabled) {
+  border-image: none;
+  background: var(--card-edge);
+}
+button.tab.active {
+  background: var(--card);
+  box-shadow: inset 2px 2px 0 #fff;
+}
+.tab-extra {
+  margin-left: 0.4rem;
+  padding: 0 0.35rem;
+  background: #e69f00;
+  color: var(--hud);
+  font-size: 1rem;
+}
+.tabpanel {
+  border: 8px solid transparent;
+  border-image: url('/atlas/ui/ui_card.png') 4 fill / 8px stretch;
+  image-rendering: pixelated;
+  background: var(--card) padding-box;
+  padding: 0.4rem 0.4rem 0.5rem;
+}
+.tabpanel > section + section {
+  margin-top: 1rem;
+}
+.tabpanel h2 {
+  margin-top: 0.2rem;
+}
+
+/* Lever cards. The legend floats so the pixel frame is not cut behind it. */
+.lever-card {
+  border: 8px solid transparent;
+  border-image: url('/atlas/ui/ui_panel.png') 4 fill / 8px stretch;
+  image-rendering: pixelated;
+  background: #fff padding-box;
+  padding: 0.2rem 0.5rem 0.45rem;
+  margin: 0 0 0.5rem;
+}
+.lever-card > legend {
+  float: left;
+  width: 100%;
+  padding: 0;
+  margin: 0 0 0.3rem;
+}
+.lever-card > legend + * {
+  clear: both;
+}
+.lever-card.changed {
+  border-image: url('/atlas/ui/ui_button_primary.png') 4 / 8px stretch;
+  background: #fff padding-box;
+}
+.lever-title {
+  display: flex;
+  align-items: center;
+  gap: 0.15rem;
+  font-weight: 700;
+  font-size: 1.05rem;
+}
+.lever-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.3rem 0.4rem;
+  align-items: center;
+  margin-top: 0.15rem;
+  font-weight: 400;
+}
+.lever-card .cost {
+  margin: 0;
+  padding: 0 0.35rem;
+  background: var(--card);
+  border: 1px solid var(--card-edge);
+  color: var(--ink);
+}
+.changed-tag {
+  padding: 0 0.4rem;
+  background: #e69f00;
+  color: var(--hud);
+  font-weight: 700;
+}
+.lever-card .radio {
+  padding: 0.25rem 0.35rem;
+  border: 2px solid transparent;
+}
+.lever-card .radio:hover {
+  background: #f7f5f0;
+}
+.lever-card .radio:has(input:checked) {
+  border-color: #0072b2;
+  background: #eaf4fa;
+}
+.lever-card .cooldown {
+  padding: 0.15rem 0.35rem;
+  background: #fff3e0;
+  border-left: 3px solid #e69f00;
+}
+.levers .quote {
+  border-top: none;
+  border: 8px solid transparent;
+  border-image: url('/atlas/ui/ui_panel_dark.png') 4 fill / 8px stretch;
+  image-rendering: pixelated;
+  background: #30364a padding-box;
+  color: var(--hud-text);
+  padding: 0.1rem 0.4rem;
+}
+.levers .quote strong {
+  color: #fff;
+}
+.levers .quote .error {
+  color: #ffb4a6;
+}
+
+/* Pixel sliders (UI kit track colours and the generated thumb). */
+input[type='range'] {
+  appearance: none;
+  -webkit-appearance: none;
+  height: 26px;
+  background: transparent;
+  cursor: pointer;
+}
+input[type='range']::-webkit-slider-runnable-track {
+  height: 10px;
+  background: #9ba1aa;
+  border: 2px solid var(--hud);
+}
+input[type='range']::-moz-range-track {
+  height: 6px;
+  background: #9ba1aa;
+  border: 2px solid var(--hud);
+}
+input[type='range']::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  width: 16px;
+  height: 24px;
+  margin-top: -9px;
+  border: none;
+  background: url('/atlas/ui/ui_slider_thumb.png') 0 0 / 16px 24px;
+  image-rendering: pixelated;
+}
+input[type='range']::-moz-range-thumb {
+  width: 16px;
+  height: 24px;
+  border: none;
+  border-radius: 0;
+  background: url('/atlas/ui/ui_slider_thumb.png') 0 0 / 16px 24px;
+  image-rendering: pixelated;
+}
+input[type='range']:disabled {
+  cursor: not-allowed;
+  opacity: 0.6;
+}
+.slider output {
+  min-width: 3.5rem;
+  text-align: right;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+}
+
+/* ---- Tutorial: the advisor ---------------------------------------------------------------- */
+.tutorial {
+  display: flex;
+  gap: 0.75rem;
+  align-items: flex-start;
+}
+.advisor {
+  display: grid;
+  justify-items: center;
+  font-weight: 700;
+  padding-top: 0.25rem;
+}
+.advisor .atlas-sprite {
+  margin: 0;
+}
+.tutorial-body {
+  flex: 1;
+  min-width: 0;
+}
+.tutorial-body p {
+  margin: 0.2rem 0 0.35rem;
+  line-height: 1.35;
+}
+
+/* ---- Shock card and the briefing ---------------------------------------------------------- */
+.news-row {
+  display: grid;
+  gap: 1rem;
+}
+.news-row.two {
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1.5fr);
+}
+.shock-card {
+  display: flex;
+  gap: 0.6rem;
+  align-items: flex-start;
+  border: 8px solid transparent;
+  border-image: url('/atlas/ui/ui_panel.png') 4 fill / 8px stretch;
+  image-rendering: pixelated;
+  background: #fff3e0 padding-box;
+  box-shadow: inset 6px 0 0 #d55e00;
+  padding: 0.3rem 0.6rem 0.4rem 1rem;
+}
+.shock-card .atlas-sprite {
+  margin: 0.2rem 0 0;
+  flex: none;
+}
+.shock-card h2 {
+  margin-bottom: 0.2rem;
+}
+.briefing {
+  border: 8px solid transparent;
+  border-image: url('/atlas/ui/ui_panel.png') 4 fill / 8px stretch;
+  image-rendering: pixelated;
+  background: #fbf8f1 padding-box;
+  padding: 0.2rem 0.7rem 0.4rem;
+}
+.masthead {
+  display: flex;
+  align-items: center;
+  gap: 0.2rem;
+  margin: 0 0 0.25rem;
+  padding-bottom: 0.15rem;
+  border-bottom: 3px double var(--hud);
+  font-family: Georgia, 'Times New Roman', serif;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+.masthead .atlas-sprite {
+  margin-right: 0.2rem;
+}
+.masthead-date {
+  margin-left: auto;
+  font-weight: 400;
+  letter-spacing: 0;
+  text-transform: none;
+}
+.briefing h2 {
+  font-family: Georgia, 'Times New Roman', serif;
+  font-size: 1.25rem;
+  line-height: 1.2;
+  margin: 0.15rem 0 0.25rem;
+}
+.news-lines {
+  margin: 0 0 0.3rem;
+}
+.reactions {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(16rem, 1fr));
+  gap: 0.2rem 1rem;
+  line-height: 1.3;
+}
+.reactions li {
+  display: flex;
+  gap: 0.15rem;
+  align-items: flex-start;
+}
+.reactions .atlas-sprite {
+  flex: none;
+}
+.mood {
+  color: var(--muted);
+}
+.city-id {
+  margin: 0 0 0.5rem;
+  color: var(--muted);
+}
+.papers .paper-date {
+  font-weight: 600;
+}
+
+/* ---- Results card --------------------------------------------------------------------------- */
+.results-head {
+  display: flex;
+  gap: 0.75rem;
+  align-items: center;
+  flex-wrap: wrap;
+  margin-bottom: 0.25rem;
+}
+.results-head .atlas-sprite {
+  margin: 0;
+}
+.results-title {
+  flex: 1;
+  min-width: 12rem;
+}
+.results-title h2 {
+  margin: 0;
+}
+.verdict {
+  margin: 0.2rem 0 0;
+  font-weight: 600;
+}
+.score-big {
+  margin: 0;
+  display: grid;
+  justify-items: end;
+  text-align: right;
+}
+.score-big strong {
+  font-size: 2.2rem;
+  line-height: 1.05;
+  font-variant-numeric: tabular-nums;
+}
+.scorecard td {
+  white-space: nowrap;
+}
+.pval {
+  display: inline-block;
+  min-width: 3.2em;
+  text-align: right;
+}
+.pbar {
+  display: inline-block;
+  position: relative;
+  width: 84px;
+  height: 10px;
+  margin-right: 0.5rem;
+  background: #ebe8e2;
+  vertical-align: middle;
+}
+.pbar::after {
+  content: '';
+  position: absolute;
+  left: 50%;
+  top: -3px;
+  bottom: -3px;
+  width: 2px;
+  margin-left: -1px;
+  background: var(--hud);
+}
+.pbar-fill {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+}
+.pbar-fill.pos {
+  background: #0072b2;
+}
+/* Losses are hatched as well as orange, so the sign does not rely on colour alone. */
+.pbar-fill.neg {
+  background: repeating-linear-gradient(45deg, #d55e00 0 3px, #f3c4a5 3px 6px);
+}
+.best {
+  font-weight: 600;
+  margin: 0.5rem 0 0.25rem;
+}
+
+/* Focus on dark surfaces: the palette yellow (9:1) instead of the orange ring (3.1:1 there). */
+.hud :focus-visible,
+.tablist :focus-visible,
+.bottombar :focus-visible,
+.title :focus-visible {
+  outline-color: var(--gold);
+}
+.title-card :focus-visible {
+  outline-color: var(--focus);
+}

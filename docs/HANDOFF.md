@@ -216,6 +216,33 @@ Node 20 (checkout@v4, setup-node@v4, setup-python@v5, pnpm/action-setup@v4, conf
 upload-pages-artifact@v3, deploy-pages@v4) are forced onto Node 24, and `ubuntu-latest` moves to
 Ubuntu 26 from 2026-10-19; neither breaks anything today.
 
+## 6b. Game-feel UI pass (after m8; ADR 0012)
+
+Owner's request (2026-10-11): make it feel more like a game, and fix tooltips clipping off
+screen. Done, UI only (`packages/sim` untouched):
+
+- Tooltip fix (own commit): tips render on `<body>` via `preact/compat` `createPortal`, placed
+  by `placeTip` (Tips.tsx) inside the viewport. `e2e/tooltips.spec.ts` fails on the old code.
+- HUD (`ui/Hud.tsx`): dark bar, icon counters, 12 capital pips (striped = draft's cost), 20-segment
+  term track, floating budget/capital deltas (opaque, removed on animationend; axe flagged a
+  fading one). Seed and model variant moved to the City tab so the HUD fits one row at 1024 px.
+- Right panel = WAI-ARIA tabs (`ui/Tabs.tsx`): Policies (lever cards with icons, cost chips,
+  "Changed" tags), City (former "Since you took office"), Log (decisions + past front pages).
+- Quarterly paper "The Daily Zoning" (`game/news.ts`, `ui/Briefing.tsx`): headline from the
+  biggest decision or the scraped data, rent-index line labelled noisy, two stakeholder
+  reactions. Uses only the researcher view, never the truth; flavour, not scored.
+- Title screen with an animated pixel diorama (`ui/TitleScene.tsx`) and mandate cards; results
+  card with verdict, per-objective bars and a best score per seed and mandate (local storage;
+  About page updated).
+- New sprites in tools/art (rent cap, crane, non-market, data, trophy, calendar, 3 faces, dark
+  HUD / card / go frames) + an art test that the faces differ by shape.
+- 3 screenshot review rounds (`docs/screenshots/game-ui/`); README GIF and debrief stills
+  regenerated (`MEDIA=1`).
+- Not done, offered to the owner: a map-first layout (would supersede ADR 0003's charts-above-
+  the-fold rule), sound, a turn-transition animation.
+- Pitfall: in a JS `String.replace` replacement, `$$` becomes `$`; one patch dropped the "$"
+  from lever costs. Use `split(a).join(b)` or a replacer function.
+
 ## 7. Open issues to report to the user
 
 - M5 calibration ESS 21 (M3: 146); T5/T6a misses got worse; H1 miss −0.38 vs data −0.02.

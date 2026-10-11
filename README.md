@@ -8,7 +8,7 @@ non-market building; watch what the data shows you; then see what really happene
 **Play it:** https://haji5.github.io/housing-policy-sim/ (runs entirely in your browser; to run
 it locally, see [Reproduce](#reproduce)).
 
-![One term of play: listings and rent charts above the isometric city](docs/media/zoned-out.gif)
+![One term of play: the quarterly paper, listings and rent charts above the isometric city](docs/media/zoned-out.gif)
 
 > I built a simulator calibrated to my own causal estimates, and then used it to test whether my
 > difference-in-differences design recovers the true effect when displaced hosts can substitute

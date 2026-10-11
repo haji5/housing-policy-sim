@@ -5,7 +5,7 @@ import { buildAtlas } from '../src/build.ts';
 import { buildings } from '../src/buildings.ts';
 import { diamond, Sprite } from '../src/draw.ts';
 import { groundTiles } from '../src/ground.ts';
-import { MARKERS } from '../src/icons.ts';
+import { ICONS, MARKERS } from '../src/icons.ts';
 import { C, PALETTE, rgba } from '../src/palette.ts';
 import { encodePng } from '../src/png.ts';
 
@@ -171,5 +171,15 @@ describe('greyscale distinguishability (PLAN §9.4)', () => {
     const a = MARKERS.marker_str!.px.map((p) => (p === C.ink ? 1 : 0));
     const b = MARKERS.marker_str_pr!.px.map((p) => (p === C.ink ? 1 : 0));
     expect(a.some((v, i) => v !== b[i])).toBe(true);
+  });
+
+  it('stakeholder moods differ by mouth shape, not colour alone', () => {
+    const ink = (n: string) => ICONS[n]!.px.map((p) => (p === C.ink ? 1 : 0));
+    const moods = ['face_happy', 'face_neutral', 'face_angry'].map(ink);
+    for (let i = 0; i < moods.length; i++)
+      for (let j = i + 1; j < moods.length; j++) {
+        const diff = moods[i]!.reduce((n, v, k) => n + (v !== moods[j]![k] ? 1 : 0), 0);
+        expect(diff, `moods ${i} and ${j}`).toBeGreaterThanOrEqual(6);
+      }
   });
 });

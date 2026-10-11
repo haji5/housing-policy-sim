@@ -58,7 +58,6 @@ h2 {
   min-height: 0;
 }
 
-.topbar,
 .bottombar {
   display: flex;
   gap: 1.5rem;
@@ -70,7 +69,6 @@ h2 {
 }
 .bottombar {
   border-top: 1px solid var(--line);
-  border-bottom: none;
   justify-content: flex-end;
 }
 .bottombar p {
@@ -294,23 +292,9 @@ button:disabled {
 }
 
 /* Start screen */
-.setup {
-  max-width: 40rem;
-  margin: 3rem auto;
-  padding: 0 1rem;
-}
-.setup h1 {
-  font-size: 2rem;
-  margin-bottom: 0.75rem;
-}
 .lede {
   font-size: 1.05rem;
   line-height: 1.5;
-}
-.setup fieldset {
-  background: var(--panel);
-  border: 1px solid var(--line);
-  padding: 0.75rem 1rem;
 }
 
 /* Levers */
@@ -447,8 +431,7 @@ button:disabled {
 .panel,
 .chart,
 .isomap,
-.map,
-.setup fieldset {
+.map {
   border: 8px solid transparent;
   border-image: url('/atlas/ui/ui_panel.png') 4 fill / 8px stretch;
   image-rendering: pixelated;

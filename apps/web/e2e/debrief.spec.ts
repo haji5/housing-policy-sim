@@ -40,6 +40,8 @@ test('onboarding, evidence badges, glossary and the debrief', async ({ page }) =
   await expect(page.getByRole('tooltip')).toContainText(/Assumed\./);
   await page.keyboard.press('Escape');
   await expect(page.getByRole('tooltip')).toHaveCount(0);
+  // The CPI glossary term is in the City tab of the city-hall panel.
+  await page.getByRole('tab', { name: 'City' }).click();
   await page.getByRole('button', { name: 'All-tenant (CPI) rent: definition' }).focus();
   await expect(page.getByRole('tooltip')).toContainText(/consumer price index/);
   await page.screenshot({ path: `${SHOTS}/02-badges-glossary.png` });
@@ -47,6 +49,7 @@ test('onboarding, evidence badges, glossary and the debrief', async ({ page }) =
 
   // The rule from turn 2 on, the registry later, so the DiD card has something to estimate.
   await page.getByRole('button', { name: 'Skip the tutorial' }).click();
+  await page.getByRole('tab', { name: /Policies/ }).click();
   await page.getByLabel(/Principal-residence rule/).check();
   await page.getByRole('slider', { name: 'Enforcement level' }).fill('3');
   for (let turn = 2; turn <= 20; turn++) {

@@ -1,6 +1,8 @@
 import { RULES } from '@zoned-out/sim';
 import type { CooldownLever, Decision, GameState, Quote } from '@zoned-out/sim';
 import { capName, regimeName, upzoneName } from '../game/useGame.ts';
+import type { ComponentChildren } from 'preact';
+import { AtlasSprite } from './AtlasSprite.tsx';
 import { LEVER_EVIDENCE } from './evidence.ts';
 import { Badge } from './Tips.tsx';
 
@@ -34,6 +36,38 @@ const CAP_HELP = [
 
 const num = (e: Event) => Number((e.target as HTMLInputElement).value);
 
+/**
+ * A lever card's legend: icon and name, then its cost, evidence badge and a "Changed" tag while
+ * the draft differs from the policy in force (text, so it does not rely on the card's colour).
+ */
+function CardLegend({
+  icon,
+  title,
+  cost,
+  changed,
+  children,
+}: {
+  icon: string;
+  title: string;
+  cost?: string;
+  changed: boolean;
+  children?: ComponentChildren;
+}) {
+  return (
+    <legend>
+      <span class="lever-title">
+        <AtlasSprite name={icon} />
+        {title}
+      </span>
+      <span class="lever-meta">
+        {cost && <span class="cost">{cost}</span>}
+        {children}
+        {changed && <span class="changed-tag">Changed</span>}
+      </span>
+    </legend>
+  );
+}
+
 /** "Locked for N more turns" when a lever is in its legislative cooldown, else null. */
 function cooldownLeft(game: GameState, lever: CooldownLever): number | null {
   const left = RULES.cooldownTurns[lever] - (game.turn - game.lastChanged[lever]);
@@ -55,15 +89,27 @@ export function Levers({ draft, game, quote, zoneNames, zoneCovered, disabled, o
   const regimeLocked = cooldownLeft(game, 'strRegime') !== null;
   const taxLocked = cooldownLeft(game, 'vacancyTax') !== null;
   const capLocked = cooldownLeft(game, 'rentCap') !== null;
+  const card = (changed: boolean, locked = false) =>
+    `lever-card${changed ? ' changed' : ''}${locked ? ' locked' : ''}`;
+  const upzoneChanged = draft.upzone.some((u, i) => u !== (cur.upzone[i] ?? 0));
   return (
-    <section class="panel levers" aria-labelledby="levers-h">
-      <h2 id="levers-h">Policy levers</h2>
+    <section class="levers" aria-labelledby="levers-h">
+      <h2 id="levers-h" class="sr-only">
+        Policy levers
+      </h2>
 
-      <fieldset disabled={disabled || regimeLocked}>
-        <legend>
-          Short-term rental rules <span class="cost">{RULES.capitalCost.strRegime} capital</span>{' '}
+      <fieldset
+        class={card(draft.strRegime !== cur.strRegime, regimeLocked)}
+        disabled={disabled || regimeLocked}
+      >
+        <CardLegend
+          icon="icon_str"
+          title="Short-term rental rules"
+          cost={`${RULES.capitalCost.strRegime} capital`}
+          changed={draft.strRegime !== cur.strRegime}
+        >
           <LeverBadge lever="strRegime" />
-        </legend>
+        </CardLegend>
         {[0, 1, 2].map((v) => (
           <label class="radio" key={v}>
             <input
@@ -82,12 +128,15 @@ export function Levers({ draft, game, quote, zoneNames, zoneCovered, disabled, o
         <Cooldown game={game} lever="strRegime" />
       </fieldset>
 
-      <fieldset disabled={disabled}>
-        <legend>
-          Enforcement budget{' '}
-          <span class="cost">${RULES.enforcementCostPerLevel.toFixed(1)}M per level</span>{' '}
+      <fieldset class={card(draft.enforcement !== cur.enforcement)} disabled={disabled}>
+        <CardLegend
+          icon="icon_enforcement"
+          title="Enforcement budget"
+          cost={`$${RULES.enforcementCostPerLevel.toFixed(1)}M per level`}
+          changed={draft.enforcement !== cur.enforcement}
+        >
           <LeverBadge lever="enforcement" />
-        </legend>
+        </CardLegend>
         <label class="slider">
           <span class="sr-only">Enforcement level</span>
           <input
@@ -104,11 +153,18 @@ export function Levers({ draft, game, quote, zoneNames, zoneCovered, disabled, o
         <small>Raises the chance illegal listings are found and fined (diminishing returns).</small>
       </fieldset>
 
-      <fieldset disabled={disabled || taxLocked}>
-        <legend>
-          Vacancy tax <span class="cost">{RULES.capitalCost.vacancyTax} capital per point</span>{' '}
+      <fieldset
+        class={card(draft.vacancyTax !== cur.vacancyTax, taxLocked)}
+        disabled={disabled || taxLocked}
+      >
+        <CardLegend
+          icon="icon_vacant"
+          title="Vacancy tax"
+          cost={`${RULES.capitalCost.vacancyTax} capital per point`}
+          changed={draft.vacancyTax !== cur.vacancyTax}
+        >
           <LeverBadge lever="vacancyTax" />
-        </legend>
+        </CardLegend>
         <label class="slider">
           <span class="sr-only">Vacancy tax rate</span>
           <input
@@ -126,11 +182,18 @@ export function Levers({ draft, game, quote, zoneNames, zoneCovered, disabled, o
         <Cooldown game={game} lever="vacancyTax" />
       </fieldset>
 
-      <fieldset disabled={disabled || capLocked}>
-        <legend>
-          Rent-increase cap <span class="cost">{RULES.capitalCost.rentCap} capital</span>{' '}
+      <fieldset
+        class={card(draft.rentCap !== cur.rentCap, capLocked)}
+        disabled={disabled || capLocked}
+      >
+        <CardLegend
+          icon="icon_rentcap"
+          title="Rent-increase cap"
+          cost={`${RULES.capitalCost.rentCap} capital`}
+          changed={draft.rentCap !== cur.rentCap}
+        >
           <LeverBadge lever="rentCap" />
-        </legend>
+        </CardLegend>
         {[0, 1, 2].map((v) => (
           <label class="radio" key={v}>
             <input
@@ -152,11 +215,15 @@ export function Levers({ draft, game, quote, zoneNames, zoneCovered, disabled, o
         <Cooldown game={game} lever="rentCap" />
       </fieldset>
 
-      <fieldset disabled={disabled}>
-        <legend>
-          Upzoning <span class="cost">{RULES.capitalCost.upzone} capital per step</span>{' '}
+      <fieldset class={card(upzoneChanged)} disabled={disabled}>
+        <CardLegend
+          icon="icon_upzone"
+          title="Upzoning"
+          cost={`${RULES.capitalCost.upzone} capital per step`}
+          changed={upzoneChanged}
+        >
           <LeverBadge lever="upzone" />
-        </legend>
+        </CardLegend>
         <small>
           Raises housing starts in a zone after a permit delay. <strong>Cannot be reversed.</strong>
         </small>
@@ -191,12 +258,15 @@ export function Levers({ draft, game, quote, zoneNames, zoneCovered, disabled, o
         </div>
       </fieldset>
 
-      <fieldset disabled={disabled}>
-        <legend>
-          Non-market homes{' '}
-          <span class="cost">${RULES.nonMarketSubsidy.toFixed(2)}M subsidy each</span>{' '}
+      <fieldset class={card(draft.nonMarket !== cur.nonMarket)} disabled={disabled}>
+        <CardLegend
+          icon="icon_nonmarket"
+          title="Non-market homes"
+          cost={`$${RULES.nonMarketSubsidy.toFixed(2)}M subsidy each`}
+          changed={draft.nonMarket !== cur.nonMarket}
+        >
           <LeverBadge lever="nonMarket" />
-        </legend>
+        </CardLegend>
         <label class="slider">
           <span class="sr-only">Non-market homes started per quarter</span>
           <input
@@ -213,8 +283,13 @@ export function Levers({ draft, game, quote, zoneNames, zoneCovered, disabled, o
         <small>Started each quarter; rented below market once built.</small>
       </fieldset>
 
-      <fieldset disabled={disabled}>
-        <legend>Data</legend>
+      <fieldset class={card(draft.buyData !== cur.buyData)} disabled={disabled}>
+        <CardLegend
+          icon="icon_data"
+          title="Data"
+          cost={`$${RULES.dataCost.toFixed(2)}M per quarter`}
+          changed={draft.buyData !== cur.buyData}
+        />
         <label class="check">
           <input
             type="checkbox"
@@ -222,7 +297,7 @@ export function Levers({ draft, game, quote, zoneNames, zoneCovered, disabled, o
             onChange={(e) => onChange({ buyData: (e.target as HTMLInputElement).checked })}
           />
           <span>
-            Buy asking-rent data (${RULES.dataCost.toFixed(2)}M per quarter)
+            Buy asking-rent data
             <small>
               Shows new-lease rents up to the end of the previous quarter. Without it you only see
               the published all-tenant rent index, which moves slowly.
@@ -232,7 +307,7 @@ export function Levers({ draft, game, quote, zoneNames, zoneCovered, disabled, o
       </fieldset>
 
       {quote && (
-        <div class="quote" aria-live="polite">
+        <div class="quote" aria-live="polite" data-testid="quote">
           <p>
             This quarter costs <strong>${quote.fiscal.toFixed(2)}M</strong> of $
             {game.budget.toFixed(2)}M and <strong>{quote.capital}</strong> of {game.capital}{' '}
