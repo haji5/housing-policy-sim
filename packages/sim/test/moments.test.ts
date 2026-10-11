@@ -79,7 +79,7 @@ describe('calibration moments on the Victoria scenario', () => {
     expect(Math.abs(avg((m) => m.didP2))).toBeLessThan(0.05);
     for (let j = 0; j < 4; j++) expect(Math.abs(avg((m) => m.leads[j]!))).toBeLessThan(0.05);
     for (const m of ms) expect(m.registeredShareEnd).toBe(0);
-  });
+  }, 120_000); // 8 full Victoria runs: a few seconds plain, 30+ s under coverage on a busy machine
 
   it('the historical policy cuts covered listings relative to exempt ones', () => {
     const m = computeMoments(run('historical'));

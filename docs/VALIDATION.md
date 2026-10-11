@@ -21,51 +21,92 @@ Internal validation, external validation and the DiD-recovery experiment (PLAN �
 
 | Ensemble metadata matches the current priors, targets, defaults, scenario and SIM_VERSION | `ensemble.test.ts` | m3 |
 
-### 1.1 Calibration pipeline checks (`pnpm validate`, M3)
+### 1.1 Calibration pipeline checks (`pnpm validate`)
 
-The generated report is [`calibration/reports/validation.md`](../calibration/reports/validation.md).
-Validation uses seeds 101-104; calibration used 1-4.
+The generated report is [`calibration/reports/validation.md`](../calibration/reports/validation.md)
+(raw numbers in `validation_results.json`). It was re-run on 2026-10-10 against the M5 ensemble
+(sim 0.5.0, 16 calibrated parameters; 28.9 min). Validation uses seeds 101-104; calibration used
+1-4. The M3 results it replaces are in git history (tag `m3`).
 
-- **Estimator cross-check.** The TypeScript DiD that produces the calibration moments equals
+- **Estimator cross-check: pass.** The TypeScript DiD that produces the calibration moments equals
   pyfixest `feols(y ~ antic + p1 + p2 | zone + month)` (the first project's estimator) on the same
-  simulated panel: largest absolute difference 1.4e-14 over the three coefficients (118 cells).
-- **Parameter recovery.** Three ensemble members (indices 75, 150, 224) were used as known truths:
-  their moments on the validation seeds became pseudo-targets, and a reduced calibration (1,024
-  Sobol + 2 Nelder-Mead starts + 1,024 ABC draws, ~6 min each) re-estimated all 14 parameters. The
-  truth lay inside the recovered 5-95% interval in all 42 parameter-cases. That is a pass, but a
-  weak one: the reduced runs' intervals are wide, from 34% of the prior range for `delistProb` to
-  60-65% for `detectMax`, `regTakeup` and `exemptClaimShare`, and 73-88% for everything else. Wide
-  intervals cover the truth easily. What the check does show is that the pipeline is not biased
-  away from the truth for any parameter, and that the parameters the full calibration labels
-  "identified" are also the ones the reduced runs narrow most. Three cases cannot test
-  calibration of the interval width itself.
+  simulated panel: largest absolute difference 9.8e-15 over the three coefficients (118 cells).
+- **Parameter recovery: 79% coverage, every miss at a prior edge.** Three ensemble members
+  (indices 75, 150, 224) were used as known truths: their moments on the validation seeds became
+  pseudo-targets, and a reduced calibration (1,024 Sobol + Nelder-Mead + 1,024 ABC draws)
+  re-estimated all 16 parameters. The truth lay inside the recovered 5-95% interval in 38 of 48
+  parameter-cases (M3: 42 of 42 with 14 parameters). Case 1 covered all 16; case 2 missed 6
+  (`pReview`, `prShare`, `investorEntry`, `detectMax`, `regTakeup`, `vacantHeldShare`) and case 3
+  missed 4 (`investorEntry`, `regTakeup`, `demandGrowthAnnual`, `sellRateAnnual`). In all ten
+  misses the true value sits in the outer 10% of its prior range (in the prior's own scale: at
+  0.00-0.10 or 0.94-0.99 of the range), and the interval edge is 0.001-0.14 of the range away. That
+  is what a weakly informative posterior does to an extreme truth: when the moments barely move a
+  parameter, its recovered 5-95% interval stays close to the prior's central 90% and cannot reach
+  the tails. The M5 ensemble contains such extreme members because its ESS is low (21; CALIBRATION.md).
+  So the check finds no systematic bias for central truths, but it does say the intervals are
+  too narrow at the edges of the priors. Intervals stay wide: 0.37 of the prior range for
+  `delistProb`, 0.49-0.64 for `detectMax`, `exemptClaimShare` and `regTakeup`, 0.68-0.92 for the
+  rest. Three cases cannot test calibration of the interval width itself.
 - **One-at-a-time sensitivity** (each parameter from its posterior 5% to 95% quantile, the others at
   their medians; paired no-policy runs). At the medians the true effect on covered listings is
-  −0.461 log points and on asking rents −0.64%. The covered-listings effect is most sensitive to
-  `detectMax` (−0.24), `delistProb` (−0.24), `pReview` (+0.22) and `prShare` (+0.21); the exempt
-  (spillover) effect to `demandSpillover` (+0.16) and `beta` (+0.11). No single parameter moves
-  the asking-rent effect by more than 0.45 percentage points across its posterior range, so the
-  rent effect stays small across the ensemble. `delistProb` changes the true effect by −0.24 but
-  the Phase 1 DiD by 0.000, as it should: de-listing only starts in Phase 2.
+  −0.475 log points and on asking rents −0.54%. The covered-listings effect is most sensitive to
+  `delistProb` (−0.38), `detectMax` (−0.30), `pReview` (+0.26), `complianceBase` (−0.26) and
+  `prShare` (+0.20); the exempt (spillover) effect to `demandSpillover` (+0.14), `beta` (+0.09),
+  `detectMax` (+0.09) and `complianceBase` (+0.08). No single parameter moves the asking-rent
+  effect by more than 0.32 percentage points across its posterior range, so the rent effect stays
+  small across the ensemble. `delistProb` changes the true effect by −0.38 but the Phase 1 DiD by
+  0.000, as it should: de-listing only starts in Phase 2.
 
-Sobol indices over the full ensemble are planned for M5, after the model gains its full mechanics.
+- **Sobol indices** (`pnpm sobol`, [`calibration/reports/sobol.md`](../calibration/reports/sobol.md);
+  2026-10-10, n = 256, 4,608 draws × seeds 1-2, 15.5 min). Each of the 16 parameters varies
+  uniformly over its posterior 5-95% range (log scale for log-uniform priors), over the
+  calibration window under the historical policy, each draw paired with its no-policy run. S1 is
+  the share of output variance a parameter explains alone, ST includes its interactions; 90%
+  bootstrap intervals are ±0.03-0.10. Slightly negative S1 values are estimator noise.
+  - _Covered-listings effect_: almost additive (ΣS1 = 0.92). `delistProb` (S1 0.29), `prShare`
+    (0.23) and `pReview` (0.15) explain two thirds of the variance; with `detectMax`,
+    `complianceBase` and `regTakeup` (0.07-0.08 each) six parameters explain nearly all of it.
+    The spillover parameters (`demandSpillover`, `investorEntry`) explain ≤ 1%.
+  - _Asking-rent effect_: ΣS1 = 0.90, but led by the host-side parameters that decide where
+    displaced units go and how many there are: `prShare` (ST 0.31), `complianceBase` (0.24),
+    `sellRateAnnual` (0.24), `pReview` (0.22), then `vacantHeldShare` (ST 0.18 with S1 ≈ 0, so
+    only through interactions) and `arrivalRentElasticity` (0.15). Enforcement parameters matter
+    less for rents (ST ≤ 0.12) than for listings. Of the six leaders only `sellRateAnnual` is
+    identified by the M5 calibration; the others are partly or weakly identified
+    (CALIBRATION.md). So the rent effect's spread is driven by what the listing data cannot pin
+    down, which is why the game shows rents with an "Assumed" badge. The whole spread is
+    still small: one-at-a-time, no parameter moves it by more than 0.32 points (above).
+  - _Rent-burden share (level)_: `arrivalRentElasticity` (S1 0.39, ST 0.57) and
+    `vacantHeldShare` (0.21 / 0.42); strong interactions (ΣS1 = 0.69). The level is not
+    calibrated (§5), and the game scores only changes against the no-policy run.
+  - _Completions_: mostly interactions (ΣS1 = 0.35): `vacantHeldShare` (ST 0.68),
+    `sellRateAnnual` (0.56), `pReview` (0.52), `beta` (0.44), `prShare` (0.43), which act through
+    rents and the stock available to developers. `delistProb`, `regTakeup`, `exemptClaimShare`
+    and `demandSpillover` leave completions in the window exactly unchanged (zero variance, so
+    their bootstrap intervals are undefined).
+  - _Caveats_: the box ignores posterior correlations, so it is wider than the joint posterior;
+    with two seeds, simulation noise counts as unexplained variance (it lowers ΣS1); the sample
+    (n = 256) gives intervals of up to ±0.10.
 
-## 2. External validation (M3)
+## 2. External validation (M5 ensemble)
 
 - **Held-out Salt Spring Island (H1): miss.** Data: 258 listings in Aug 2023, 252 in Jun 2026 (log
-  change −0.024). Sim: −0.261 (5-95% −0.494 to −0.105). The model applies the full
-  principal-residence rule from the Nov 2025 opt-in, so Salt Spring's non-principal-residence
-  listings fall as the covered areas' did in 2024; the data show almost no fall by Jun 2026. Only
-  two post-opt-in snapshots exist, and the explanation could be slower enforcement on the islands,
-  a transition period, or hosts already registered as exempt. It is reported, not fitted.
-- **Rent bound (S2): mostly inside.** The STR-attributable change in asking rents is −0.61% (5-95%
-  −0.92% to −0.09%); 83% of the ensemble lies inside the first project's −3.3% to −0.4% bound. The 5-95%
-  range never reaches the −3.3% end, so the members outside the bound are mainly ones with smaller
-  effects (closer to zero) than the bound allows.
+  change −0.024). Sim: −0.382 (5-95% −0.715 to −0.172); M3 was −0.261, so the miss grew. The model
+  applies the full principal-residence rule from the Nov 2025 opt-in, so Salt Spring's
+  non-principal-residence listings fall as the covered areas' did in 2024; the data show almost no
+  fall by Jun 2026. Only two post-opt-in snapshots exist, and the explanation could be slower
+  enforcement on the islands, a transition period, or hosts already registered as exempt. It is
+  reported, not fitted.
+- **Rent bound (S2): mostly inside.** The STR-attributable change in asking rents is −0.48% (5-95%
+  −0.66% to −0.30%); 78% of the ensemble lies inside the first project's −3.3% to −0.4% bound
+  (M3: 83%). The 5-95% range never reaches the −3.3% end, so the members outside the bound are
+  ones with smaller effects (closer to zero) than the bound allows. Either way the effect is too
+  small to detect in the CPI data.
 - **CPI sanity (S1): not comparable by design.** Real CPI rented accommodation rose 19.5% (Sep 2023
-  to Jun 2026); the sim's CPI-style index rose 1.3%. The sim has no macro rent inflation
-  (`rentDriftAnnual = 0`) because it isolates the STR channel. The STR-attributable part (S2) is
-  too small to detect against CPI noise (ASSUMPTIONS O7: 2.4% month-to-month).
+  to Jun 2026); the sim's CPI-style index changed by −0.3%. The sim has no macro rent inflation
+  (`rentDriftAnnual = 0`) because it isolates the STR channel. The STR-attributable part of the
+  CPI-style index is −0.24% (calibration report), too small to detect against CPI noise
+  (ASSUMPTIONS O7: 2.4% month-to-month).
 - **In-sample misses** (T2, T5, T6a) are diagnosed in [CALIBRATION.md](CALIBRATION.md#results).
 
 ## 3. DiD-recovery experiment (M4)

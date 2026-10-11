@@ -23,7 +23,7 @@ _Last updated 2026-10-10 ~20:30 (end of the third session), for the next session
 | Milestone                 | Status                                                                     | Tag  |
 | ------------------------- | -------------------------------------------------------------------------- | ---- |
 | M0-M4                     | done                                                                       | m0-4 |
-| **M5 full mechanics**     | **committed (`eb2ed3b`); validate + Sobol + docs left, then tag (§3)**     | -    |
+| M5 full mechanics         | done: validation + Sobol written up in VALIDATION.md §1.1-2 (§3)           | m5   |
 | **M6 art pass**           | **committed as WIP (`m6 (WIP)` commit); small polish left, then tag (§4)** | -    |
 | **M7 debrief/onboarding** | **drafted, not wired into the UI (§5)**                                    | -    |
 | M8 polish, docs, launch   | not started (§6)                                                           | -    |
@@ -64,7 +64,16 @@ Order of commits this session: `eb2ed3b` m5 → `m6 (WIP)` → `m7 (WIP)` drafts
 - Timings: Victoria run ~0.23 s (24 spin-up + 49 months); full calibration 44 min; validate
   ~35 min; playtests (8 seeds × 5 strategies) 28 s; e2e ~10 s.
 
-## 3. M5: what is left
+## 3. M5: done (tagged `m5`, 2026-10-10)
+
+Items 1-4 below are done: VALIDATION.md §1.1-2 summarise `calibration/reports/validation.md`
+(recovery 79% coverage; all 10 misses are truths in the outer 10% of their prior) and
+`calibration/reports/sobol.md` (15.5 min run). Gate note: on a busy machine the sim suite's
+timing tests can fail when test files run in parallel under coverage; `npx vitest run --coverage
+--no-file-parallelism` in `packages/sim` passes (the perf test now takes the best of 3 runs;
+the 8-seed moments test has a 120 s timeout). Item 5 (larger ABC stage 3) was not run.
+
+Original list, for the record:
 
 Done and committed in `eb2ed3b`: web UI for the full game (start screen + mandates, budget and
 political capital, six levers + data purchase with costs/cooldowns/refusals, researcher-view
