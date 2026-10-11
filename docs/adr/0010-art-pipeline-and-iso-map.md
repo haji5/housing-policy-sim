@@ -48,13 +48,17 @@ without an OFL-compatible licence.
    diagonals with integer zoom (1×, 2×, 3×) plus a 0.5× overview, culling off-screen tiles. Pan by
    drag or arrow keys, zoom by wheel, buttons or +/−. Water, cranes and "for rent" boards animate
    at 4 frames per second, and not at all under `prefers-reduced-motion`. Overlays dim the city
-   and tint the ground under lots in the chosen state (STR, empty, construction).
+   and tint the ground under lots in the chosen state (STR, empty, construction). Construction
+   lots kick up dust; a red "delisted" stamp marks lots whose sampled home was an STR at the
+   previous quarter and is not now (drawn at screen size on the overview and the STR overlay).
+   The canvas backing store always equals its CSS size (an e2e check), because a rescaled canvas
+   drops pixel columns from the font and sprites.
 9. **Determinism.** The atlas is byte-identical across builds (tested); the PNG is committed so
    the site builds without running the art tools (`pnpm art` regenerates it).
 
 ## Consequences
 
-- No model change: ODD.md and ASSUMPTIONS.md are unaffected. The map is a god view of sampled
-  homes; the charts remain the researcher view (ADR 0006).
+- No model change: ASSUMPTIONS.md is unaffected. ODD §4 (Observation) records the map's sampling
+  rule. The map is a god view of sampled homes; the charts remain the researcher view (ADR 0006).
 - The flat placeholder map (`render/MapCanvas.tsx`) stays as a fallback (`?map=flat`).
 - Licence: generated art is CC BY 4.0 (PLAN D4); code stays MIT.

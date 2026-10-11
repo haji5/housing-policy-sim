@@ -6,6 +6,7 @@ import { IsoMap } from '../render/iso/IsoMap.tsx';
 import { firstLastValid, researcherView } from '../game/observe.ts';
 import { capName, regimeName, TICKS_PER_TURN, TOTAL_TURNS, useGame } from '../game/useGame.ts';
 import type { UiState } from '../game/useGame.ts';
+import { AtlasSprite, SHOCK_ICON } from './AtlasSprite.tsx';
 import { Levers } from './Levers.tsx';
 import { LineChart } from './LineChart.tsx';
 import { Logo } from './Logo.tsx';
@@ -144,9 +145,11 @@ function Play({ state, quote, setDraft, endTurn, setup }: Game) {
           Date <strong data-testid="date">{label(snapshot.tick)}</strong>
         </span>
         <span>
+          <AtlasSprite name="icon_budget" />
           Budget <strong data-testid="budget">${g.budget.toFixed(1)}M</strong>
         </span>
         <span>
+          <AtlasSprite name="icon_capital" />
           Political capital <strong data-testid="capital">{g.capital}</strong> / 12
         </span>
         <span>
@@ -163,7 +166,12 @@ function Play({ state, quote, setDraft, endTurn, setup }: Game) {
         <section class="left">
           {state.currentShock !== null && state.phase !== 'over' && (
             <aside class="shock-card" role="status" aria-labelledby="shock-h">
-              <h2 id="shock-h">Shock: {shockCard(state.currentShock).name}</h2>
+              <h2 id="shock-h">
+                {SHOCK_ICON[shockCard(state.currentShock).id] && (
+                  <AtlasSprite name={SHOCK_ICON[shockCard(state.currentShock).id]!} />
+                )}
+                Shock: {shockCard(state.currentShock).name}
+              </h2>
               <p>{shockCard(state.currentShock).text}</p>
               <small>
                 The same shock hits the no-policy comparison run, so it does not affect your score.

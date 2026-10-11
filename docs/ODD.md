@@ -86,6 +86,11 @@ Each tick runs in fixed order (`step.ts`), and agents are iterated in ascending 
   agent decisions.
 - **Observation.** The god view is recorded each tick. A separate researcher view (§7.8, ADR 0006) turns it into what an analyst would see: noisy, sometimes truncated quarterly listing
   snapshots and a noisy CPI. It is post-processing only and never feeds back into the model.
+  The game's isometric map (ADR 0010) is a third, purely visual read of the god view: each
+  building shows one home of its zone sampled from a fixed hashed order of the starting stock
+  (new construction fills reserved lots in id order), so the share of buildings in each state
+  matches the zone's share of homes. A delisting stamp marks sampled homes that were STRs at the
+  previous quarter's snapshot and are not now. It is never used by the model or the scorecard.
 - **Exogenous shocks.** Shock cards (§7.10) change rates, arrivals, incomes, enforcement or
   tourist demand for a fixed period. They are events, applied identically to a player's run and
   its no-policy counterfactual.

@@ -20,13 +20,13 @@ _Last updated 2026-10-10 ~20:30 (end of the third session), for the next session
 
 ## 1. Milestone status
 
-| Milestone                 | Status                                                                     | Tag  |
-| ------------------------- | -------------------------------------------------------------------------- | ---- |
-| M0-M4                     | done                                                                       | m0-4 |
-| M5 full mechanics         | done: validation + Sobol written up in VALIDATION.md §1.1-2 (§3)           | m5   |
-| **M6 art pass**           | **committed as WIP (`m6 (WIP)` commit); small polish left, then tag (§4)** | -    |
-| **M7 debrief/onboarding** | **drafted, not wired into the UI (§5)**                                    | -    |
-| M8 polish, docs, launch   | not started (§6)                                                           | -    |
+| Milestone                 | Status                                                                | Tag  |
+| ------------------------- | --------------------------------------------------------------------- | ---- |
+| M0-M4                     | done                                                                  | m0-4 |
+| M5 full mechanics         | done: validation + Sobol written up in VALIDATION.md §1.1-2 (§3)      | m5   |
+| M6 art pass               | done: icons, delisting stamp, dust, 1:1 canvas fix, review round (§4) | m6   |
+| **M7 debrief/onboarding** | **drafted, not wired into the UI (§5)**                               | -    |
+| M8 polish, docs, launch   | not started (§6)                                                      | -    |
 
 Git: `main`, no remote (GitHub MCP auth fails; nothing pushed; Pages deploy untested).
 Order of commits this session: `eb2ed3b` m5 → `m6 (WIP)` → `m7 (WIP)` drafts + this file.
@@ -106,7 +106,18 @@ supply wins Tourism (7/8) and Balanced on 5/8 seeds (tenant protection's Balance
 by seed 8). Vacancy-tax revenue (~$160M/term at 1 point per $10M) drives tenant protection's
 score; points scales were not re-tuned.
 
-## 4. M6: what is left (committed as WIP)
+## 4. M6: done (tagged `m6`)
+
+Finished this session: top-bar budget/capital icons and the shock-card icon (`AtlasSprite`);
+`stamp_delist` on lots whose sampled home was an STR last quarter and is not now (IsoMap keeps
+the previous snapshot; drawn at screen size on the overview and STR overlay); `dust0-2` on
+construction lots. Review round found a real defect: the map canvas backing store (922 px) was
+drawn into 906 CSS px (frame padding), dropping pixel columns ("RJLE", "EXEMFT"); fixed by
+measuring the content box, with an e2e check that `canvas.width === clientWidth`. ODD §4 notes
+the map's sampling rule; ADR 0010 updated. Note: `play.spec.ts` regenerates `screenshots/m6/0*`
+with the current UI, so they show the M7 tutorial.
+
+Original list, for the record:
 
 Done: `tools/art` (workspace package, `pnpm art`, 11 tests, no deps: own PNG encoder on
 `node:zlib`), atlas + `art-preview.html`, isometric map `apps/web/src/render/iso/`

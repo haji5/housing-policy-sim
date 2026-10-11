@@ -493,3 +493,10 @@ button.primary:disabled {
   image-rendering: pixelated;
   display: block;
 }
+
+/* Atlas icons inline with text (top bar, shock card) */
+.atlas-sprite {
+  image-rendering: pixelated;
+  vertical-align: middle;
+  margin-right: 0.35rem;
+}

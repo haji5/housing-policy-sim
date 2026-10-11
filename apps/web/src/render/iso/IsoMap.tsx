@@ -32,6 +32,8 @@ interface LotView {
   building: string | null;
   marker: string | null;
   sign: string | null;
+  /** Was a short-term rental last quarter and is not now (delisted or converted). */
+  delisted: boolean;
   state: 'owner' | 'ltr' | 'str' | 'forrent' | 'held' | 'construction' | 'empty';
 }
 
@@ -51,11 +53,24 @@ function viewOf(
   lot: Lot,
   d: number | undefined,
   s: Snapshot,
+  prevTenure: Uint8Array | null,
   animT: number,
   upzoned: boolean,
 ): LotView {
   if (d === undefined)
-    return { building: null, marker: null, sign: upzoned ? 'sign_upzone' : null, state: 'empty' };
+    return {
+      building: null,
+      marker: null,
+      sign: upzoned ? 'sign_upzone' : null,
+      delisted: false,
+      state: 'empty',
+    };
+  const v = baseView(lot, d, s, animT);
+  v.delisted = v.state !== 'str' && prevTenure !== null && prevTenure[d] === Tenure.STR;
+  return v;
+}
+
+function baseView(lot: Lot, d: number, s: Snapshot, animT: number): LotView {
   const big = ['midrise', 'tower', 'hotel', 'lowrise3'].includes(lot.kind);
   const t = s.tenure[d];
   if (t === Tenure.CONSTRUCTION)
@@ -63,6 +78,7 @@ function viewOf(
       building: `construction_${big ? 'large' : 'small'}${animT % 3}`,
       marker: null,
       sign: null,
+      delisted: false,
       state: 'construction',
     };
   if (t === Tenure.STR)
@@ -70,21 +86,30 @@ function viewOf(
       building: lot.kind,
       marker: s.principalRes[d] ? 'marker_str_pr' : 'marker_str',
       sign: null,
+      delisted: false,
       state: 'str',
     };
   if (t === Tenure.VACANT)
-    return { building: `${lot.kind}_dark`, marker: 'marker_held', sign: null, state: 'held' };
+    return {
+      building: `${lot.kind}_dark`,
+      marker: 'marker_held',
+      sign: null,
+      delisted: false,
+      state: 'held',
+    };
   if (t === Tenure.LTR && !s.occupied[d])
     return {
       building: `${lot.kind}_dark`,
       marker: null,
       sign: `sign_forrent${animT % 8 === 0 ? 1 : 0}`,
+      delisted: false,
       state: 'forrent',
     };
   return {
     building: lot.kind,
     marker: null,
     sign: null,
+    delisted: false,
     state: t === Tenure.LTR ? 'ltr' : 'owner',
   };
 }
@@ -128,6 +153,13 @@ export function IsoMap({ layout, snapshot }: Props) {
     [layout],
   );
   const nStart = useMemo(() => snapshot.zone.length, [layout]); // first snapshot of this game
+  // The previous quarter's tenure, for the delisting stamp (reset when a new game starts).
+  const hist = useRef<{ cur: Snapshot | null; prev: Snapshot | null }>({ cur: null, prev: null });
+  if (hist.current.cur !== snapshot) {
+    const last = hist.current.cur;
+    hist.current = { cur: snapshot, prev: last && last.tick < snapshot.tick ? last : null };
+  }
+  const prevTenure = hist.current.prev?.tenure ?? null;
   const order = useMemo(
     () => dwellingOrder(snapshot.zone, nStart, layout.zoneNames.length),
     [snapshot.zone.length, nStart, layout],
@@ -154,7 +186,11 @@ export function IsoMap({ layout, snapshot }: Props) {
     const el = wrapRef.current;
     if (!el) return;
     const ro = new ResizeObserver(() => {
-      const w = Math.max(320, Math.floor(el.clientWidth));
+      // Content width (without the frame's padding): the canvas must be drawn 1:1 or the
+      // browser rescales it and drops pixel columns from sprites and the pixel font.
+      const cs = getComputedStyle(el);
+      const inner = el.clientWidth - parseFloat(cs.paddingLeft) - parseFloat(cs.paddingRight);
+      const w = Math.max(320, Math.floor(inner));
       setSize({ w, h: Math.round(Math.min(520, Math.max(300, w * 0.52))) });
     });
     ro.observe(el);
@@ -183,10 +219,12 @@ export function IsoMap({ layout, snapshot }: Props) {
                   ),
               )
             ];
-      out.push(viewOf(lot, d, snapshot, animT, (snapshot.levers.upzone[lot.zone] ?? 0) > 0));
+      out.push(
+        viewOf(lot, d, snapshot, prevTenure, animT, (snapshot.levers.upzone[lot.zone] ?? 0) > 0),
+      );
     }
     return out;
-  }, [city, order, snapshot, animT, layout.scale]);
+  }, [city, order, snapshot, prevTenure, animT, layout.scale]);
 
   useEffect(() => {
     const canvas = canvasRef.current;
@@ -271,6 +309,8 @@ export function IsoMap({ layout, snapshot }: Props) {
           }
         }
         if (v.sign) drawFrame(ctx, atlas, v.sign, x - 9, y + 4);
+        if (v.state === 'construction') drawFrame(ctx, atlas, `dust${animT % 3}`, x + 9, y + 5);
+        if (v.delisted) drawFrame(ctx, atlas, 'stamp_delist', x + 8, y - 4);
         ctx.globalAlpha = 1;
       }
     ctx.setTransform(1, 0, 0, 1, 0, 0);
@@ -303,6 +343,30 @@ export function IsoMap({ layout, snapshot }: Props) {
           f.h * k,
         );
       });
+    }
+    // Delisting stamps at a fixed screen size when zoomed out or on the STR overlay, so the
+    // rule's first-quarter exits are visible on the whole-region view.
+    if (z < 1 || overlay === 'str') {
+      const f = atlas.frames['stamp_delist'];
+      const k = overlay === 'str' ? UI_SCALE : 1;
+      if (f)
+        city.lots.forEach((lot, i) => {
+          if (!lotViews[i]!.delisted) return;
+          const [x, y] = centre(lot.c, lot.r);
+          if (!visible(x, y)) return;
+          const [sx, sy] = toScreen(x, y - 10);
+          ctx.drawImage(
+            atlas.image,
+            f.x,
+            f.y,
+            f.w,
+            f.h,
+            sx - f.ax * k,
+            sy - f.ay * k,
+            f.w * k,
+            f.h * k,
+          );
+        });
     }
     // District labels above each district's top corner, in screen space.
     for (const d of city.districts) {
@@ -344,7 +408,9 @@ export function IsoMap({ layout, snapshot }: Props) {
   };
 
   const counts = { str: 0, forrent: 0, held: 0, construction: 0 };
-  for (const v of lotViews)
+  let delisted = 0;
+  for (const v of lotViews) {
+    if (v.delisted) delisted++;
     if (
       v.state === 'str' ||
       v.state === 'forrent' ||
@@ -352,6 +418,7 @@ export function IsoMap({ layout, snapshot }: Props) {
       v.state === 'construction'
     )
       counts[v.state]++;
+  }
   const homesPerLot = Math.round(
     city.districts.reduce((a, d) => a + d.homesPerLot, 0) / Math.max(1, city.districts.length),
   );
@@ -408,7 +475,7 @@ export function IsoMap({ layout, snapshot }: Props) {
         tabIndex={0}
         style={{ width: `${size.w}px`, height: `${size.h}px` }}
         role="img"
-        aria-label={`City map, each building stands for about ${homesPerLot} homes. Shown: ${counts.str} short-term rental buildings, ${counts.forrent} for rent, ${counts.held} held empty, ${counts.construction} under construction. Arrow keys pan, plus and minus zoom.`}
+        aria-label={`City map, each building stands for about ${homesPerLot} homes. Shown: ${counts.str} short-term rental buildings, ${counts.forrent} for rent, ${counts.held} held empty, ${counts.construction} under construction, ${delisted} stopped short-term renting this quarter. Arrow keys pan, plus and minus zoom.`}
         onPointerDown={(e) => {
           (e.target as HTMLCanvasElement).setPointerCapture(e.pointerId);
           drag.current = { x: e.clientX, y: e.clientY, cx: view.x, cy: view.y };
@@ -456,6 +523,9 @@ export function IsoMap({ layout, snapshot }: Props) {
         </li>
         <li>
           <Swatch atlas={atlas} name="sign_upzone" /> Upzoned lot
+        </li>
+        <li>
+          <Swatch atlas={atlas} name="stamp_delist" /> Stopped short-term renting this quarter
         </li>
       </ul>
       <p class="chart-note">
