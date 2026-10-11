@@ -123,3 +123,56 @@ These change only what the researcher view reports, never the model.
 | O6  | Flag threshold                         | 0.75 × larger neighbour | DATA    | bc-str-ban-analysis `queries/02_aggregate_monthly.sql` (`n_total / greatest(lag, lead) < 0.75`).                                                                                                                                      | m4         |
 | O7  | CPI rented-accommodation noise SD      | 2.4%                    | DATA    | Residual SD of log Victoria CPI rented accommodation around a centred 13-month moving average, 2019-2026, in bc-str-ban-analysis `data/fixtures/cpi_18100004.csv`: 2.3-2.5% depending on the start year. (In index points it is 3.6.) | m4         |
 | O8  | Researcher sees quarterly CPI readings | every 3rd month         | ASSUMED | StatCan publishes CPI monthly; the game shows quarterly readings to match the turn length.                                                                                                                                            | m4         |
+
+## Investor tenure choice and rent cap (M5, ADR 0007)
+
+| ID  | Quantity                                            | Value                     | Tag     | Source / note                                                                                                                                                                 | Introduced |
+| --- | --------------------------------------------------- | ------------------------- | ------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------- |
+| I1  | Investor choice set                                 | LTR / STR / VACANT / SELL | ASSUMED | Multinomial logit with the same Gumbel scale as before; IIA means displaced units split across the other uses in proportion to their baseline odds.                           | m5         |
+| I2  | `vacantHeldShare` (investor units held vacant)      | calibrated, prior 0.5-8%  | ASSUMED | BC Speculation and Vacancy Tax data would anchor this (VERIFY); weakly identified by listing moments.                                                                         | m5         |
+| I3  | `sellRateAnnual` (investor units sold per year)     | calibrated, prior 2-10%   | ASSUMED | Order of magnitude of resale turnover (VERIFY); weakly identified.                                                                                                            | m5         |
+| I4  | General inflation π                                 | 2.65%/yr                  | DATA    | Victoria all-items CPI, Sep 2023 (149.1) to Jun 2026 (160.2): bc-str-ban-analysis `data/fixtures/cpi_18100004.csv`.                                                           | m5         |
+| I5  | Rent caps Low / Medium / High (nominal, annual)     | 1% / 3% / 6%              | ASSUMED | Medium is the status quo (`rentCapAnnual`). The actual BC caps by year (2024 3.5%, 2025 3.0%) are VERIFY.                                                                     | m5         |
+| I6  | `capPenaltyYears`                                   | 2                         | ASSUMED | Years of foregone growth an investor weighs when a cap binds.                                                                                                                 | m5         |
+| I7  | `mobilityDiscountElasticity`                        | 3                         | ASSUMED | A 15% below-market rent cuts the internal move rate by ~36%; direction from rent-control lock-in evidence (LITERATURE, e.g. Diamond, McQuade & Qian 2019), magnitude assumed. | m5         |
+| I8  | Assessed value of a typical home (vacancy-tax base) | $900k                     | VERIFY  | Order of magnitude for Greater Victoria (BC Assessment); not checked.                                                                                                         | m5         |
+
+## Developers and construction (M5, ADR 0008)
+
+| ID  | Quantity                         | Value                                  | Tag     | Source / note                                                                                                               | Introduced |
+| --- | -------------------------------- | -------------------------------------- | ------- | --------------------------------------------------------------------------------------------------------------------------- | ---------- |
+| D1  | `startsAnnualShare`              | 2.2% of stock per year                 | VERIFY  | Roughly CMHC completions in the Victoria CMA (~4,400/yr) over ~198k dwellings; not checked against CMHC tables.             | m5         |
+| D2  | Construction lag                 | U{18..30} months                       | VERIFY  | PLAN §5.6 default.                                                                                                          | m5         |
+| D3  | `rentElasticity` of starts       | 1                                      | ASSUMED | Supply responds to real asking rents.                                                                                       | m5         |
+| D4  | `rateSemiElasticity` of starts   | 0.1 per percentage point               | ASSUMED | A 1-point rate rise cuts starts ~10%.                                                                                       | m5         |
+| D5  | `rateRef`                        | 2.75%                                  | VERIFY  | Middle of the Bank of Canada published neutral-rate range (2.25-3.25%).                                                     | m5         |
+| D6  | Policy rate path                 | monthly, Jan 2019 - Oct 2026           | DATA    | bc-str-ban-analysis `data/fixtures/boc_policy_rate_monthly.csv` (copied to `params/policyRate.json`); flat after (ASSUMED). | m5         |
+| D7  | Rental share of completions      | renter households / dwellings, by zone | ASSUMED | Uses V4/V7. Completed rentals are purpose-built (never STR, never sold); "mostly purpose-built" is VERIFY.                  | m5         |
+| D8  | Upzoning starts multipliers      | Moderate ×1.4, Aggressive ×2.0         | ASSUMED | Informed by Auckland's 2016 upzoning roughly doubling consents on upzoned land (LITERATURE, VERIFY).                        | m5         |
+| D9  | Permit delay                     | 12 months                              | ASSUMED | PLAN §5.6 default.                                                                                                          | m5         |
+| D10 | `capElasticity` of rental starts | 3                                      | ASSUMED | Direction LITERATURE (rent control reduces rental supply: Diamond, McQuade & Qian 2019); magnitude assumed.                 | m5         |
+| D11 | Non-market rent                  | 70% of market                          | ASSUMED | Typical "below-market" target; programmes vary.                                                                             | m5         |
+
+## Shock cards (M5, ADR 0009, `params/shocks.json`)
+
+| ID  | Card            | Effect (duration)                                             | Tag     |
+| --- | --------------- | ------------------------------------------------------------- | ------- |
+| K1  | Rate hike       | policy rate +1 point (12 months)                              | ASSUMED |
+| K2  | Migration surge | renter arrivals ×1.3 (12 months)                              | ASSUMED |
+| K3  | Recession       | incomes ×0.95, arrivals ×0.9, tourist demand ×0.9 (12 months) | ASSUMED |
+| K4  | Court challenge | detection ×0.5 (12 months)                                    | ASSUMED |
+| K5  | Tourism boom    | tourist demand ×1.25 (12 months)                              | ASSUMED |
+| K6  | Wildfire season | tourist demand ×0.7, arrivals ×1.1 (6 months)                 | ASSUMED |
+
+## Game rules (M5, ADR 0009)
+
+Design constants, not model parameters; they do not affect the simulation or the calibration.
+
+| ID  | Item              | Value                                                                       | Tag                                               |
+| --- | ----------------- | --------------------------------------------------------------------------- | ------------------------------------------------- |
+| G1  | Budget            | $8M start, +$2M per quarter, plus fines and vacancy tax                     | ASSUMED                                           |
+| G2  | Running costs     | enforcement $0.4M/level/quarter; non-market $0.15M/home; data $0.25M        | ASSUMED (the non-market subsidy per home: VERIFY) |
+| G3  | Political capital | 6 at start, +2/quarter, max 12; costs per ADR 0009                          | ASSUMED                                           |
+| G4  | Cooldowns         | 4 turns for the STR regime, vacancy tax and rent cap                        | ASSUMED                                           |
+| G5  | Shock draws       | from turn 3, probability 0.25 per turn, no repeats                          | ASSUMED                                           |
+| G6  | Points scales     | 0.25 pp burden, 0.1 pp stress rate, 500 homes, $10M, 2% listings, 1 capital | ASSUMED                                           |

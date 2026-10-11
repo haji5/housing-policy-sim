@@ -1,6 +1,6 @@
 # Handoff: where the build stands and exactly what to do next
 
-_Written 2026-10-10 at the end of a the coding agent session, for the next session. Read this, then
+_Last updated 2026-10-10 (second session, mid-M5), for the next session. Read this, then
 `WORKING_AGREEMENTS.md` and `docs/PLAN.md`._
 
 ## 0. What the user asked for (standing instructions)
@@ -22,17 +22,17 @@ _Written 2026-10-10 at the end of a the coding agent session, for the next sessi
 
 ## 1. Milestone status
 
-| Milestone                             | Status                                                      | Tag  |
-| ------------------------------------- | ----------------------------------------------------------- | ---- |
-| M0 scaffold                           | done                                                        | `m0` |
-| M1 headless sim v0                    | done                                                        | `m1` |
-| M2 ugly playable prototype            | done (screenshots in `docs/screenshots/m2/`)                | `m2` |
-| M3 calibration + validation           | done; acceptance partly met (T5, T6a miss; see CALIBRATION) | `m3` |
-| M4 DiD-recovery experiment            | done (VALIDATION.md §3)                                     | `m4` |
-| **M5 full mechanics**                 | **next** (designed in §5)                                   | -    |
-| M6 art pass                           | not started                                                 | -    |
-| M7 debrief / evidence UI / onboarding | not started                                                 | -    |
-| M8 polish, docs, launch               | not started                                                 | -    |
+| Milestone                             | Status                                                                  | Tag  |
+| ------------------------------------- | ----------------------------------------------------------------------- | ---- |
+| M0 scaffold                           | done                                                                    | `m0` |
+| M1 headless sim v0                    | done                                                                    | `m1` |
+| M2 ugly playable prototype            | done (screenshots in `docs/screenshots/m2/`)                            | `m2` |
+| M3 calibration + validation           | done; acceptance partly met (T5, T6a miss; see CALIBRATION)             | `m3` |
+| M4 DiD-recovery experiment            | done (VALIDATION.md §3)                                                 | `m4` |
+| **M5 full mechanics**                 | **in progress: model committed; recalibration + web UI remaining (§5)** | -    |
+| M6 art pass                           | not started                                                             | -    |
+| M7 debrief / evidence UI / onboarding | not started                                                             | -    |
+| M8 polish, docs, launch               | not started                                                             | -    |
 
 Git: branch `main`, no remote configured (the GitHub MCP connector failed to authenticate;
 nothing has been pushed; Pages deploy is untested).
@@ -64,8 +64,13 @@ nothing has been pushed; Pages deploy is untested).
   command substitution. Use the Edit/Write tools for TS/TSX containing backticks, or write a
   script file first.
 - `python` is not on PATH in the Bash tool; use `calibration/.venv/Scripts/python.exe` directly.
-- Full Victoria calibration takes ~25 min on this 20-thread machine (16 workers). A sim run is
-  ~0.15 s (60k agents, 24 spin-up + 49 recorded months).
+- Bash heredocs sometimes fail ("unexpected EOF") when the body has apostrophes, and `\n` inside
+  a generated TS string can turn into a real newline. Write edit scripts with the Write tool into
+  the scratchpad and run them, or use the Edit tool.
+- `calibrate.log` stays empty until a stage ends (Python buffers stdout); check worker processes
+  (`tasklist | grep node`) to see if it is running.
+- Full Victoria calibration took ~29 min in M3 (expect ~45-60 min for the M5 model). A sim run was
+  ~0.15 s in M3 and is ~0.23 s in M5 (24 spin-up + 49 recorded months).
 
 ## 3. M3: finished (tag `m3`)
 
@@ -102,43 +107,83 @@ nothing has been pushed; Pages deploy is untested).
 - The 75% flag rule drops a genuine (policy-driven) snapshot in ~7% of runs. Worth a sentence in
   the game's debrief.
 
-## 5. M5 design notes (full mechanics; re-calibrate afterwards)
+## 5. M5: in progress (model done and committed; recalibration + web UI remaining)
 
-PLAN §5.5-5.10 and §10 M5. Proposed design (each needs an ADR):
+### Done
 
-- **Investor choice → STR / LTR / VACANT / SELL logit.**
-  - VACANT: `ASC_vac − β·vacancyTaxMonthly` (tax = rate × assessed value / 12; the assessed
-    value is VERIFY).
-  - SELL: unit → OWNER_OCC (principalRes 1); `ASC_sell − k·(r_t − r_0)`.
-  - Spin-up controllers target the starting vacant-held share (ASSUMED) and measure the
-    baseline sales rate.
-  - Owner→investor purchases run at the baseline sales rate, multiplied by
-    `(1 + investorEntry·max(0, strNet/strNet0 − 1))` in zones without the rule. This replaces
-    the current investor-entry formula; recalibrate.
-  - These give the displaced-unit destination simplex (LTR/Sell/Vacant) the plan wants to show
-    as uncertain.
-- **Developers.**
-  - Starts: `starts_z ~ Poisson(s0_z · exp(ρ·log(m_z/m_z0) − h·(r_t − r_0)) · headroom_z/headroom_z0)`.
-  - Pipeline: CONSTRUCTION tenure with `completionTick` ~ U(18,30) months (VERIFY); completions
-    enter as LTR or OWNER_OCC by `rentalShare`.
-  - Dwelling arrays need spare capacity (they are fixed-size now; invariants test assumes fixed n
-    for two-zone, so update it).
-  - BoC policy rate path: DATA in the first project's `data/fixtures/boc_policy_rate_monthly.csv`.
-  - Renter arrivals need a growth term so baseline completions are absorbed.
-- **Levers:**
-  - Upzoning per zone (capacity ×1.1 / ×1.25 after a 12-month permit delay).
-  - Vacancy tax 0-3%.
-  - Rent cap Low/Medium/High (BC caps by year are VERIFY; the open item in PLAN §16).
-  - Non-market build (stretch).
-  - Resources: fiscal budget and political capital per turn, costs and cooldowns (PLAN §5.8).
-- **Shock cards** (PLAN §5.9), seeded deck in JSON: rate hike, migration surge, recession,
-  court challenge (enforcement ×0.5 for 4 quarters), tourism boom, wildfire.
-- **Scoring** (PLAN §6.2): renter affordability, stress (doubled-up + gone), net completions,
-  fiscal balance, visitor capacity (STR beds) and political capital, plus mandates.
-- **Fog of data in the game:** the researcher view from M4 (noisy quarterly snapshots, noisy CPI).
-  The asking-rent index is visible only after a paid "data purchase".
-- Then: re-run `pnpm calibrate` (must still pass M3 acceptance), Sobol sensitivity indices into
-  VALIDATION.md, and 5 headless "playtest" policies scored to show no dominant strategy.
+- **Model** committed in `b1ecbf3` ("m5 (WIP)"), SIM_VERSION 0.5.0. ADRs 0007 (investor
+  STR/LTR/VACANT/SELL choice, purchases, real-terms rent cap, mobility), 0008 (developers,
+  pipeline, purpose-built rentals, upzoning as a starts multiplier, non-market homes, BoC rate
+  path), 0009 (game layer). ODD fully rewritten for M5; ASSUMPTIONS I1-I8, D1-D11, K1-K6, G1-G6.
+  (The docs are in the second WIP commit; see git log.)
+- New sim files: `systems/developers.ts`, `shocks.ts` + `params/shocks.json`, `rates.ts` +
+  `params/policyRate.json` (DATA), `metrics.ts` (scorecard vs paired no-policy run),
+  `game.ts` (resources, costs, cooldowns, seeded shock schedule, mandates), `playtest.ts`
+  (`playGame`, `paramsForSeed`, `recentRevenue`, 5 `STRATEGIES`), CLI `pnpm sim playtest`.
+- Two new calibrated priors: `host.vacantHeldShare`, `host.sellRateAnnual` (16 parameters).
+- Tests: 60 sim tests; all pass except the 2 ensemble tests (stale until recalibration). New:
+  `mechanics.test.ts`, `game.test.ts`; CRN variance test now at a 6-month horizon (explained in
+  the test and ADR 0007); golden snapshot updated deliberately.
+- Bugs found and fixed along the way (in ADRs): world now built at its true first tick
+  (`-preTicks - spinUpMonths`), otherwise scheduled events (pipeline, purchases) fired after
+  spin-up; new dwellings use stable birth keys (`dw.key`) for CRN; rental completions are
+  purpose-built (removed a +0.05 covered-vs-exempt placebo drift).
+- Preliminary playtest (6 seeds, OLD ensemble, so numbers will change): winners differ by mandate
+  (supply wins Balanced/Tourism, tenant protection wins Affordability/Budget); only the crackdown
+  is Pareto-dominated (by the balanced mix). The STR crackdown scores badly: the Bill 35 lesson.
+
+### In flight when the session ended
+
+- `pnpm calibrate` was started in the background at ~19:15 on 2026-10-10 against commit
+  `b1ecbf3`. It was probably killed when the session closed. **Check
+  `calibration/reports/calibrate.log`: if it does not end with `exit 0`, re-run
+  `pnpm calibrate` (~45-60 min; runs are ~0.23 s each now).** Do not edit `packages/sim/src`
+  while it runs.
+- **Web UI rewrite, half done (does not typecheck yet):** `apps/web/src/game/protocol.ts`,
+  `client.ts`, `useGame.ts` and `workers/sim.worker.ts` are rewritten (player sim + no-policy
+  twin in lockstep, shocks, `finish` → outcomes). Still to do:
+  1. Export from `packages/sim/src/index.ts`: `paramsForSeed`, `playGame`, `recentRevenue`,
+     `STRATEGIES` (and types `PlayResult`, `Strategy`) from `./playtest.ts`. Only after the
+     calibration has finished (index.ts is loaded by the batch workers).
+  2. Rewrite `ui/App.tsx` for the new `useGame()` API (`state.phase` now starts at `'setup'`:
+     a start screen choosing a mandate from `MANDATES`, then `start(seed, mandate)`). Top bar:
+     turn, date, budget $M, political capital, mandate. Show the current shock card
+     (`state.currentShock`, `shockCard(code)`). End of term: scorecard panel from
+     `state.final` (effects, points, mandate score; "vs no-policy run, same seed and shocks").
+  3. Rewrite `ui/Levers.tsx` for all six levers + "buy asking-rent data" checkbox, with the live
+     `quote` (fiscal cost, capital cost, errors as role=alert; disable End turn on errors).
+     Upzoning: per-zone select, irreversible note. Non-market: 0-40 per quarter, step 5.
+  4. Charts = researcher view (fog of data): listings from `researcherPanel(series-as-RunOutput,
+seed, ticks 0,3,6,..)` summed covered/exempt, flagged snapshots shown hollow and excluded;
+     rents: `researcherCpi` always, asking index only for ticks <= `state.dataThroughTick`.
+     `LineChart` needs per-point x positions and hollow markers.
+  5. `render/MapCanvas.tsx`: zone array now comes from `snapshot.zone` (grows with construction;
+     recompute geometry when its length changes); colours for VACANT (held) and CONSTRUCTION;
+     `layout.zone` no longer exists.
+  6. Update `apps/web/e2e/play.spec.ts` (start screen click, new lever labels), screenshots to
+     `docs/screenshots/m5/`, 3 review rounds.
+
+### Remaining M5 steps after that
+
+1. When calibration finishes: `pnpm test` (ensemble tests should pass), compare the fit with M3
+   (T1, T1a, T3, T4, T6b, T7 must still pass; T2, T5, T6a missed before) and write the result in
+   `docs/CALIBRATION.md` (new run section). Then `pnpm validate` (~20 min) and update
+   VALIDATION.md §1.1-2.
+2. Sobol sensitivity (PLAN §8.1): new Python script using `scipy.stats.sobol_indices` (scipy is
+   already pinned) over the posterior 5-95% box, outputs: covered-listings effect, asking-rent
+   effect, rent burden, completions. Write to VALIDATION.md.
+3. `pnpm sim playtest --seeds 1,2,3,4,5,6,7,8 --out calibration/reports/playtest.json` with the
+   new ensemble; write VALIDATION.md §4 (playtests: effects table, mandate winners, Pareto check;
+   state plainly whether any strategy dominates).
+4. Known limitations to document: held-vacant stock creeps up ~20% over 6 years in no-policy
+   runs; placebo P1 with default params ~+0.04; GONE/doubled-up levels uncalibrated (the score
+   uses the stress rate vs the no-policy run for that reason); runs ~0.45 s per 60-tick game.
+5. Full gate (format, lint, typecheck, test, build, e2e), commit, tag `m5`, update this file.
+
+### Old M5 design notes
+
+Superseded by ADRs 0007-0009 (capacity headroom was replaced by a starts multiplier; investor
+entry was kept unchanged next to the new baseline purchases).
 
 ## 6. M6-M8 reminders
 

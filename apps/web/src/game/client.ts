@@ -1,5 +1,5 @@
 import type { PolicyEvent } from '@zoned-out/sim';
-import type { Snapshot, WorkerRequest, WorkerResponse, WorldLayout } from './protocol.ts';
+import type { Final, Snapshot, WorkerRequest, WorkerResponse, WorldLayout } from './protocol.ts';
 
 type DistributiveOmit<T, K extends PropertyKey> = T extends unknown ? Omit<T, K> : never;
 type Pending = { resolve: (r: WorkerResponse) => void; reject: (e: Error) => void };
@@ -35,10 +35,20 @@ export class SimClient {
     });
   }
 
-  async init(scenario: string, seed: number): Promise<{ layout: WorldLayout; snapshot: Snapshot }> {
-    const r = await this.request({ type: 'init', scenario, seed });
+  async init(
+    scenario: string,
+    seed: number,
+    shocks: PolicyEvent[],
+  ): Promise<{ layout: WorldLayout; snapshot: Snapshot }> {
+    const r = await this.request({ type: 'init', scenario, seed, shocks });
     if (r.type !== 'init') throw new Error('unexpected response');
     return { layout: r.layout, snapshot: r.snapshot };
+  }
+
+  async finish(): Promise<Final> {
+    const r = await this.request({ type: 'finish' });
+    if (r.type !== 'finish') throw new Error('unexpected response');
+    return r.final;
   }
 
   async advance(events: PolicyEvent[], ticks: number): Promise<Snapshot> {

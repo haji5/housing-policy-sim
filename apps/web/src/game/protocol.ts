@@ -1,15 +1,19 @@
-import type { LeverState, PolicyEvent, RunOutput } from '@zoned-out/sim';
+import type { LeverState, Outcomes, PolicyEvent, RunOutput } from '@zoned-out/sim';
 
 /** Messages between the UI thread and the sim worker. */
 export type WorkerRequest =
-  | { id: number; type: 'init'; scenario: string; seed: number }
-  | { id: number; type: 'advance'; events: PolicyEvent[]; ticks: number };
+  | { id: number; type: 'init'; scenario: string; seed: number; shocks: PolicyEvent[] }
+  | { id: number; type: 'advance'; events: PolicyEvent[]; ticks: number }
+  | { id: number; type: 'finish' };
 
 export interface Snapshot {
   tick: number;
   date: string;
   levers: LeverState;
+  /** The player's run so far (true series; the UI derives the researcher view from it). */
   series: RunOutput['series'];
+  /** Zone per dwelling (grows with construction). */
+  zone: Uint8Array;
   /** Tenure code per dwelling (copy, transferred). */
   tenure: Uint8Array;
   /** 1 if the dwelling is a host's principal residence. */
@@ -19,7 +23,6 @@ export interface Snapshot {
 }
 
 export interface WorldLayout {
-  zone: Uint8Array;
   zoneNames: string[];
   zoneCovered: boolean[];
   start: { year: number; month: number };
@@ -30,7 +33,14 @@ export interface WorldLayout {
   scale: number;
 }
 
+/** End of term: outcomes of the player's run and of the paired no-policy run. */
+export interface Final {
+  policy: Outcomes;
+  base: Outcomes;
+}
+
 export type WorkerResponse =
   | { id: number; type: 'init'; layout: WorldLayout; snapshot: Snapshot }
   | { id: number; type: 'advance'; snapshot: Snapshot }
+  | { id: number; type: 'finish'; final: Final }
   | { id: number; type: 'error'; message: string };
