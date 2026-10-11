@@ -4,6 +4,21 @@ A playable, browser-based housing-policy simulator. The player is a provincial h
 
 This document is the build plan, written to be handed to the coding agent. Read it fully before writing code. Sections 14 and 15 contain a `WORKING_AGREEMENTS.md` to install and a kickoff prompt.
 
+> **Working mode (owner's instruction, supersedes any "stop after M2" wording below).** Keep working autonomously through **every milestone, M0 to M8, until the whole project is finished**. Do not stop between milestones to ask for a playtest or for approval. Ask only when genuinely blocked on something only the owner can provide (e.g. creating the GitHub repo, authorising an account).
+>
+> Autonomy does not relax the quality bar. At the end of **every** milestone, still:
+> - restate its acceptance criteria and plan;
+> - write tests first for sim invariants;
+> - run `pnpm lint && pnpm typecheck && pnpm test`, plus build and e2e;
+> - do the Playwright screenshot review (at least 3 rounds) for UI and art;
+> - run calibration and validation where the milestone changes the model;
+> - write ADR, ODD and ASSUMPTIONS updates for modelling changes;
+> - commit, tag (`m0` … `m8`) and write the milestone summary (what changed, tests and results, what could not be verified).
+>
+> If a check fails, fix it before moving on. If a calibration target cannot be met without hand-tuning, report the diagnostics and continue.
+>
+> Long sessions may hit usage limits. Keep `docs/HANDOFF.md` up to date at every milestone, and commit work in small steps, so a fresh session can resume exactly where the last one stopped. The current status and next steps are always in `docs/HANDOFF.md`.
+
 ---
 
 ## 1. Why this project exists (so decisions stay aligned)
@@ -533,7 +548,7 @@ make calibrate | make validate   (Python via uv)
 
 ## 15. Kickoff prompt to paste into the coding agent
 
-> Read `docs/PLAN.md` and `WORKING_AGREEMENTS.md` completely. We are building the housing-policy simulator described there. Start with **M0 (scaffold)**, then **M1 (headless sim v0)** and **M2 (ugly playable prototype)**, in plan mode for each: restate the acceptance criteria, list the files you'll create, then implement. Follow `WORKING_AGREEMENTS.md` strictly (determinism, no new dependencies without justification, tests first for invariants). Read `D:\Tools\Projects\bc-str-ban-analysis` for calibration inputs when we reach M3 and verify every number there before using it. At the end of each milestone, run lint, typecheck and tests, take Playwright screenshots where relevant, tag the commit, and summarise what changed, what's tested, and what you could not verify. Stop after M2 and ask me to playtest before starting M3.
+> Read `docs/PLAN.md` and `WORKING_AGREEMENTS.md` completely. We are building the housing-policy simulator described there. Start with **M0 (scaffold)**, then **M1 (headless sim v0)** and **M2 (ugly playable prototype)**, in plan mode for each: restate the acceptance criteria, list the files you'll create, then implement. Follow `WORKING_AGREEMENTS.md` strictly (determinism, no new dependencies without justification, tests first for invariants). Read `D:\Tools\Projects\bc-str-ban-analysis` for calibration inputs when we reach M3 and verify every number there before using it. At the end of each milestone, run lint, typecheck and tests, take Playwright screenshots where relevant, tag the commit, and summarise what changed, what's tested, and what you could not verify. Then continue straight to the next milestone. Keep going until M8 is done (see "Working mode" at the top). Keep `docs/HANDOFF.md` current so another session can resume.
 
 ### Per-milestone follow-up prompts (use one at a time)
 
