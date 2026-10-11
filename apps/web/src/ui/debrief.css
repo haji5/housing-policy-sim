@@ -47,13 +47,13 @@ button.badge {
 .badge-icon-assumed {
   background-image: url('/atlas/ui/badge_assumed.png');
 }
+/* Rendered on <body> with fixed coordinates computed by placeTip (Tips.tsx). */
 .tip {
-  position: absolute;
-  z-index: 20;
-  left: 0;
-  top: calc(100% + 4px);
+  position: fixed;
+  z-index: 50;
   width: max-content;
-  max-width: 22rem;
+  max-width: min(22rem, calc(100vw - 16px));
+  pointer-events: none;
   background: var(--ink);
   color: #fff;
   font-size: 1rem;
