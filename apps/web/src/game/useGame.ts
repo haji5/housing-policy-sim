@@ -12,14 +12,7 @@ import {
   shockCard,
   shockEvents,
 } from '@zoned-out/sim';
-import type {
-  Decision,
-  GameState,
-  MandateId,
-  PolicyEvent,
-  Quote,
-  Scorecard,
-} from '@zoned-out/sim';
+import type { Decision, GameState, MandateId, PolicyEvent, Quote, Scorecard } from '@zoned-out/sim';
 import { SimClient } from './client.ts';
 import type { Snapshot, WorldLayout } from './protocol.ts';
 
@@ -177,11 +170,13 @@ export function useGame() {
       text: describe(e, layout),
       kind: 'decision',
     }));
-    if (s.draft.buyData)
+    if (s.draft.buyData !== s.game.current.buyData)
       newLog.push({
         turn: s.game.turn + 1,
         tick: s.game.turn * TICKS_PER_TURN,
-        text: 'Bought asking-rent data for the quarter',
+        text: s.draft.buyData
+          ? 'Started buying asking-rent data'
+          : 'Stopped buying asking-rent data',
         kind: 'decision',
       });
     const buyData = s.draft.buyData;
@@ -220,10 +215,15 @@ export function useGame() {
         game,
         phase: final ? 'over' : 'playing',
         draft: { ...game.current, upzone: [...game.current.upzone], buyData },
-        dataThroughTick: buyData ? Math.max(p.dataThroughTick, lastTick - TICKS_PER_TURN) : p.dataThroughTick,
+        dataThroughTick: buyData
+          ? Math.max(p.dataThroughTick, lastTick - TICKS_PER_TURN)
+          : p.dataThroughTick,
         currentShock: shock,
         log: [...p.log, ...newLog, ...shockLog],
-        changes: [...p.changes, ...events.map((e) => ({ tick: e.tick, label: describe(e, layout) }))],
+        changes: [
+          ...p.changes,
+          ...events.map((e) => ({ tick: e.tick, label: describe(e, layout) })),
+        ],
         final,
       }));
     } catch (e) {

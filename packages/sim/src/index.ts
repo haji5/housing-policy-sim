@@ -48,3 +48,5 @@ export {
   statusQuo,
 } from './game.ts';
 export type { CooldownLever, Decision, GameState, MandateId, Quote } from './game.ts';
+export { STRATEGIES, paramsForSeed, playGame, recentRevenue } from './playtest.ts';
+export type { PlayResult, Strategy } from './playtest.ts';

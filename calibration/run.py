@@ -4,6 +4,7 @@
     python calibration/run.py calibrate    # full calibration -> packages/sim/src/params/ensemble.json
     python calibration/run.py smoke        # tiny calibration for CI (does not touch the ensemble)
     python calibration/run.py validate     # PLAN §8.1-8.2 checks -> calibration/reports/validation.md
+    python calibration/run.py sobol        # Sobol indices (PLAN §8.1) -> calibration/reports/sobol.md
 
 Extra arguments after the task are passed through, e.g. `calibrate --stage1 2048`.
 `pnpm calibrate` / `pnpm validate` call this through scripts/py.mjs.
@@ -25,6 +26,7 @@ TASKS = {
     "smoke": ["calibrate.py", "--smoke"],
     "validate": ["validate.py"],
     "did": ["did_recovery.py"],
+    "sobol": ["sobol.py"],
 }
 
 

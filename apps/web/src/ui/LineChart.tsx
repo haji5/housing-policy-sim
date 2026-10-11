@@ -1,8 +1,17 @@
+export interface Point {
+  x: number;
+  y: number;
+  /** Shown as a hollow marker and left out of the line (e.g. a snapshot flagged incomplete). */
+  hollow?: boolean;
+}
+
 export interface Line {
   label: string;
-  values: readonly number[];
+  points: readonly Point[];
   color: string;
   dash?: string;
+  /** Draw a filled marker at every point (sparse series such as quarterly snapshots). */
+  dots?: boolean;
 }
 
 export interface Marker {
@@ -19,6 +28,8 @@ interface Props {
   yFormat?: (y: number) => string;
   /** Text alternative describing the chart's key takeaway (screen readers). */
   summary: string;
+  /** Small print under the legend (data source, caveats). */
+  note?: string;
 }
 
 const W = 520;
@@ -37,6 +48,11 @@ export function niceTicks(lo: number, hi: number, target = 5): number[] {
   return out;
 }
 
+/** Points of a series given as one value per tick starting at `x0`. */
+export function dense(values: readonly number[], x0 = 0): Point[] {
+  return values.map((y, i) => ({ x: x0 + i, y }));
+}
+
 /** Minimal SVG line chart (placeholder until the M7 chart pass). */
 export function LineChart({
   title,
@@ -46,8 +62,9 @@ export function LineChart({
   markers = [],
   yFormat = String,
   summary,
+  note,
 }: Props) {
-  const all = lines.flatMap((l) => l.values);
+  const all = lines.flatMap((l) => l.points.map((p) => p.y)).filter(Number.isFinite);
   if (all.length === 0) {
     return (
       <figure class="chart">
@@ -57,15 +74,12 @@ export function LineChart({
             No data yet. End a turn to see results.
           </text>
         </svg>
+        {note && <p class="chart-note">{note}</p>}
       </figure>
     );
   }
   let lo = Math.min(...all);
   let hi = Math.max(...all);
-  if (!Number.isFinite(lo)) {
-    lo = 0;
-    hi = 1;
-  }
   const pad = (hi - lo) * 0.1 || Math.abs(hi) * 0.05 || 1;
   lo -= pad;
   hi += pad;
@@ -76,6 +90,7 @@ export function LineChart({
   const sy = (y: number) => M.top + ih - ((y - lo) / (hi - lo)) * ih;
   const xTicks: number[] = [];
   for (let x = 0; x <= xMax; x += 12) xTicks.push(x);
+  const hasHollow = lines.some((l) => l.points.some((p) => p.hollow));
 
   return (
     <figure class="chart">
@@ -101,14 +116,33 @@ export function LineChart({
           </g>
         ))}
         {lines.map((l) => (
-          <polyline
-            key={l.label}
-            fill="none"
-            stroke={l.color}
-            stroke-width={2.5}
-            stroke-dasharray={l.dash}
-            points={l.values.map((v, i) => `${sx(i)},${sy(v)}`).join(' ')}
-          />
+          <g key={l.label}>
+            <polyline
+              fill="none"
+              stroke={l.color}
+              stroke-width={2.5}
+              stroke-dasharray={l.dash}
+              points={l.points
+                .filter((p) => !p.hollow)
+                .map((p) => `${sx(p.x)},${sy(p.y)}`)
+                .join(' ')}
+            />
+            {l.points.map((p, i) =>
+              p.hollow ? (
+                <circle
+                  key={i}
+                  cx={sx(p.x)}
+                  cy={sy(p.y)}
+                  r={4}
+                  fill="var(--panel)"
+                  stroke={l.color}
+                  stroke-width={2}
+                />
+              ) : l.dots ? (
+                <circle key={i} cx={sx(p.x)} cy={sy(p.y)} r={3} fill={l.color} />
+              ) : null,
+            )}
+          </g>
         ))}
       </svg>
       <ul class="legend">
@@ -128,7 +162,16 @@ export function LineChart({
             {l.label}
           </li>
         ))}
+        {hasHollow && (
+          <li>
+            <svg width="12" height="12" aria-hidden="true">
+              <circle cx="6" cy="6" r="4" fill="none" stroke="var(--ink)" stroke-width="2" />
+            </svg>
+            Flagged incomplete (dropped)
+          </li>
+        )}
       </ul>
+      {note && <p class="chart-note">{note}</p>}
     </figure>
   );
 }

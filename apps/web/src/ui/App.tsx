@@ -1,9 +1,13 @@
-import { tickToYearMonth } from '@zoned-out/sim';
+import { useMemo } from 'preact/hooks';
+import { MANDATES, OBJECTIVES, shockCard, tickToYearMonth } from '@zoned-out/sim';
+import type { MandateId, Objective } from '@zoned-out/sim';
 import { MapCanvas } from '../render/MapCanvas.tsx';
-import { regimeName, TICKS_PER_TURN, TOTAL_TURNS, useGame } from '../game/useGame.ts';
-import type { GameState } from '../game/useGame.ts';
+import { firstLastValid, researcherView } from '../game/observe.ts';
+import { capName, regimeName, TICKS_PER_TURN, TOTAL_TURNS, useGame } from '../game/useGame.ts';
+import type { UiState } from '../game/useGame.ts';
 import { Levers } from './Levers.tsx';
 import { LineChart } from './LineChart.tsx';
+import type { Point } from './LineChart.tsx';
 
 const MONTHS = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
 const XMAX = TOTAL_TURNS * TICKS_PER_TURN;
@@ -13,54 +17,130 @@ function pct(a: number, b: number): string {
   return `${v >= 0 ? '+' : '−'}${Math.abs(v).toFixed(1)}%`;
 }
 
+/** Signed number with a real minus sign. */
+function signed(v: number, digits: number): string {
+  const r = Number(v.toFixed(digits));
+  return `${r > 0 ? '+' : r < 0 ? '−' : '±'}${Math.abs(r).toFixed(digits)}`;
+}
+
+/** Rounded count with thousands separators. */
+function fmt(v: number): string {
+  return Math.round(v).toLocaleString('en-CA');
+}
+
 export function App() {
-  const { state, setDraft, endTurn, restart } = useGame();
-  const { snapshot, layout } = state;
+  const game = useGame();
+  const { state } = game;
 
   if (state.phase === 'error') {
     return (
       <main class="center">
-        <p role="alert">Something went wrong: {state.error}</p>
-        <button onClick={() => void restart(state.seed)}>Restart</button>
+        <div>
+          <p role="alert">Something went wrong: {state.error}</p>
+          <button onClick={game.setup}>Back to the start</button>
+        </div>
       </main>
     );
   }
-  if (!snapshot || !layout) {
+  if (state.phase === 'setup') return <Setup {...game} />;
+  if (!state.snapshot || !state.layout || !state.game || !state.draft) {
     return (
       <main class="center">
         <p aria-live="polite">Building the city…</p>
       </main>
     );
   }
+  return <Play {...game} />;
+}
 
+type Game = ReturnType<typeof useGame>;
+
+function Setup({ state, start, setMandate }: Game) {
+  return (
+    <main class="setup">
+      <h1>Zoned Out</h1>
+      <p class="lede">
+        You run housing policy for the Capital Regional District (Greater Victoria, BC) for five
+        years (20 quarters), starting in September 2023. The region is stylised as eight zones, with
+        starting numbers from public data where available. Set short-term rental rules, enforcement,
+        a vacancy tax, a rent cap, upzoning and non-market homes. Your results are compared with
+        what would have happened with no policy changes: same city, same luck.
+      </p>
+      <form
+        onSubmit={(e) => {
+          e.preventDefault();
+          void start(state.seed, state.mandate);
+        }}
+      >
+        <fieldset>
+          <legend>Choose your mandate</legend>
+          {(Object.keys(MANDATES) as MandateId[]).map((id) => (
+            <label class="radio" key={id}>
+              <input
+                type="radio"
+                name="mandate"
+                value={id}
+                checked={state.mandate === id}
+                onChange={() => setMandate(id)}
+              />
+              <span>
+                <strong>{MANDATES[id].name}</strong>
+                <small>{MANDATES[id].text}</small>
+              </span>
+            </label>
+          ))}
+        </fieldset>
+        <p class="muted">
+          Seed {state.seed}. Each seed picks one calibrated variant of the model and one sequence of
+          shocks.
+        </p>
+        <button class="primary" type="submit" data-testid="start">
+          Take office
+        </button>
+      </form>
+    </main>
+  );
+}
+
+function Play({ state, quote, setDraft, endTurn, setup }: Game) {
+  const snapshot = state.snapshot!;
+  const layout = state.layout!;
+  const g = state.game!;
+  const draft = state.draft!;
   const label = (x: number) => {
     const ym = tickToYearMonth(layout.start, x);
     return `${MONTHS[ym.month - 1]} ${String(ym.year).slice(2)}`;
   };
-  const s = snapshot.series;
-  const zones = s.zones;
-  const coveredSeries = sumZones(zones, (z) => z.covered, layout.scale);
-  const exemptSeries = sumZones(zones, (z) => !z.covered, layout.scale);
-  const first = (xs: number[]) => xs[0] ?? 0;
-  const lastv = (xs: number[]) => xs[xs.length - 1] ?? 0;
-  const dirty =
-    state.draft.strRegime !== snapshot.levers.strRegime ||
-    state.draft.enforcement !== snapshot.levers.enforcement;
+  const view = useMemo(
+    () => researcherView(snapshot, layout, state.seed, state.dataThroughTick),
+    [snapshot, layout, state.seed, state.dataThroughTick],
+  );
+  const markers = state.changes.map((c) => ({ x: c.tick, label: c.label }));
+  const blocked = (quote?.errors.length ?? 0) > 0;
+  const lastOf = (p: Point[]) => p[p.length - 1]?.y;
+  const cov = firstLastValid(view.covered);
+  const ex = firstLastValid(view.exempt);
+  const cpiLast = lastOf(view.cpi);
 
   return (
     <div class="app">
       <header class="topbar">
         <h1>Zoned Out</h1>
         <span>
-          Turn <strong data-testid="turn">{Math.min(state.turn + 1, TOTAL_TURNS)}</strong> /{' '}
+          Turn <strong data-testid="turn">{Math.min(g.turn + 1, TOTAL_TURNS)}</strong> /{' '}
           {TOTAL_TURNS}
         </span>
         <span>
           Date <strong data-testid="date">{label(snapshot.tick)}</strong>
         </span>
         <span>
-          Rule in force: <strong>{regimeName(snapshot.levers.strRegime)}</strong>, enforcement{' '}
-          {snapshot.levers.enforcement}/5
+          Budget <strong data-testid="budget">${g.budget.toFixed(1)}M</strong>
+        </span>
+        <span>
+          Political capital <strong data-testid="capital">{g.capital}</strong> / 12
+        </span>
+        <span>
+          Mandate <strong>{MANDATES[g.mandate].name}</strong>
         </span>
         <span class="seed">
           seed {state.seed}
@@ -71,42 +151,116 @@ export function App() {
 
       <main class="layout">
         <section class="left">
-          <MapCanvas layout={layout} snapshot={snapshot} />
+          {state.currentShock !== null && state.phase !== 'over' && (
+            <aside class="shock-card" role="status" aria-labelledby="shock-h">
+              <h2 id="shock-h">Shock: {shockCard(state.currentShock).name}</h2>
+              <p>{shockCard(state.currentShock).text}</p>
+              <small>
+                The same shock hits the no-policy comparison run, so it does not affect your score.
+              </small>
+            </aside>
+          )}
+          {state.final && <ScorecardPanel state={state} />}
           <div class="charts">
             <LineChart
-              title="Active entire-home STR listings"
+              title="Entire-home STR listings (quarterly scrape)"
               xMax={XMAX}
               xLabel={label}
-              markers={state.changes.map((c) => ({ x: c.tick, label: c.label }))}
+              yFormat={(y) => fmt(y)}
+              markers={markers}
               lines={[
-                { label: 'Covered areas', values: coveredSeries, color: '#d55e00' },
-                { label: 'Exempt areas', values: exemptSeries, color: '#009e73', dash: '6 4' },
+                { label: 'Covered areas', points: view.covered, color: '#d55e00', dots: true },
+                {
+                  label: 'Exempt areas',
+                  points: view.exempt,
+                  color: '#009e73',
+                  dash: '6 4',
+                  dots: true,
+                },
               ]}
-              summary={`Covered-area listings ${pct(first(coveredSeries), lastv(coveredSeries))} since the start; exempt areas ${pct(first(exemptSeries), lastv(exemptSeries))}.`}
+              summary={
+                cov && ex
+                  ? `Covered-area listings ${pct(cov[0].y, cov[1].y)} since the first snapshot; exempt areas ${pct(ex[0].y, ex[1].y)}.`
+                  : 'No snapshots yet.'
+              }
+              note={`Scraped counts are noisy. ${view.flagged > 0 ? `${view.flagged} snapshot${view.flagged === 1 ? ' was' : 's were'} flagged incomplete and left out.` : 'Incomplete scrapes are flagged and left out.'}`}
             />
             <LineChart
               title="Rent indices (start = 100)"
               xMax={XMAX}
               xLabel={label}
               yFormat={(y) => y.toFixed(0)}
-              markers={state.changes.map((c) => ({ x: c.tick, label: c.label }))}
+              markers={markers}
               lines={[
-                { label: 'Asking rents (new leases)', values: s.askingRentIndex, color: '#0072b2' },
                 {
-                  label: 'CPI-style (all tenants)',
-                  values: s.cpiRentIndex,
+                  label: 'All-tenant rents (published, quarterly)',
+                  points: view.cpi,
                   color: '#cc79a7',
                   dash: '6 4',
+                  dots: true,
                 },
+                ...(view.asking.length > 0
+                  ? [{ label: 'Asking rents (bought data)', points: view.asking, color: '#0072b2' }]
+                  : []),
               ]}
-              summary={`Asking rents ${pct(100, lastv(s.askingRentIndex))}, all-tenant rents ${pct(100, lastv(s.cpiRentIndex))} since the start.`}
+              summary={`Published all-tenant rents ${cpiLast !== undefined ? pct(100, cpiLast) : 'not yet available'}${view.asking.length > 0 ? `; asking rents ${pct(100, lastOf(view.asking)!)} (through ${label(state.dataThroughTick)})` : ''}.`}
+              note={
+                view.asking.length > 0
+                  ? `Asking-rent data covers months up to ${label(state.dataThroughTick)}.`
+                  : 'Buy asking-rent data to see what new leases cost.'
+              }
             />
           </div>
+          <MapCanvas layout={layout} snapshot={snapshot} />
         </section>
 
         <aside class="right">
-          <Levers draft={state.draft} disabled={state.phase !== 'playing'} onChange={setDraft} />
-          <Summary state={state} />
+          {state.phase !== 'over' && (
+            <Levers
+              draft={draft}
+              game={g}
+              quote={quote}
+              zoneNames={layout.zoneNames}
+              zoneCovered={layout.zoneCovered}
+              disabled={state.phase !== 'playing'}
+              onChange={setDraft}
+            />
+          )}
+          <section class="panel" aria-labelledby="sum-h">
+            <h2 id="sum-h">Since you took office</h2>
+            <dl class="kpis">
+              {[
+                { name: 'Covered-area listings', v: cov },
+                { name: 'Exempt-area listings', v: ex },
+              ].map((r) => (
+                <div key={r.name}>
+                  <dt>{r.name}</dt>
+                  <dd>
+                    {r.v ? `${fmt(r.v[0].y)} → ${fmt(r.v[1].y)} (${pct(r.v[0].y, r.v[1].y)})` : '–'}
+                  </dd>
+                </div>
+              ))}
+              <div>
+                <dt>All-tenant rents</dt>
+                <dd>{cpiLast !== undefined ? pct(100, cpiLast) : '–'}</dd>
+              </div>
+              <div>
+                <dt>STR rules</dt>
+                <dd>{regimeName(snapshot.levers.strRegime)}</dd>
+              </div>
+              <div>
+                <dt>Rent cap</dt>
+                <dd>{capName(snapshot.levers.rentCap)}</dd>
+              </div>
+              <div>
+                <dt>Fines and vacancy tax so far</dt>
+                <dd>${g.revenue.toFixed(2)}M</dd>
+              </div>
+            </dl>
+            <p class="muted">
+              Listings are scraped counts; they move for many reasons besides your rules.
+            </p>
+          </section>
           <section class="panel" aria-labelledby="log-h">
             <h2 id="log-h">Decisions</h2>
             {state.log.length === 0 ? (
@@ -114,7 +268,7 @@ export function App() {
             ) : (
               <ol class="log">
                 {state.log.map((l, i) => (
-                  <li key={i}>
+                  <li key={i} class={l.kind}>
                     Turn {l.turn} ({label(l.tick)}): {l.text}
                   </li>
                 ))}
@@ -128,19 +282,19 @@ export function App() {
         {state.phase === 'over' ? (
           <>
             <p data-testid="over">Your term is over.</p>
-            <button onClick={() => void restart(state.seed + 1)}>New term (new seed)</button>
+            <button onClick={setup}>New term (new seed)</button>
           </>
         ) : (
           <>
             <p class="muted">
-              {dirty
-                ? 'Changes take effect when you end the turn.'
-                : 'Each turn is one quarter (3 months).'}
+              {blocked
+                ? 'Fix the problems in the levers panel to end the turn.'
+                : 'Each turn is one quarter (3 months). Changes take effect when you end the turn.'}
             </p>
             <button
               class="primary"
               data-testid="end-turn"
-              disabled={state.phase !== 'playing'}
+              disabled={state.phase !== 'playing' || blocked}
               onClick={() => void endTurn()}
             >
               {state.phase === 'busy' ? 'Simulating…' : 'End turn'}
@@ -152,67 +306,63 @@ export function App() {
   );
 }
 
-function Summary({ state }: { state: GameState }) {
-  const s = state.snapshot!.series;
-  const scale = state.layout!.scale;
-  const z = s.zones;
-  const first = (xs: number[]) => xs[0] ?? 0;
-  const lastv = (xs: number[]) => xs[xs.length - 1] ?? 0;
-  const last = s.housed.length - 1;
-  if (last < 0) return null;
+const OBJECTIVE_LABEL: Record<Objective, string> = {
+  affordability: 'Renters paying over 30% of income',
+  stress: 'Housing-stress rate (doubled up or left)',
+  supply: 'Homes completed',
+  fiscal: 'Fiscal balance vs status quo',
+  visitors: 'Visitor beds (STR listings)',
+  capital: 'Political capital left',
+};
+
+function ScorecardPanel({ state }: { state: UiState }) {
+  const f = state.final!;
+  const e = f.card.effects;
+  const weights = MANDATES[state.mandate].weights;
+  const effect: Record<Objective, string> = {
+    affordability: `${signed(e.rentBurdenPp, 2)} pp`,
+    stress: `${signed(e.stressRatePp, 2)} pp`,
+    supply: `${signed(e.completions, 0)} homes`,
+    fiscal: `${signed(f.card.fiscalBalance, 1)} $M`,
+    visitors: `${signed(e.strListingsPct, 1)}%`,
+    capital: `${f.card.capital}`,
+  };
   return (
-    <section class="panel" aria-labelledby="sum-h">
-      <h2 id="sum-h">Since you took office</h2>
-      <dl class="kpis">
-        {[
-          { name: 'Covered-area listings', values: sumZones(z, (x) => x.covered, scale) },
-          { name: 'Exempt-area listings', values: sumZones(z, (x) => !x.covered, scale) },
-        ].map((g) => (
-          <div key={g.name}>
-            <dt>{g.name}</dt>
-            <dd>
-              {fmt(first(g.values))} → {fmt(lastv(g.values))} (
-              {pct(first(g.values), lastv(g.values))})
-            </dd>
-          </div>
-        ))}
-        <div>
-          <dt>Asking rents</dt>
-          <dd>{pct(100, lastv(s.askingRentIndex))}</dd>
-        </div>
-        <div>
-          <dt>Renters paying &gt; 30% of income</dt>
-          <dd>{(100 * lastv(s.rentBurdenShare)).toFixed(1)}%</dd>
-        </div>
-        <div>
-          <dt>Households that left (housing stress)</dt>
-          <dd>{fmt(lastv(s.gone) / scale)}</dd>
-        </div>
-      </dl>
-      {state.phase === 'over' && (
-        <p class="note">
-          These are raw before/after changes. Rents move for many reasons besides STR rules; the
-          debrief (coming later) compares your term with a no-policy counterfactual on the same
-          seed.
-        </p>
-      )}
+    <section class="panel scorecard" aria-labelledby="score-h" data-testid="scorecard">
+      <h2 id="score-h">End of term: your scorecard</h2>
+      <p class="muted">
+        Each effect compares your term with a no-policy run of the same city: same seed, same model
+        variant, same shocks.
+      </p>
+      <table>
+        <thead>
+          <tr>
+            <th scope="col">Objective</th>
+            <th scope="col">Effect</th>
+            <th scope="col">Points</th>
+            <th scope="col">Weight</th>
+          </tr>
+        </thead>
+        <tbody>
+          {OBJECTIVES.map((k) => (
+            <tr key={k}>
+              <th scope="row">{OBJECTIVE_LABEL[k]}</th>
+              <td>{effect[k]}</td>
+              <td>{signed(f.card.points[k], 1)}</td>
+              <td>×{weights[k]}</td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+      <p class="composite">
+        Mandate score ({MANDATES[state.mandate].name}):{' '}
+        <strong data-testid="composite">{signed(f.composite, 2)}</strong> points
+      </p>
+      <p class="muted">
+        Asking rents ended {signed(e.askingRentPct, 1)} index points (start = 100) versus no policy
+        (not scored directly). The debrief with uncertainty bands across model variants arrives in a
+        later version.
+      </p>
     </section>
   );
-}
-
-/** Element-wise sum of listings over the zones matching `pred`, in real units (agents / scale). */
-function sumZones(
-  zones: { covered: boolean; strListings: number[] }[],
-  pred: (z: { covered: boolean }) => boolean,
-  scale: number,
-): number[] {
-  const n = zones[0]?.strListings.length ?? 0;
-  const out = new Array<number>(n).fill(0);
-  for (const z of zones) if (pred(z)) for (let i = 0; i < n; i++) out[i]! += z.strListings[i]!;
-  return out.map((v) => Math.round(v / scale));
-}
-
-/** Rounded count with thousands separators. */
-function fmt(v: number): string {
-  return Math.round(v).toLocaleString('en-CA');
 }

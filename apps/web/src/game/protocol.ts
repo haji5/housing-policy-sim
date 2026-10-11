@@ -25,6 +25,9 @@ export interface Snapshot {
 export interface WorldLayout {
   zoneNames: string[];
   zoneCovered: boolean[];
+  /** Real dwellings and renter households per zone at the start (map layout). */
+  zoneDwellings: number[];
+  zoneRenters: number[];
   start: { year: number; month: number };
   /** Calibrated parameter set used for this game (-1 = uncalibrated defaults). */
   ensembleMember: number;

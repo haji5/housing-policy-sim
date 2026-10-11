@@ -55,6 +55,7 @@ h2 {
 }
 .app > main {
   overflow: auto;
+  min-height: 0;
 }
 
 .topbar,
@@ -86,7 +87,24 @@ h2 {
   grid-template-columns: minmax(0, 1fr) 380px;
   gap: 1rem;
   padding: 1rem;
-  align-items: start;
+  align-items: stretch;
+}
+/* Wide screens: the two columns scroll independently, so the charts and the levers both stay
+   reachable on a laptop screen. */
+@media (min-width: 1001px) {
+  .app > main.layout {
+    overflow: hidden;
+    height: 100%;
+  }
+  .layout > .left,
+  .layout > .right {
+    overflow-y: auto;
+    max-height: 100%;
+    padding-bottom: 1rem;
+  }
+  .layout {
+    padding-bottom: 0;
+  }
 }
 @media (max-width: 1000px) {
   .layout {
@@ -264,4 +282,128 @@ button.primary {
 button:disabled {
   opacity: 0.6;
   cursor: progress;
+}
+
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+}
+
+/* Start screen */
+.setup {
+  max-width: 40rem;
+  margin: 3rem auto;
+  padding: 0 1rem;
+}
+.setup h1 {
+  font-size: 2rem;
+  margin-bottom: 0.75rem;
+}
+.lede {
+  font-size: 1.05rem;
+  line-height: 1.5;
+}
+.setup fieldset {
+  background: var(--panel);
+  border: 1px solid var(--line);
+  padding: 0.75rem 1rem;
+}
+
+/* Levers */
+.cost {
+  font-weight: 400;
+  font-size: 0.8rem;
+  color: var(--muted);
+  margin-left: 0.25rem;
+}
+.cooldown {
+  display: block;
+  margin-top: 0.25rem;
+  color: #8a4b00;
+}
+.check {
+  display: flex;
+  gap: 0.5rem;
+  align-items: flex-start;
+  cursor: pointer;
+}
+.check span {
+  display: grid;
+}
+.upzone {
+  display: grid;
+  gap: 0.25rem;
+  margin-top: 0.4rem;
+}
+.upzone-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.9rem;
+}
+.upzone-row select {
+  font: inherit;
+  font-size: 0.875rem;
+  padding: 0.1rem 0.25rem;
+}
+.quote {
+  border-top: 1px solid var(--line);
+  padding-top: 0.5rem;
+  font-size: 0.9rem;
+}
+.quote p {
+  margin: 0.25rem 0;
+}
+.error {
+  color: #a01c00;
+  font-weight: 600;
+}
+
+/* Shock card and scorecard */
+.shock-card {
+  background: #fff3e0;
+  border: 1px solid #e69f00;
+  border-left: 6px solid #d55e00;
+  padding: 0.6rem 1rem;
+}
+.shock-card p {
+  margin: 0.25rem 0;
+}
+.log .shock {
+  color: #8a4b00;
+  font-weight: 600;
+}
+.scorecard {
+  margin-bottom: 0;
+  border: 2px solid var(--accent);
+}
+.scorecard table {
+  border-collapse: collapse;
+  width: 100%;
+  font-size: 0.9rem;
+  font-variant-numeric: tabular-nums;
+}
+.scorecard th,
+.scorecard td {
+  padding: 0.3rem 0.5rem;
+  border-bottom: 1px solid var(--line);
+  text-align: right;
+}
+.scorecard th[scope='row'],
+.scorecard thead th:first-child {
+  text-align: left;
+  font-weight: 400;
+}
+.composite {
+  font-size: 1.1rem;
+}
+.chart-note {
+  margin: 0.25rem 0 0;
+  font-size: 0.8rem;
+  color: var(--muted);
 }

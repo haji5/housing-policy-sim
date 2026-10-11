@@ -61,6 +61,8 @@ self.onmessage = (ev: MessageEvent<WorkerRequest>) => {
           layout: {
             zoneNames: player.zones.map((z) => z.spec.name),
             zoneCovered: player.zones.map((z) => z.spec.covered),
+            zoneDwellings: player.zones.map((z) => z.spec.dwellings),
+            zoneRenters: player.zones.map((z) => z.spec.renterHouseholds),
             start: player.scenario.start,
             ensembleMember: member,
             ensembleSize: ENSEMBLE.sets.length,

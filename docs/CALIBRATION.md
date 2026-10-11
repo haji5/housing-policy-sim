@@ -69,7 +69,59 @@ below (filled in after each full calibration run).
 
 <!-- results-summary -->
 
-### Run of 2026-10-10 (sim 0.4.0, spin-up model, ADR 0005)
+### Run of 2026-10-10 evening (sim 0.5.0, M5 full mechanics, ADRs 0007-0009)
+
+Same pipeline and budget as M3: 8,192 Sobol draws, 4 Nelder-Mead starts, 4,096 ABC proposals,
+16 parameters (M3's 14 plus `host.vacantHeldShare` and `host.sellRateAnnual`). 600 accepted
+(D ≤ 93.3), **effective sample size 21**, ensemble of 300 sets of which 179 are distinct. Best
+distance 43.4 (stage-1 median 375). Wall time 44.2 min on 16 workers (runs are ~0.23 s, up from
+~0.15 s).
+
+**Fit, M5 vs M3** (ensemble mean; pass = within 2 SE, paths judged at the last point).
+
+| ID  | Target   | M5 sim mean (5-95%)                   | M3 sim mean | Pass (M5)  |
+| --- | -------- | ------------------------------------- | ----------- | ---------- |
+| T1  | −0.390   | −0.399 (−0.548 to −0.243)             | −0.374      | yes        |
+| T1a | −0.124   | −0.083 (−0.185 to −0.011)             | −0.100      | yes        |
+| T2  | −0.115   | −0.220 (−0.397 to −0.114)             | −0.228      | **no** (¼) |
+| T3  | −0.432   | −0.505 (−0.708 to −0.341), RMSE 0.054 | −0.506      | yes        |
+| T4  | +0.062   | +0.191 (+0.037 to +0.318), RMSE 0.059 | +0.181      | yes        |
+| T5  | 37.6%    | 26.4% (21.4% to 31.1%)                | 31.2%       | **no**     |
+| T6a | 70.0%    | 58.4% (49.9% to 69.3%)                | 62.4%       | **no**     |
+| T6b | 9.4%     | 7.9% (1.5% to 15.7%)                  | 7.7%        | yes        |
+| T7  | leads ≈0 | −0.026, −0.015, +0.010, −0.007        | ≈0          | yes        |
+| H1  | −0.024   | −0.382 (−0.715 to −0.172), held out   | −0.261      | **no**     |
+
+**M3's acceptance still holds in the same places.** Everything that passed in M3 passes (T1, T1a,
+T3, T4, T6b, T7), and the same three targets miss (T2, T5, T6a). Nothing was tuned by hand.
+What got worse:
+
+- **Overall fit and ESS.** The best distance doubled (19.7 → 43.4) and the ABC tolerance with it
+  (45 → 93). The importance weights are concentrated: ESS 21 against 146 in M3, so the 300-set
+  ensemble repeats its best members (179 distinct). The ensemble still spans the posterior
+  ranges below, but it is a thinner sample than M3's. A larger stage 3 (for example 16,384
+  proposals, about 3 hours) would raise the ESS; it has not been run.
+- **T5 (multi-host share) misses by more** (26.4% vs 31.2% in M3, target 37.6%), and **T6a**
+  slightly more (58.4% vs 62.4%). In M5, non-principal-residence units can also be sold or held
+  empty, and multi-listing hosts own only non-PR units, so every new exit route removes
+  multi-host listings first. The mechanism that would offset this (multi-hosts complying less)
+  is again pinned near its prior edge (`multiComplianceShift` 5% quantile −0.39). This is the
+  same structural limitation as in M3, stronger now; it is reported, not fitted.
+- **H1 (Salt Spring, held out)** misses by more (−0.38 vs −0.26 in M3; data −0.02).
+
+**Identification changes.** `sellRateAnnual` is identified (contraction 0.61) and
+`vacantHeldShare` is not (0.09). `complianceBase` fell from partly to weakly identified
+(contraction −0.24: the posterior is as wide as the prior), and `prShare` from identified to
+partly (0.35). The strongest trade-off is `complianceBase` vs `detectMax` (−0.58): compliance at
+once and detection later produce the same listing path. Identified: `multiComplianceShift`,
+`detectMax`, `delistProb`, `regTakeup`, `exemptClaimShare`, `sellRateAnnual`.
+
+**Rents (not fitted).** STR-attributable change in asking rents by Jun 2026: −0.48% (5-95%
+−0.66% to −0.30%), 78% of the ensemble inside the first project's −3.3% to −0.4% bound (83% in
+M3). On the CPI-style index −0.24%: too small to detect against a +19.5% CPI rise. True effect on
+covered listings −0.585 log points; on never-covered listings +0.083 (spillover).
+
+### Run of 2026-10-10 (sim 0.4.0, spin-up model, ADR 0005; superseded by the M5 run above)
 
 8,192 Sobol draws, 4 Nelder-Mead starts, 4,096 ABC proposals; 600 accepted (D ≤ 45.1), effective
 sample size 146, ensemble of 300 sets. Best distance 19.7 (stage-1 median 346). Wall time 28.6 min

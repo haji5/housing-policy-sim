@@ -1,7 +1,8 @@
 import { expect, test } from '@playwright/test';
 
-test('game loads with the title and an End turn button', async ({ page }) => {
+test('start screen leads to the game with an End turn button', async ({ page }) => {
   await page.goto('/?seed=1');
   await expect(page.getByRole('heading', { name: 'Zoned Out' })).toBeVisible();
-  await expect(page.getByTestId('end-turn')).toBeEnabled();
+  await page.getByTestId('start').click();
+  await expect(page.getByTestId('end-turn')).toBeEnabled({ timeout: 30_000 });
 });

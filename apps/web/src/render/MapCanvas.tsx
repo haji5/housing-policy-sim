@@ -3,8 +3,9 @@ import { hash32, Tenure } from '@zoned-out/sim';
 import type { Snapshot, WorldLayout } from '../game/protocol.ts';
 
 /**
- * Placeholder map (M2): every dwelling is a small square in its zone's block. Positions are a
- * fixed hashed shuffle so building types are scattered rather than banded. The M6 art pass
+ * Placeholder map (M2): every dwelling is a small square in its zone's block. The starting stock is
+ * a fixed hashed shuffle so building types are scattered rather than banded; new construction is
+ * appended at the end of its zone's block so existing homes keep their place. The M6 art pass
  * replaces this with the isometric renderer.
  */
 const ZONE_GAP = 24;
@@ -17,6 +18,8 @@ export const MAP_COLORS = {
   ltr: '#0072b2',
   vacant: '#ffffff',
   vacantEdge: '#0072b2',
+  held: '#3a3a3a',
+  construction: '#cc79a7',
   str: '#e69f00',
   strPr: '#f0e442',
   bg: '#e8f1e4',
@@ -76,21 +79,25 @@ function packBlocks(layout: WorldLayout, perZone: Int32Array[], cell: number, as
   return { blocks, width, height: y + rowH + 12 };
 }
 
-/** Cells shrink for big cities; the block shape that gives the shortest map wins. */
-function layoutBlocks(layout: WorldLayout): Geometry {
+/**
+ * Cells shrink for big cities; the block shape that gives the shortest map wins. `nStart` is the
+ * size of the starting stock: dwellings from there on are construction, appended in id order.
+ */
+function layoutBlocks(layout: WorldLayout, zone: Uint8Array, nStart: number): Geometry {
   // Small cells so the whole map and the charts fit a laptop screen.
-  const n = layout.zone.length;
+  const n = zone.length;
   const cell = n > 30000 ? 2 : n > 15000 ? 3 : 4;
-  const ids: number[][] = layout.zoneNames.map(() => []);
-  for (let d = 0; d < n; d++) ids[layout.zone[d]!]!.push(d);
-  // Fixed hashed shuffle so building types are scattered rather than banded.
-  const perZone = ids.map((zoneIds) =>
-    Int32Array.from(
-      zoneIds
+  const start: number[][] = layout.zoneNames.map(() => []);
+  const built: number[][] = layout.zoneNames.map(() => []);
+  for (let d = 0; d < n; d++) (d < nStart ? start : built)[zone[d]!]!.push(d);
+  const perZone = start.map((zoneIds, zi) =>
+    Int32Array.from([
+      ...zoneIds
         .map((d) => ({ d, k: hash32(7, d, 0, 1) }))
         .sort((a, b) => a.k - b.k)
         .map((e) => e.d),
-    ),
+      ...built[zi]!,
+    ]),
   );
   let best = packBlocks(layout, perZone, cell, 3);
   for (let aspect = 1.5; aspect <= 12; aspect += 0.5) {
@@ -102,7 +109,10 @@ function layoutBlocks(layout: WorldLayout): Geometry {
 
 export function MapCanvas({ layout, snapshot }: { layout: WorldLayout; snapshot: Snapshot }) {
   const ref = useRef<HTMLCanvasElement>(null);
-  const geo = useMemo(() => layoutBlocks(layout), [layout]);
+  // Starting stock size for this game (the first snapshot after a new layout).
+  const nStart = useMemo(() => snapshot.zone.length, [layout]);
+  const nNow = snapshot.zone.length;
+  const geo = useMemo(() => layoutBlocks(layout, snapshot.zone, nStart), [layout, nStart, nNow]);
 
   useEffect(() => {
     const canvas = ref.current;
@@ -127,10 +137,8 @@ export function MapCanvas({ layout, snapshot }: { layout: WorldLayout; snapshot:
         const t = tenure[d];
         if (t === Tenure.STR) {
           ctx.fillStyle = principalRes[d] ? MAP_COLORS.strPr : MAP_COLORS.str;
-          ctx.fillRect(cx, cy, s, s);
         } else if (t === Tenure.LTR && occupied[d]) {
           ctx.fillStyle = MAP_COLORS.ltr;
-          ctx.fillRect(cx, cy, s, s);
         } else if (t === Tenure.LTR) {
           ctx.fillStyle = MAP_COLORS.vacant;
           ctx.fillRect(cx, cy, s, s);
@@ -138,17 +146,22 @@ export function MapCanvas({ layout, snapshot }: { layout: WorldLayout; snapshot:
             ctx.strokeStyle = MAP_COLORS.vacantEdge;
             ctx.strokeRect(cx + 0.5, cy + 0.5, s - 1, s - 1);
           }
+          continue;
+        } else if (t === Tenure.VACANT) {
+          ctx.fillStyle = MAP_COLORS.held;
+        } else if (t === Tenure.CONSTRUCTION) {
+          ctx.fillStyle = MAP_COLORS.construction;
         } else {
           ctx.fillStyle = MAP_COLORS.owner;
-          ctx.fillRect(cx, cy, s, s);
         }
+        ctx.fillRect(cx, cy, s, s);
       }
     }
   }, [geo, snapshot, layout]);
 
   const counts = snapshot.series.zones.map((z) => z.strListings[z.strListings.length - 1] ?? 0);
   const alt = layout.zoneNames
-    .map((n, i) => `${n}: about ${Math.round(counts[i]! / layout.scale)} STR listings`)
+    .map((n, i) => `${n}: about ${Math.round((counts[i] ?? 0) / layout.scale)} STR listings`)
     .join('; ');
   return (
     <div class="map">
@@ -165,6 +178,12 @@ export function MapCanvas({ layout, snapshot }: { layout: WorldLayout; snapshot:
         </li>
         <li>
           <span class="sw sw-vac" /> For rent (vacant)
+        </li>
+        <li>
+          <span class="sw" style={{ background: MAP_COLORS.held }} /> Held empty
+        </li>
+        <li>
+          <span class="sw" style={{ background: MAP_COLORS.construction }} /> Under construction
         </li>
         <li>
           <span class="sw" style={{ background: MAP_COLORS.owner }} /> Owner-occupied

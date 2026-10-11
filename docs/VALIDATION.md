@@ -136,3 +136,66 @@ fall than to understate it: the true effect is plausibly 0-20% smaller than −0
 mechanisms (tourist demand shifting in proportion to exempt demand; investor purchases responding to
 STR profits) are ASSUMED functional forms. The truth here is the Phase 1 window average; the
 first project's Phase 2 term is not examined.
+
+## 4. Balance playtests (M5)
+
+**Question (PLAN §10 M5).** With all six levers, the scorecard and the mandates, does any single
+strategy dominate? Five scripted strategies (`packages/sim/src/playtest.ts`) play full 20-turn
+terms under the game rules, each against its paired no-policy run (same seed, same ensemble
+member, same shock cards), on seeds 1-8 with the M5 ensemble:
+`pnpm sim playtest --seeds 1,2,3,4,5,6,7,8 --out calibration/reports/playtest.json`.
+
+| Strategy                                                   | Rent burden (pp) | Stress rate (pp) | Completions | STR listings | Asking rent (pts) | Fiscal ($M) |
+| ---------------------------------------------------------- | ---------------: | ---------------: | ----------: | -----------: | ----------------: | ----------: |
+| Status quo                                                 |             0.00 |             0.00 |           0 |           0% |              0.00 |         0.0 |
+| STR crackdown (rule + registry, max enforcement)           |            −0.22 |            +0.04 |         −40 |         −40% |             −0.32 |       −17.8 |
+| Supply push (aggressive upzoning + 10 non-market/qtr)      |            −0.22 |            −0.15 |      +6,809 |          +1% |             −0.84 |       −30.0 |
+| Tenant protection (1% cap, 3% vacancy tax, PR rule)        |            −2.73 |            −0.15 |        −513 |         −24% |             −0.75 |      +162.6 |
+| Balanced (rule + registry, 1% vacancy tax, upzoning, data) |            −0.74 |            −0.06 |      +1,824 |         −38% |             −1.35 |       +83.6 |
+
+Effects are means over the 8 seeds, versus the paired no-policy run. Asking rent is the gap in
+the asking-rent index (start = 100) at the end of the term.
+
+**Mandate scores** (mean points; per-seed winners in brackets):
+
+| Strategy          |           Balanced |      Affordability |    Balanced budget |            Tourism |
+| ----------------- | -----------------: | -----------------: | -----------------: | -----------------: |
+| Status quo        |              +2.00 |              +0.92 |              +1.85 |              +1.38 |
+| STR crackdown     |              −1.60 |              −0.64 |              −1.12 |              −6.62 |
+| Supply push       |     +4.28 (5 of 8) |     +3.57 (2 of 8) |              +2.61 | **+3.02** (7 of 8) |
+| Tenant protection | **+4.58** (3 of 8) | **+4.90** (6 of 8) | **+8.01** (8 of 8) |     +0.53 (1 of 8) |
+| Balanced          |              +1.42 |              +1.77 |              +3.70 |              −3.84 |
+
+**Plain answer: no single strategy dominates, but tenant protection is strong.**
+
+- **Pareto check over the six objectives:** only the STR crackdown is dominated (by the balanced
+  mix, which does at least as well on every objective). Status quo, supply, tenant protection
+  and balanced are each best or second-best on something.
+- **Winners differ by mandate and by seed.** Supply wins the tourism mandate and most seeds of the
+  balanced one; tenant protection wins the budget mandate on every seed and affordability on 6 of 8. Its balanced-mandate mean (+4.58) beats supply's (+4.28) only because of one seed (seed 8,
+  +10.7); per seed, supply wins 5 of 8.
+- **Why tenant protection scores well:** the 3% vacancy tax raises about $160M over the term,
+  and the fiscal objective is worth 1 point per $10M (ASSUMED, ADR 0009). Its supply cost is
+  real but modest in points (−513 completions ≈ −1 point). Its results vary most across model
+  variants (balanced-mandate score 2.0 to 10.7 across seeds), so it is also the riskiest
+  strategy. Points scales were not re-tuned after this run.
+- **The STR crackdown loses on every mandate.** It cuts listings by 40% (a large visitor-capacity
+  cost) and moves rents and stress by amounts too small to detect in a real data set
+  (asking rents −0.3 points; the stress rate slightly up). That is the Bill 35 lesson the game is
+  built around.
+
+## 5. Known limitations (M5)
+
+Measured with the M5 ensemble (members 0, 50, …, 250; seed 7; no policy; 72 months):
+
+- **Held-empty stock creeps up** by about 16% over six years with no policy
+  (`host.vacantHeldShare` is weakly identified). Games are scored against the paired no-policy
+  run, so the drift cancels in the score but shows on the map.
+- **Housing-stress levels are not calibrated.** The rent-burden share is about 68% and about 15% of
+  renter households double up or leave over six years: income (ASSUMPTIONS A31) and
+  `maxRentShare` are VERIFY/ASSUMED. The scorecard therefore uses changes in the stress rate
+  against the no-policy run, never the level.
+- **Placebo drift.** With no policy, the covered-minus-exempt listing gap drifts within about ±0.05
+  log points over 64 months (ADR 0005), so small in-game DiD readings are noise.
+- **ESS 21** in the M5 calibration (CALIBRATION.md): the game's 300 parameter sets contain 179
+  distinct ones.

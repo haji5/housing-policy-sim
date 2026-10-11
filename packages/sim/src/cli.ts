@@ -309,7 +309,9 @@ function sdMoments(ms: Moments[]): Moments {
 
 /**
  * True causal effects of the historical policy at the last snapshot, from a paired (same-seed)
- * no-policy run: covered listings, exempt listings, asking-rent and CPI-style index.
+ * no-policy run: covered listings, exempt listings, asking-rent and CPI-style index. Also two
+ * levels of the policy run for sensitivity analysis: the end rent-burden share and completions over
+ * the window (real units).
  */
 function trueEffects(hist: RunOutput, none: RunOutput): Record<string, number> {
   const end = hist.series.tick.length - 1;
@@ -323,6 +325,10 @@ function trueEffects(hist: RunOutput, none: RunOutput): Record<string, number> {
     exemptListings: Math.log(Math.max(1, sum(hist, never)) / Math.max(1, sum(none, never))),
     askingRent: Math.log(hist.series.askingRentIndex[end]! / none.series.askingRentIndex[end]!),
     cpiRent: Math.log(hist.series.cpiRentIndex[end]! / none.series.cpiRentIndex[end]!),
+    rentBurden: hist.series.rentBurdenShare[end]!,
+    completions:
+      hist.series.zones.reduce((a, z) => a + z.completions.reduce((x, y) => x + y, 0), 0) /
+      hist.meta.scale,
   };
 }
 
