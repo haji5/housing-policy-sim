@@ -17,7 +17,7 @@ async function scrollTop(page: Page): Promise<void> {
     await page.locator(sel).evaluate((el) => el.scrollTo(0, 0));
 }
 
-const SHOTS = resolve(dirname(fileURLToPath(import.meta.url)), '../../../docs/screenshots/m5');
+const SHOTS = resolve(dirname(fileURLToPath(import.meta.url)), '../../../docs/screenshots/m6');
 
 test('play a full 20-turn term with the principal-residence rule', async ({ page }) => {
   test.setTimeout(180_000);

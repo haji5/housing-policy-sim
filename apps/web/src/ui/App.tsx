@@ -2,15 +2,21 @@ import { useMemo } from 'preact/hooks';
 import { MANDATES, OBJECTIVES, shockCard, tickToYearMonth } from '@zoned-out/sim';
 import type { MandateId, Objective } from '@zoned-out/sim';
 import { MapCanvas } from '../render/MapCanvas.tsx';
+import { IsoMap } from '../render/iso/IsoMap.tsx';
 import { firstLastValid, researcherView } from '../game/observe.ts';
 import { capName, regimeName, TICKS_PER_TURN, TOTAL_TURNS, useGame } from '../game/useGame.ts';
 import type { UiState } from '../game/useGame.ts';
 import { Levers } from './Levers.tsx';
 import { LineChart } from './LineChart.tsx';
+import { Logo } from './Logo.tsx';
 import type { Point } from './LineChart.tsx';
 
 const MONTHS = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
 const XMAX = TOTAL_TURNS * TICKS_PER_TURN;
+/** ?map=flat keeps the M2 placeholder map (fallback and debugging). */
+const FLAT_MAP =
+  typeof window !== 'undefined' &&
+  new URLSearchParams(window.location.search).get('map') === 'flat';
 
 function pct(a: number, b: number): string {
   const v = (100 * (b - a)) / a;
@@ -58,7 +64,9 @@ type Game = ReturnType<typeof useGame>;
 function Setup({ state, start, setMandate }: Game) {
   return (
     <main class="setup">
-      <h1>Zoned Out</h1>
+      <h1>
+        <Logo scale={4} />
+      </h1>
       <p class="lede">
         You run housing policy for the Capital Regional District (Greater Victoria, BC) for five
         years (20 quarters), starting in September 2023. The region is stylised as eight zones, with
@@ -125,7 +133,9 @@ function Play({ state, quote, setDraft, endTurn, setup }: Game) {
   return (
     <div class="app">
       <header class="topbar">
-        <h1>Zoned Out</h1>
+        <h1>
+          <Logo scale={2} />
+        </h1>
         <span>
           Turn <strong data-testid="turn">{Math.min(g.turn + 1, TOTAL_TURNS)}</strong> /{' '}
           {TOTAL_TURNS}
@@ -211,7 +221,11 @@ function Play({ state, quote, setDraft, endTurn, setup }: Game) {
               }
             />
           </div>
-          <MapCanvas layout={layout} snapshot={snapshot} />
+          {FLAT_MAP ? (
+            <MapCanvas layout={layout} snapshot={snapshot} />
+          ) : (
+            <IsoMap layout={layout} snapshot={snapshot} />
+          )}
         </section>
 
         <aside class="right">

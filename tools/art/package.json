@@ -1,0 +1,18 @@
+{
+  "name": "@zoned-out/art",
+  "version": "0.0.0",
+  "private": true,
+  "description": "Procedural pixel-art pipeline: palette-indexed sprites to an atlas PNG + JSON.",
+  "license": "MIT",
+  "type": "module",
+  "scripts": {
+    "art": "node src/build.ts",
+    "test": "vitest run",
+    "typecheck": "tsc -p tsconfig.json"
+  },
+  "devDependencies": {
+    "@types/node": "24.19.2",
+    "typescript": "6.0.3",
+    "vitest": "5.0.3"
+  }
+}

@@ -13,3 +13,4 @@ calibration/priors.json
 calibration/inputs/
 packages/sim/src/params/
 packages/sim/src/scenarios/
+apps/web/public/atlas/

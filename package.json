@@ -18,6 +18,7 @@
     "format": "prettier --write .",
     "typecheck": "pnpm -r --if-present typecheck",
     "sim": "node packages/sim/src/cli.ts",
+    "art": "node tools/art/src/build.ts",
     "calibrate": "node scripts/py.mjs calibrate",
     "calibrate:smoke": "node scripts/py.mjs smoke",
     "validate": "node scripts/py.mjs validate",
