@@ -124,4 +124,9 @@ export const Purpose = {
   REG_TAKEUP: 22,
   INVESTOR_ENTRY: 23,
   ANTICIPATE: 24,
+  // Observation layer (researcher view, ADR 0006): never used by the model itself.
+  OBS_COMPLETE: 25,
+  OBS_ZONE: 26,
+  OBS_TRUNCATED: 27,
+  OBS_CPI: 28,
 } as const;

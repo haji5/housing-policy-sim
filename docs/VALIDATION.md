@@ -68,6 +68,71 @@ Sobol indices over the full ensemble are planned for M5, after the model gains i
   too small to detect against CPI noise (ASSUMPTIONS O7: 2.4% month-to-month).
 - **In-sample misses** (T2, T5, T6a) are diagnosed in [CALIBRATION.md](CALIBRATION.md#results).
 
-## 3. DiD-recovery experiment
+## 3. DiD-recovery experiment (M4)
 
-M4.
+**Question.** The first project's headline estimate (T1: Phase 1 cut covered-area entire-home
+listings by −0.390 log points) compares covered areas with three small exempt areas. If the rule
+pushes STR demand and investors into those exempt areas, the control group is itself treated
+(a SUTVA violation) and the DiD overstates the effect. Inside the model the truth is known, so we
+can measure the bias.
+
+**Design** ([`calibration/did_recovery.py`](../calibration/did_recovery.py), report
+[`calibration/reports/did_recovery.md`](../calibration/reports/did_recovery.md)). For 60 ensemble
+members × 5 spillover strengths (0, 0.5, 1, 2, 3 × each member's calibrated `demandSpillover` and
+`investorEntry`), the sim runs the Historical Bill 35 policy and no policy on the same seed
+(common random numbers). The **truth** is the mean over the Phase 1 snapshots (Jun 2024-Mar 2025)
+of log covered listings with the policy minus without it. The **estimate** is the first project's
+regression, `log(1+n) ~ antic + phase1 + phase2 | zone + month` with zone-clustered SEs, run with
+pyfixest on the researcher view (ADR 0006): quarterly snapshots with scrape noise, 7.7% truncated
+snapshots, and the first project's 75% flag rule. Salt Spring leaves the control group at its
+opt-in, as in the first project. Ten members per level also get placebo-in-space randomization
+inference over all 56 three-zone control groups.
+
+![DiD recovery](../calibration/reports/did_recovery.png)
+
+| Spillover | True effect | DiD estimate |  Mean bias | Bias, 5-95% of runs | 95% CI covers truth |
+| --------: | ----------: | -----------: | ---------: | ------------------: | ------------------: |
+|        0× |      −0.346 |       −0.339 |     +0.007 |    −0.108 to +0.150 |                 93% |
+|      0.5× |      −0.350 |       −0.361 |     −0.010 |    −0.146 to +0.141 |                 93% |
+|    **1×** |  **−0.348** |   **−0.384** | **−0.037** |    −0.165 to +0.086 |                 92% |
+|        2× |      −0.356 |       −0.410 |     −0.054 |    −0.196 to +0.064 |                 87% |
+|        3× |      −0.356 |       −0.437 |     −0.080 |    −0.221 to +0.042 |                 75% |
+
+**Plain answer: yes, the DiD is biased, and in the direction that overstates the effect.** At the
+calibrated spillover strength the covered-vs-exempt DiD estimates −0.384 against a true effect of
+−0.348. It overstates the fall in covered listings by 0.037 log points, about 11% of the true
+effect. The bias grows roughly linearly with spillover: about zero (+0.007) with no spillover,
+−0.054 at twice the calibrated strength and −0.080 at three times (23% of the true effect). Read
+back onto the real estimate, T1 = −0.390 would correspond to a true effect of about −0.35 at the
+calibrated spillover, and anywhere from about −0.40 (no spillover) to −0.31 (3×).
+
+What drives it, and what does not:
+
+- **Spillover into the control group is most of it.** In a 24-member check at 1×, the policy
+  raised listings in the control zones by +0.028 log points (equal weight per zone, as in the
+  regression); at 3× by +0.062. The DiD subtracts that rise as if it were the counterfactual
+  trend. The remaining ~0.01-0.02 comes from the regression's equal zone weighting and its
+  pre-period baseline (it is about −0.01 even with no spillover).
+- **Measurement noise adds almost no bias.** The same regression on the noise-free true panel
+  gives nearly the same mean (−0.388 vs −0.384 at 1×). Scrape noise and truncation add a run-level
+  SD of about 0.03. The first project's 75% rule catches nearly all truncated snapshots (0.02 missed
+  per run), but it also drops a complete snapshot in about 7% of runs, when the policy's own sharp
+  fall trips it. Runs with a false flag are not more biased (mean bias +0.015 vs −0.040 at 1×).
+- **Single-run error is large compared with the bias.** Even with no spillover the bias ranges
+  from −0.11 to +0.15 across runs (SD 0.085): with three small control areas, idiosyncratic swings
+  in the control zones move a single estimate a lot. The zone-clustered 95% CI still covers the
+  truth 92-93% of the time up to 1×, falling to 75% at 3× as bias grows relative to the SE.
+- **Inference.** The RI p-value sits at its floor of 1/56 = 0.018 in the median run at every level:
+  the true covered-area effect is far larger than any placebo assignment. The real data's RI p was
+  0.011. So the existence of a large effect is robust; its size is overstated by roughly 0-0.08 log
+  points depending on spillover.
+
+**Why this cannot be settled with the listings data.** Spillover strength is weakly identified by
+the calibration (contraction −0.04 for `demandSpillover` and 0.10 for `investorEntry`,
+CALIBRATION.md). Within the model, the first project's estimate is more likely to overstate the
+fall than to understate it: the true effect is plausibly 0-20% smaller than −0.390.
+
+**Caveats.** This is a property of the model, not proof about the real world: the spillover
+mechanisms (tourist demand shifting in proportion to exempt demand; investor purchases responding to
+STR profits) are ASSUMED functional forms. The truth here is the Phase 1 window average; the
+first project's Phase 2 term is not examined.

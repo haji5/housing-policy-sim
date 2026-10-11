@@ -9,10 +9,15 @@
  *       Each input line: {"id": any, "params": <ParamOverrides>}. Runs the historical policy
  *       (and with --counterfactual also "none") over the calibration window for every seed, and
  *       writes {"id", "moments" (mean over seeds), "sd" (sd over seeds), "effects"?} per line.
+ *   pnpm sim panel --in draws.jsonl --out panels.jsonl
+ *       Each input line: {"id", "params": <ParamOverrides>, "seed"}. Runs "historical" and "none"
+ *       on the same seed over the calibration window and writes the researcher-view panel at the
+ *       scenario's snapshot ticks (real units): {"id", "snapshotTicks", "zones", "observed",
+ *       "hist", "none", "truncated", "incomplete"}. Used by calibration/did_recovery.py (M4).
  */
 import { readFileSync, writeFileSync } from 'node:fs';
 import { parseArgs } from 'node:util';
-import { computeMoments, DEFAULT_PARAMS, mergeParams, runSim } from './index.ts';
+import { computeMoments, DEFAULT_PARAMS, mergeParams, researcherPanel, runSim } from './index.ts';
 import type { Moments, ParamOverrides, Params, PolicyEvent, RunOutput } from './index.ts';
 
 /** Calibration window: Jun 2022 (tick -15) to Jun 2026 (tick 33). */
@@ -116,8 +121,52 @@ function main(argv: string[]): void {
     return;
   }
 
+  if (command === 'panel') {
+    if (!values.in || !values.out) throw new Error('panel needs --in and --out');
+    const lines = readFileSync(values.in, 'utf8')
+      .split(/\r?\n/)
+      .filter((l) => l.trim());
+    const outLines: string[] = [];
+    for (const line of lines) {
+      const draw = JSON.parse(line) as { id: unknown; params: ParamOverrides; seed: number };
+      const p = mergeParams(params, draw.params);
+      const cal = (pol: string) =>
+        runSim({
+          scenario: values.scenario,
+          params: p,
+          seed: draw.seed,
+          policy: pol,
+          ticks: CAL_TICKS,
+          preTicks: CAL_PRE,
+        });
+      const hist = cal('historical');
+      const none = cal('none');
+      const ticks = hist.meta.observation?.snapshotTicks;
+      if (!ticks) throw new Error(`Scenario "${values.scenario}" has no observation calendar`);
+      const obs = researcherPanel(hist, draw.seed, ticks);
+      outLines.push(
+        JSON.stringify({
+          id: draw.id,
+          snapshotTicks: ticks,
+          zones: hist.series.zones.map((z) => ({
+            name: z.name,
+            covered: z.covered,
+            ...(z.optInTick !== undefined ? { optInTick: z.optInTick } : {}),
+          })),
+          observed: obs.observed,
+          hist: obs.truth,
+          none: researcherPanel(none, draw.seed, ticks).truth,
+          truncated: obs.truncated,
+          incomplete: obs.incomplete,
+        }),
+      );
+    }
+    writeFileSync(values.out, outLines.join('\n') + '\n');
+    return;
+  }
+
   if (command !== 'run')
-    throw new Error(`Unknown command "${command}" (expected run | bench | batch)`);
+    throw new Error(`Unknown command "${command}" (expected run | bench | batch | panel)`);
   const out = runSim(base);
   if (values.summary) process.stdout.write(summarise(out));
   else if (values.out) writeFileSync(values.out, JSON.stringify(out));

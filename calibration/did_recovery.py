@@ -69,11 +69,13 @@ def run_panels(draws: list[dict], workers: int) -> list[dict]:
 
 
 def panel_frame(p: dict, which: str = "observed") -> pd.DataFrame:
+    """Zone x snapshot panel. The observed panel drops snapshots the analyst flags as incomplete
+    (never interpolated); the true panels keep every snapshot."""
     rows = []
     for zi, z in enumerate(p["zones"]):
         for k, t in enumerate(p["snapshotTicks"]):
-            if p["incomplete"][k]:
-                continue  # flagged truncated snapshot: excluded, never interpolated
+            if which == "observed" and p["incomplete"][k]:
+                continue  # flagged snapshot: excluded, never interpolated
             opt = z.get("optInTick")
             if not z["covered"] and opt is not None and t >= opt:
                 continue
@@ -151,7 +153,9 @@ def main(argv=None) -> int:
         est, se = estimate(df)
         clean, _ = estimate(panel_frame(p, "hist"))  # same estimator on the noise-free true panel
         row = {**m, "estimate": est, "se": se, "estimate_noiseless": clean, "truth": true_att(p),
-               "exempt_spillover": true_exempt(p), "dropped_snapshots": int(sum(p["incomplete"]))}
+               "exempt_spillover": true_exempt(p), "dropped_snapshots": int(sum(p["incomplete"])),
+               "false_flags": int(sum(f and not t for f, t in zip(p["incomplete"], p["truncated"]))),
+               "missed_truncations": int(sum(t and not f for f, t in zip(p["incomplete"], p["truncated"])))}
         if list(idx).index(m["member"]) < args.ri_members:
             row["ri_p"] = ri_pvalue(df, est)
         rows.append(row)
@@ -165,10 +169,12 @@ def main(argv=None) -> int:
         truth=("truth", "mean"), estimate=("estimate", "mean"), noiseless=("estimate_noiseless", "mean"),
         bias=("bias", "mean"), bias_lo=("bias", lambda x: np.quantile(x, 0.05)), bias_hi=("bias", lambda x: np.quantile(x, 0.95)),
         exempt=("exempt_spillover", "mean"), coverage=("covered95", "mean"), ri_p=("ri_p", "median"),
+        ri_reject=("ri_p", lambda x: float(np.mean(x.dropna() <= 0.05)) if x.notna().any() else float("nan")),
+        false_flags=("false_flags", "mean"), missed=("missed_truncations", "mean"),
     ).reset_index()
     t1 = next(t for t in load_targets() if t["id"] == "T1")
 
-    fig, ax = plt.subplots(figsize=(7.5, 4.2))
+    fig, (ax, bx) = plt.subplots(1, 2, figsize=(11, 4.2), gridspec_kw={"width_ratios": [1.15, 1]})
     for col, lab, c, mk in [("truth", "True effect on covered listings (paired runs)", "#000000", "o"),
                             ("estimate", "Covered-vs-exempt DiD estimate (researcher view)", "#0072B2", "s")]:
         g = res.groupby("level")[col]
@@ -176,12 +182,24 @@ def main(argv=None) -> int:
                     yerr=[g.mean() - g.quantile(0.05), g.quantile(0.95) - g.mean()],
                     fmt=mk + "-", color=c, capsize=3, label=lab)
     ax.axhline(t1["value"], color="#E69F00", ls="--", label=f"Real-data estimate (T1 = {t1['value']})")
-    ax.axvline(1.0, color="#999999", ls=":")
-    ax.text(1.02, ax.get_ylim()[1] - 0.02, "calibrated", color="#555555", fontsize=8, va="top")
-    ax.set_xlabel("Spillover strength (x calibrated demand spillover and investor entry)")
+    for a in (ax, bx):
+        a.axvline(1.0, color="#999999", ls=":")
+        a.set_xlabel("Spillover strength (x calibrated)")
+    ax.text(1.04, ax.get_ylim()[1] - 0.01, "calibrated", color="#555555", fontsize=8, va="top")
     ax.set_ylabel("Phase 1 effect (log points)")
-    ax.set_title("Does the DiD recover the truth when hosts can move to exempt areas?")
+    ax.set_title("Effect: truth vs DiD (mean, 5-95% across runs)", fontsize=10)
     ax.legend(fontsize=8, loc="lower left")
+    g = res.groupby("level")["bias"]
+    bx.fill_between(summ["level"], g.quantile(0.05), g.quantile(0.95), color="#0072B2", alpha=0.18,
+                    label="5-95% of runs")
+    bx.fill_between(summ["level"], g.quantile(0.25), g.quantile(0.75), color="#0072B2", alpha=0.3,
+                    label="25-75% of runs")
+    bx.plot(summ["level"], g.mean(), "s-", color="#0072B2", label="Mean bias")
+    bx.axhline(0, color="#000000", lw=0.8)
+    bx.set_ylabel("Bias = DiD estimate - truth (log points)")
+    bx.set_title("Bias (same run, same seed)", fontsize=10)
+    bx.legend(fontsize=8, loc="lower left")
+    fig.suptitle("Does the DiD recover the truth when hosts can move to exempt areas?")
     fig.tight_layout()
     fig.savefig(REPORTS / "did_recovery.png", dpi=130)
     plt.close(fig)
@@ -200,21 +218,22 @@ def main(argv=None) -> int:
     for _, r in summ.iterrows():
         L.append(f"| {r['level']:.1f}x | {r['truth']:+.3f} | {r['estimate']:+.3f} | {r['noiseless']:+.3f} | {r['bias']:+.3f} | "
                  f"{r['bias_lo']:+.3f} to {r['bias_hi']:+.3f} | {r['exempt']:+.3f} | {r['coverage'] * 100:.0f}% | {r['ri_p']:.3f} |")
+    L += ["", "## Measurement", "",
+          "Per run, averaged by spillover level: snapshots the analyst's 75% rule drops although they were complete "
+          "(false flags; a genuine policy-driven fall can trip the rule), truncated snapshots the rule misses, and the "
+          f"share of RI-tested runs (first {args.ri_members} members) with RI p <= 0.05.", "",
+          "| Spillover | False flags per run | Missed truncations per run | RI p <= 0.05 |", "|---:|---:|---:|---:|"]
+    for _, r in summ.iterrows():
+        L.append(f"| {r['level']:.1f}x | {r['false_flags']:.2f} | {r['missed']:.2f} | {r['ri_reject'] * 100:.0f}% |")
     cal = summ[summ["level"] == 1.0]
     if len(cal):
         c = cal.iloc[0]
-        rel = c["bias"] / c["truth"] * 100 if c["truth"] else float("nan")
-        L += ["", "## Plain reading", "",
-              f"- At the calibrated spillover strength the DiD estimate is {c['estimate']:+.3f} against a true effect of "
-              f"{c['truth']:+.3f}: a bias of {c['bias']:+.3f} log points ({rel:+.0f}% of the true effect). "
-              + ("The DiD overstates the fall in covered listings, because the control group is itself pushed up by "
-                 "displaced demand and investors." if c["bias"] < 0 else
-                 "The DiD does not overstate the effect at this spillover level."),
-              f"- With no spillover (0x) the mean bias is {summ.iloc[0]['bias']:+.3f}: the design is close to unbiased when "
-              "SUTVA holds; what remains is noise from the snapshot process and the few control areas.",
-              f"- Bias grows with spillover: at {summ.iloc[-1]['level']:.0f}x it is {summ.iloc[-1]['bias']:+.3f}.",
-              "- Spillover strength is weakly identified by the calibration (see calibration.md), so the size of this "
-              "bias in the real Bill 35 estimate cannot be pinned down from the listings data alone."]
+        rel = (abs(c["estimate"]) / abs(c["truth"]) - 1) * 100 if c["truth"] else float("nan")
+        L += ["", "## Numbers at the calibrated spillover (1x)", "",
+              f"- DiD estimate {c['estimate']:+.3f} vs true effect {c['truth']:+.3f}: bias {c['bias']:+.3f} log points "
+              f"(the DiD magnitude is {rel:+.0f}% relative to the true magnitude); the same DiD on the noise-free true panel gives {c['noiseless']:+.3f}.",
+              f"- True effect on never-covered (control) listings: {c['exempt']:+.3f}.",
+              "- Interpretation: docs/VALIDATION.md section 3 (written by hand from this report)."]
     L += ["", "![DiD recovery](did_recovery.png)", ""]
     (REPORTS / "did_recovery.md").write_text("\n".join(L) + "\n", encoding="utf-8", newline="\n")
     (REPORTS / "did_recovery.json").write_text(json.dumps({"summary": summ.to_dict(orient="records"),

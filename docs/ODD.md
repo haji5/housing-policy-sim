@@ -67,7 +67,8 @@ sub)` (`rng.ts`). Runs that share a seed share every agent's draws, so counterfa
 - **Adaptation.** Hosts choose the use with the highest random utility (logit). Searchers take
   affordable units.
 - **Emergence.** Market rents, occupancy, vacancy and housing stress emerge from agent decisions.
-- **Observation.** The god view is recorded each tick. The noisy researcher view follows in M5.
+- **Observation.** The god view is recorded each tick. A separate researcher view (§7.8, ADR 0006) turns it into what an analyst would see: noisy, sometimes truncated quarterly listing
+  snapshots and a noisy CPI. It is post-processing only and never feeds back into the model.
 
 ## 5. Initialisation
 
@@ -191,3 +192,14 @@ excluded): the S2a DiD `log(1 + n/scale) ~ antic + phase1 + phase2 | zone + mont
 exempt; an opted-in zone leaves the control group), an event study with reference Aug 2023 whose
 four pre-announcement coefficients are the T7 leads, log level paths of covered, never-covered and
 opt-in zones relative to Aug 2023, and the multi-host and registry shares in Jun 2026.
+
+### 7.8 Researcher view (`researcher.ts`, ADR 0006)
+
+At each snapshot tick, observed listings in zone z are
+`m_zt = round(n_zt · c_t · exp(σ_z ε_zt − σ_z²/2) · k_zt)`, where `n_zt` is true listings in real
+units, `c_t = clamp(N(0.97, 0.02), 0.5, 1)` is scrape completeness common to all zones,
+`σ_z = 0.04`, and `k_zt ~ U(0.4, 0.7)` only in a truncated snapshot (probability 4/52), else 1. A
+snapshot is flagged and dropped when its total is below 0.75 × the larger of its neighbours'
+totals (the first project's rule). Quarterly CPI readings are the CPI-style index times
+`exp(0.024 ε_t)`. Draws are keyed by run seed, zone and tick with their own purposes, so paired
+runs share observation noise. Parameters: `params/observation.json` (ASSUMPTIONS O1-O8).

@@ -20,3 +20,10 @@ export { DEFAULT_PARAMS, mergeParams } from './params.ts';
 export { ENSEMBLE, ensembleIndexForSeed, ensembleParams } from './ensemble.ts';
 export type { EnsembleFile } from './ensemble.ts';
 export type { ParamOverrides } from './params.ts';
+export {
+  DEFAULT_OBSERVATION,
+  flagIncomplete,
+  researcherCpi,
+  researcherPanel,
+} from './researcher.ts';
+export type { ObservationParams, ResearcherPanel } from './researcher.ts';

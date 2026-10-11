@@ -28,8 +28,8 @@ _Written 2026-10-10 at the end of a the coding agent session, for the next sessi
 | M1 headless sim v0                    | done                                                        | `m1` |
 | M2 ugly playable prototype            | done (screenshots in `docs/screenshots/m2/`)                | `m2` |
 | M3 calibration + validation           | done; acceptance partly met (T5, T6a miss; see CALIBRATION) | `m3` |
-| **M4 DiD-recovery experiment**        | **next** (see §4)                                           | -    |
-| M5 full mechanics                     | designed only (see §5)                                      | -    |
+| M4 DiD-recovery experiment            | done (VALIDATION.md §3)                                     | `m4` |
+| **M5 full mechanics**                 | **next** (designed in §5)                                   | -    |
 | M6 art pass                           | not started                                                 | -    |
 | M7 debrief / evidence UI / onboarding | not started                                                 | -    |
 | M8 polish, docs, launch               | not started                                                 | -    |
@@ -89,37 +89,18 @@ nothing has been pushed; Pages deploy is untested).
 - `fine`, `registrationCost`, `incomeMedian`, `rentCapAnnual`, CRD populations/dwellings are
   VERIFY (see ASSUMPTIONS.md).
 
-## 4. M4: DiD-recovery experiment (next after M3)
+## 4. M4: finished (tag `m4`)
 
-Acceptance (PLAN §10 M4): researcher-view panel generation, `did_recovery.py`, spillover sweep,
-figure + VALIDATION.md section; "a figure shows estimated vs true effect across spillover
-strengths with intervals". Follow-up prompt: "State plainly if DiD is biased and by how much."
-
-Already written: `calibration/did_recovery.py` (runs `pnpm did-recovery`). It needs a new CLI
-command. Steps:
-
-1. Copy `docs/handoff/staged/researcher.ts.txt` → `packages/sim/src/researcher.ts` and
-   `docs/handoff/staged/observation.json` → `packages/sim/src/params/observation.json` (separate
-   from defaults.json, so the ensemble hash stays valid). Its values:
-   - `cpiNoiseSd` = 2.4: **DATA**, residual SD of Victoria CPI rented accommodation around a
-     13-month moving average, computed from the first project's `data/fixtures/cpi_18100004.csv`
-     (2.3-2.5 points).
-   - `truncationProb` = 0.077: 4 truncated of 52 snapshots in the first project (DATA).
-   - `flagThreshold` = 0.75: the first project's rule (DATA).
-   - Completeness and zone noise are ASSUMED.
-2. Append Purpose codes to `rng.ts` (append-only; never renumber): `OBS_COMPLETE: 25`,
-   `OBS_ZONE: 26`, `OBS_TRUNCATED: 27`, `OBS_CPI: 28`. Export `researcherPanel`,
-   `researcherCpi` and `DEFAULT_OBSERVATION` from `index.ts`. Tests first: determinism, the
-   flagging rule, noise moments, and that model output is unchanged.
-3. Add CLI command `panel` in `cli.ts`. Input lines are `{id, params, seed}`. For each line, run
-   `historical` and `none` with `ticks 49, preTicks 15` (same seed). Output one line
-   `{id, snapshotTicks, zones:[{name,covered,optInTick?}], observed:[[zone][snap]],
-hist:[[...]], none:[[...]], incomplete:[bool]}`, counts in real units (n/scale). Snapshot
-   ticks come from `scenario.observation.snapshotTicks`. Use `researcherPanel(histRun, seed, …)`
-   for `observed`.
-4. `pnpm did-recovery` → `calibration/reports/did_recovery.{md,png,json}`. Add a VALIDATION.md §3
-   summary and a README figure later (M8). ADR 0006 for the observation layer, plus ODD §4 and
-   ASSUMPTIONS O1-O8. Commit, tag `m4`.
+- Observation layer `packages/sim/src/researcher.ts` + `params/observation.json` (ADR 0006, ODD
+  §7.8, ASSUMPTIONS O1-O8). Flag rule matches the first project exactly:
+  `total < 0.75 × max(prev, next)`. CPI noise SD 2.4 is in **percent** (applied multiplicatively).
+  RNG purposes 25-28 added. Model output, defaults and ensemble unchanged.
+- CLI `panel` command; `pnpm did-recovery` (~1 min) writes `calibration/reports/did_recovery.*`.
+- Result (VALIDATION.md §3): at calibrated spillover the DiD overstates the Phase 1 effect by
+  0.037 log points (~11%); ~0 with no spillover, −0.080 at 3×. Most of it is control-zone
+  spillover; measurement noise adds ~0 bias. Single-run SD of the error ~0.08.
+- The 75% flag rule drops a genuine (policy-driven) snapshot in ~7% of runs. Worth a sentence in
+  the game's debrief.
 
 ## 5. M5 design notes (full mechanics; re-calibrate afterwards)
 
