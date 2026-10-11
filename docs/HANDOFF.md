@@ -76,13 +76,12 @@ sobol`, e2e + screenshots (`docs/screenshots/m5`, 3 rounds).
 
 Remaining, in order:
 
-1. **`pnpm validate` was started at ~20:00 in the background** (output →
-   `calibration/reports/validate.log`, ends with a `real ...` line from `time`). If the log has
-   no `real` line and no python/node workers are running, re-run `pnpm validate` (~35 min).
-   Then update VALIDATION.md §1.1 (estimator check, recovery 3 cases × 16 params,
-   one-at-a-time sensitivity) and §2 (H1, S2, S1) from `calibration/reports/validation.md`.
-   Known from calibration already: H1 −0.38 (miss), S2 78% inside the bound, asking-rent
-   effect −0.48% (5-95% −0.66 to −0.30), CPI-style −0.24%.
+1. **`pnpm validate` finished** (2026-10-10, 28.9 min, exit 0, sim 0.5.0 ensemble); reports
+   committed in `calibration/reports/validation.{md,json}`. Update VALIDATION.md §1.1 (estimator
+   check, recovery 3 cases × 16 params, one-at-a-time sensitivity) and §2 (H1, S2, S1) from
+   `calibration/reports/validation.md`; do not re-run it. Known from calibration: H1 −0.38
+   (miss), S2 78% inside the bound, asking-rent effect −0.48% (5-95% −0.66 to −0.30),
+   CPI-style −0.24%.
 2. **Sobol**: `pnpm sobol` (default n=256, seeds 1,2; ~4,600 draws, roughly 10 min). Writes
    `calibration/reports/sobol.{md,json}`. Summarise in VALIDATION.md §1.1 (replace the line
    "Sobol indices ... are planned for M5"). Caveats are in the script docstring.
