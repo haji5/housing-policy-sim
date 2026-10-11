@@ -9,7 +9,7 @@
     ".": "./src/index.ts"
   },
   "scripts": {
-    "test": "vitest run --coverage",
+    "test": "vitest run --coverage && vitest run -c vitest.perf.config.ts",
     "typecheck": "tsc -p tsconfig.json",
     "coverage": "vitest run --coverage"
   },

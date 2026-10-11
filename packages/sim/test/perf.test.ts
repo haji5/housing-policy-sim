@@ -4,8 +4,8 @@ import { run } from './helpers.ts';
 describe('performance budget', () => {
   it('~10k agents x 60 ticks runs well inside budget', () => {
     run(1, 'historical'); // warm up the JIT
-    // Best of three: the minimum measures the code, not other load on the machine (other test
-    // files run in parallel, under coverage instrumentation).
+    // Best of three: the minimum measures the code, not other load on the machine. Runs alone
+    // and uninstrumented (vitest.perf.config.ts), after the coverage suite.
     let ms = Infinity;
     let agents = 0;
     for (const seed of [2, 3, 4]) {
