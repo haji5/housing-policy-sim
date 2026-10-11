@@ -5,8 +5,8 @@ short-term rental law.** You are the housing minister for Greater Victoria for o
 term. Set short-term rental rules, enforcement, a vacancy tax, a rent cap, upzoning and
 non-market building; watch what the data shows you; then see what really happened.
 
-**Play it:** https://haji5.github.io/housing-policy-sim/ _(live once the repository is published
-on GitHub; until then run it locally, see [Reproduce](#reproduce))._
+**Play it:** https://haji5.github.io/housing-policy-sim/ (runs entirely in your browser; to run
+it locally, see [Reproduce](#reproduce)).
 
 ![One term of play: listings and rent charts above the isometric city](docs/media/zoned-out.gif)
 
@@ -101,6 +101,7 @@ Requires Node ≥ 24 and pnpm; Python 3.11 for calibration.
 pnpm install
 pnpm lint && pnpm typecheck && pnpm test   # sim tests include an 85% line-coverage gate
 pnpm build && pnpm e2e                     # Playwright: play, keyboard-only, axe audit, budgets
+pnpm e2e:live                              # smoke test of the deployed site (needs network)
 pnpm dev                                   # http://localhost:5173
 ```
 

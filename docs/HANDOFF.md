@@ -1,6 +1,6 @@
 # Handoff: where the build stands and exactly what to do next
 
-_Last updated 2026-10-11 (fourth session: m5, m6, m7 tagged), for the next session. Read this,
+_Last updated 2026-10-11 (fifth session: deployed, m8 tagged; all milestones done). Read this,
 then `WORKING_AGREEMENTS.md` and `docs/PLAN.md`._
 
 ## 0. What the user asked for (standing instructions)
@@ -20,16 +20,17 @@ then `WORKING_AGREEMENTS.md` and `docs/PLAN.md`._
 
 ## 1. Milestone status
 
-| Milestone                   | Status                                                                | Tag  |
-| --------------------------- | --------------------------------------------------------------------- | ---- |
-| M0-M4                       | done                                                                  | m0-4 |
-| M5 full mechanics           | done: validation + Sobol written up in VALIDATION.md §1.1-2 (§3)      | m5   |
-| M6 art pass                 | done: icons, delisting stamp, dust, 1:1 canvas fix, review round (§4) | m6   |
-| M7 debrief/onboarding       | done: wired, a11y checklist, ADR 0011, 3 review rounds (§5)           | m7   |
-| **M8 polish, docs, launch** | **done locally; only the deploy is left, which needs the owner (§6)** | -    |
+| Milestone               | Status                                                                | Tag  |
+| ----------------------- | --------------------------------------------------------------------- | ---- |
+| M0-M4                   | done                                                                  | m0-4 |
+| M5 full mechanics       | done: validation + Sobol written up in VALIDATION.md §1.1-2 (§3)      | m5   |
+| M6 art pass             | done: icons, delisting stamp, dust, 1:1 canvas fix, review round (§4) | m6   |
+| M7 debrief/onboarding   | done: wired, a11y checklist, ADR 0011, 3 review rounds (§5)           | m7   |
+| M8 polish, docs, launch | done: deployed, live URL checked from a clean browser (§6)            | m8   |
 
-Git: `main`, no remote (GitHub MCP auth fails; nothing pushed; Pages deploy untested).
-Order of commits this session: `eb2ed3b` m5 → `m6 (WIP)` → `m7 (WIP)` drafts + this file.
+Git: `main` and tags `m0`-`m8` pushed to `origin` = https://github.com/haji5/housing-policy-sim.
+Live site: https://haji5.github.io/housing-policy-sim/ (Pages, source "GitHub Actions"; every
+push to `main` redeploys). Use `gh` for GitHub; the GitHub MCP server fails to authenticate.
 
 ## 2. Environment facts (important, learned the hard way)
 
@@ -164,7 +165,7 @@ Checks and fixes:
 - e2e: `a11y.spec.ts` moved into `e2e/`; new `debrief.spec.ts` (tutorial, badges, tooltips,
   debrief numbers, honesty rule, screenshots `docs/screenshots/m7`).
 
-## 6. M8: done locally, not tagged (deploy needs the owner)
+## 6. M8: done (tagged `m8`)
 
 Done (committed after `m7`):
 
@@ -196,10 +197,24 @@ inside the coverage suite; fixed in `f0c9bff`: it now runs alone via `vitest.per
 the Pages run failed because Pages was not yet enabled (Settings → Pages → Source: GitHub
 Actions). CI's e2e and calibration-smoke steps had not run yet.
 
-Left (needs the owner): create the GitHub repo `haji5/housing-policy-sim` (PLAN D2), add the
-remote and push `main` with tags, enable Pages with "GitHub Actions" as the source. Then check
-the deployed URL in a clean browser, update README's "Play it" note, and tag `m8`. Stretch goals
-(Vancouver scenario, daily seed, phone layout) were not started.
+Fifth session (2026-10-11): the owner enabled Pages. CI run 38121510113 passed every step on
+GitHub for the first time, including e2e (8 passed, 1 skipped = media; no retries; debrief 13.6 s
+on the runner) and the calibration smoke test (venv built from requirements.txt). Pages run
+38121510134 deployed. `apps/web/e2e-live/deployed.spec.ts` (`pnpm e2e:live`, own config
+`playwright.live.config.ts`, not part of `pnpm e2e`; LIVE_URL overrides the address) checks the
+live site in a fresh headless context: start screen, every stylesheet `url()` resolves under
+`/housing-policy-sim/` and returns image/png, atlas fetched, a full 20-turn term, the debrief
+(ready in 8.0 s, own-variant gap < 1e-9, "too small to detect"), the About page and its link
+back, the art preview (atlas drawn), no console errors, no failed or non-2xx responses, and no
+request outside the site's origin and base path. Passed; screenshots
+`docs/screenshots/m8/live-*.png` reviewed (no defects found; the debrief's share link uses the
+Pages URL). README's "Play it" note updated.
+
+Not started (stretch, owner to choose): Vancouver scenario, daily seed via URL, phone layout,
+lazy-loading the debrief, a larger ABC stage 3. Housekeeping: GitHub warns that actions on
+Node 20 (checkout@v4, setup-node@v4, setup-python@v5, pnpm/action-setup@v4, configure-pages@v5,
+upload-pages-artifact@v3, deploy-pages@v4) are forced onto Node 24, and `ubuntu-latest` moves to
+Ubuntu 26 from 2026-10-19; neither breaks anything today.
 
 ## 7. Open issues to report to the user
 

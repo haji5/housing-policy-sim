@@ -14,6 +14,7 @@
     "build": "pnpm -r --if-present build",
     "test": "pnpm -r --if-present test",
     "e2e": "pnpm --filter @zoned-out/web e2e",
+    "e2e:live": "pnpm --filter @zoned-out/web e2e:live",
     "lint": "eslint . && prettier --check .",
     "format": "prettier --write .",
     "typecheck": "pnpm -r --if-present typecheck",
