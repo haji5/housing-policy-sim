@@ -16,31 +16,48 @@ it locally, see [Reproduce](#reproduce)).
 
 ## Three results
 
-**1. The model reproduces the Bill 35 evidence it was calibrated to.** The first project
-estimated that BC's principal-residence rule cut entire-home listings in Victoria's covered areas
-by −0.390 log points (about −32%) against the exempt areas, with no pre-trends. The calibrated
-ensemble gives −0.399 (5-95% −0.548 to −0.243), matches the covered and exempt listing paths
-and shows no pre-trends. It misses the multi-listing-host share, the registered share and the
-weak Phase 2 term, and a held-out test (Salt Spring Island's opt-in) fails; all are reported, not
-tuned away ([CALIBRATION.md](docs/CALIBRATION.md), [VALIDATION.md](docs/VALIDATION.md)).
+**1. The model reproduces the headline Bill 35 estimate it was calibrated to, but not every
+target.** The first project estimated that BC's principal-residence rule cut entire-home listings
+in Victoria's covered areas by −0.390 log points (about −32%) against the exempt areas, with no
+pre-trends. The calibrated ensemble's mean is −0.399 (−0.366 averaging its 179 distinct
+parameter sets equally), it tracks the covered-area listing path and it shows no pre-trends.
+That is a fitted target, not an out-of-sample test. The fit is imperfect: the model overshoots
+the exempt areas' growth from late 2025, and misses the multi-listing-host share, the registered
+share and the weak Phase 2 term. Even the best-fitting parameter set's calibration distance is
+about four times what a correctly specified model would give. The one held-out test, Salt Spring Island's November 2025
+opt-in, fails. All of this is reported, not tuned away
+([CALIBRATION.md](docs/CALIBRATION.md), [VALIDATION.md](docs/VALIDATION.md),
+[robustness report](calibration/reports/robustness.md)).
 
 ![Simulated vs observed listing paths](calibration/reports/paths.png)
 
-**2. The policy moves listings a lot and rents very little.** Inside the model, where the
-counterfactual is known exactly, the rule cuts covered-area listings by 0.585 log points while
-asking rents fall by 0.48% (5-95% across model variants: −0.66% to −0.30%), and the all-tenant
-CPI-style index by 0.24%. CPI rented accommodation in Victoria rose 19.5% over the same period
-and its monthly noise is about 2.4%, so a rent effect this size is **too small to detect** in
-the data, which is what the first project found. That is not the same as no effect.
+**2. The policy moves listings a lot and rents little, but how little rests on assumptions.**
+Inside the model, where the counterfactual is known exactly, the rules (principal residence plus
+registry) cut covered-area listings by 0.585 log points by June 2026. At the default rent-market
+assumptions, asking rents fall by 0.48% (5-95% across the calibrated ensemble: −0.66% to
+−0.30%) and the all-tenant CPI-style index falls by 0.24%. That ensemble range understates the
+uncertainty. The listing data cannot pin down how fast rents adjust to vacancy, or how strongly
+vacancy draws renters into the region, and both are fixed assumptions. Varying them over a wide
+range moves the asking-rent effect from about −0.1% to −2.2%, more than all 16 calibrated
+parameters together ([robustness report](calibration/reports/robustness.md)). Even the upper end
+is at or below the 1-3% that the first project's CPI design cannot detect: its Phase 1 rent
+estimate has a standard error of 1.1 points. So the effect is **too small to detect** in the
+data, which is what the first project found. That is not the same as no effect, and the model
+does not measure its size.
 
 ![STR-attributable rent effect across the ensemble](calibration/reports/rent_effect.png)
 
-**3. The DiD design overstates the effect when the control group is contaminated.** Running the
-first project's regression on simulated scraped data, with the truth known: at the calibrated
-spillover strength it estimates −0.384 against a true −0.348, overstating the fall by 0.037 log
-points (11%). The bias grows with spillover into the exempt areas, to 23% at three times the
-calibrated strength. Read back onto the real estimate, the true Phase 1 effect is plausibly 0-20%
-smaller than −0.390 ([VALIDATION.md §3](docs/VALIDATION.md#3-did-recovery-experiment-m4)).
+**3. Spillover into the exempt areas biases the DiD towards overstating the effect, but only
+modestly.** I ran the first project's regression on simulated scraped data, where the truth is
+known. Over the Phase 1 window, at the calibrated spillover strength, it estimates −0.425 against
+a true −0.385, overstating the fall by 0.039 log points (10%). With no spillover it understates
+the fall by 5%. Spillover strength is barely identified by the calibration, so I also checked
+it directly against the data: the control areas, including Salt Spring before its opt-in, are
+untreated until late 2025. Their observed listing path fits half the calibrated spillover
+slightly better than the full strength, though the evidence is weak. At half strength the
+overstatement is about 3%. Read back onto the real estimate, the true Phase 1 effect is
+plausibly within about 10% of −0.390, more likely smaller than larger
+([VALIDATION.md §3](docs/VALIDATION.md#3-did-recovery-experiment-m4)).
 
 ![DiD estimate vs true effect across spillover strengths](calibration/reports/did_recovery.png)
 
@@ -57,8 +74,9 @@ whether the estimate itself is biased.
 ## The model in ten lines
 
 - Monthly ticks; a game turn is a quarter; a term is 20 turns from September 2023.
-- About 39,000 dwellings and 36,000 households in eight zones of the Capital Regional District
-  (1 agent per 5 real units); five zones are covered by the rule, three are exempt.
+- About 39,000 dwellings and 13,000 renter households in eight zones of the Capital Regional
+  District (1 agent per 5 real units: about 198,000 homes and 66,000 renter households;
+  owner-occupiers are a tenure, not agents); five zones are covered by the rule, three are exempt.
 - Investors choose short-term rental, long-term rental, holding empty or selling by a
   multinomial logit; hosts of their own principal residence stay legal.
 - Enforcement detects and fines illegal listings; a registry de-lists unregistered ones.
@@ -68,7 +86,8 @@ whether the estimate itself is biased.
 - Households search, double up or leave the region when they cannot find a home.
 - A noisy "researcher view" (scraped snapshots, a noisy CPI) is what the player sees.
 - 16 behavioural parameters are calibrated by simulated method of moments and ABC; the game
-  draws from a 300-member ensemble, so each seed plays a different plausible model.
+  draws from a 300-member ensemble (179 distinct parameter sets; effective sample size 21), so
+  different seeds usually play different plausible models.
 - Fully deterministic: a counter-based hashed RNG gives common random numbers, so every effect is
   a paired comparison with a no-policy run of the same city and luck.
 
@@ -83,8 +102,14 @@ tagged DATA / LITERATURE / ASSUMED / VERIFY), [calibration](docs/CALIBRATION.md)
   of British Columbia.** It is a calibrated, simplified model, not a digital twin of Victoria.
 - The listing response is calibrated; the rent, vacancy-tax, rent-cap, upzoning and
   non-market responses are assumptions (shown with "Assumed" badges in the game).
-- The calibration's effective sample size is low (21; 179 distinct parameter sets among 300), and
-  several targets and the Salt Spring hold-out are missed ([CALIBRATION.md](docs/CALIBRATION.md)).
+- The calibration's effective sample size is low (21; 179 distinct parameter sets among 300, one
+  of them repeated 62 times), its 5-95% ranges are indicative only, and several targets and the
+  Salt Spring hold-out are missed ([CALIBRATION.md](docs/CALIBRATION.md)).
+- The rent effect's size is set by assumed rent dynamics (above), and homes sold to
+  owner-occupiers house no one from the rental market in the model (it has no owner households),
+  which pushes the rent effect towards zero.
+- Enforcement levels other than the default are an extrapolation: detection at the default
+  level is calibrated, but how it scales with the level is assumed.
 - Levels of rent burden and housing stress are not calibrated; the game scores only changes
   against the no-policy run.
 - Some real-world inputs are tagged VERIFY in [ASSUMPTIONS.md](docs/ASSUMPTIONS.md) (Census
@@ -113,6 +138,7 @@ pnpm calibrate                # ~45 min; writes the ensemble and calibration/rep
 pnpm validate                 # ~30 min: estimator check, parameter recovery, sensitivity
 pnpm sobol                    # ~15 min: Sobol indices
 pnpm did-recovery             # the DiD-recovery experiment
+pnpm robustness               # ~3 min: ensemble fit diagnostics, rent-assumption sensitivity
 pnpm sim playtest --seeds 1,2,3,4,5,6,7,8 --out calibration/reports/playtest.json
 ```
 
@@ -125,14 +151,14 @@ Art is generated, not drawn: `pnpm art` rebuilds the sprite atlas. README media:
 Measured on the development laptop, otherwise idle (Node, headless Chromium), against the
 [PLAN §11](docs/PLAN.md) budgets:
 
-| Budget                                     | Target     | Measured                                                   |
-| ------------------------------------------ | ---------- | ---------------------------------------------------------- |
-| Page script (gzipped)                      | < 400 KB   | 57 KB, plus two workers of 29 KB each                      |
-| Sprite atlas                               | < 300 KB   | 6.7 KB PNG + 17.7 KB JSON                                  |
-| First interaction                          | < 2 s      | start screen interactive at 76 ms; city built in 0.4 s     |
-| One turn                                   | -          | 0.10 s (player and no-policy runs)                         |
-| 10k agents × 60 ticks in Node              | < 150 ms   | 37 ms best, 39 ms median (12.7k agents)                    |
-| Victoria run (75k agents, 24 + 60 months)  | < 150 ms   | **not met**: 284 ms best, 293 ms median (`pnpm sim bench`) |
+| Budget                                     | Target     | Measured                                                          |
+| ------------------------------------------ | ---------- | ----------------------------------------------------------------- |
+| Page script (gzipped)                      | < 400 KB   | 57 KB, plus two workers of 29 KB each                             |
+| Sprite atlas                               | < 300 KB   | 6.7 KB PNG + 17.7 KB JSON                                         |
+| First interaction                          | < 2 s      | start screen interactive at 76 ms; city built in 0.4 s            |
+| One turn                                   | -          | 0.10 s (player and no-policy runs)                                |
+| 10k agents × 60 ticks in Node              | < 150 ms   | 37 ms best, 39 ms median (12.7k agents)                           |
+| Victoria run (75k agents, 24 + 60 months)  | < 150 ms   | **not met**: 284 ms best, 293 ms median (`pnpm sim bench`)        |
 | Debrief ensemble in the browser, 4 workers | 200 < 10 s | **32 variants × 2 runs: 6.0 s** (N = 200 not attempted, ADR 0011) |
 
 ## Tech stack

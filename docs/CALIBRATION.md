@@ -121,6 +121,29 @@ once and detection later produce the same listing path. Identified: `multiCompli
 M3). On the CPI-style index −0.24%: too small to detect against a +19.5% CPI rise. True effect on
 covered listings −0.585 log points; on never-covered listings +0.083 (spillover).
 
+**Fit diagnostics and robustness (2026-10-11, [`robustness.md`](../calibration/reports/robustness.md),
+`pnpm robustness`).** Generated from the shipped ensemble; no parameters changed.
+
+- **Goodness of fit.** If the model were correctly specified and the target SEs right, the
+  weighted distance would be about 10 (sum of target weight × dimensions). The ensemble's distinct
+  sets score 43 (best) to 93 (tolerance), median 82. So the "pass" column above, judged one
+  target at a time, flatters the joint fit. T5 and T6a contribute about two thirds of the excess.
+  Individual members miss T1 by about 2 SE on average; the ensemble mean matches it.
+- **Paths beyond the last point.** T3 is within 1.7 SE at every snapshot. T4 tracks the data to
+  Sep 2025, then rises to +0.19 by Jun 2026 while the data stay at +0.06. The never-covered areas
+  grow too much at the end, and the "pass" relies on an ASSUMED SE of 0.07. Salt Spring (H1)
+  misses before its opt-in as well as after: +0.12 to +0.16 at ticks 15-24 against −0.07 to +0.04
+  observed (z up to 3.1), while it was still an exempt control area. That is evidence against
+  strong spillover (VALIDATION §3).
+- **Duplicates.** One parameter set is 62 of the 300 members (21%). Averaging the 179 distinct
+  sets equally gives a Phase 1 DiD of −0.366 instead of −0.399. With ESS ≈ 21, each tail of a
+  5-95% range rests on about one effective draw: treat ranges as indicative.
+- **Rent effect vs fixed assumptions.** The rent range above holds `kappa` (asking-rent
+  adjustment, A26) and `arrivalVacancySemiElasticity` (A33) fixed. Over kappa 0.03-0.3 and eta
+  0-50 the mean asking-rent effect runs from −0.09% to −2.2%. That is a larger spread than all 16
+  calibrated parameters produce. `arrivalRentElasticity`, the parameter left free to carry rent
+  uncertainty, matters much less.
+
 ### Run of 2026-10-10 (sim 0.4.0, spin-up model, ADR 0005; superseded by the M5 run above)
 
 8,192 Sobol draws, 4 Nelder-Mead starts, 4,096 ABC proposals; 600 accepted (D ≤ 45.1), effective

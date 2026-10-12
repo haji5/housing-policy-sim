@@ -58,7 +58,8 @@ The generated report is [`calibration/reports/validation.md`](../calibration/rep
   `prShare` (+0.20); the exempt (spillover) effect to `demandSpillover` (+0.14), `beta` (+0.09),
   `detectMax` (+0.09) and `complianceBase` (+0.08). No single parameter moves the asking-rent
   effect by more than 0.32 percentage points across its posterior range, so the rent effect stays
-  small across the ensemble. `delistProb` changes the true effect by −0.38 but the Phase 1 DiD by
+  small across the ensemble. The fixed rent-market assumptions move it far more (§2 and
+  [`robustness.md`](../calibration/reports/robustness.md)). `delistProb` changes the true effect by −0.38 but the Phase 1 DiD by
   0.000, as it should: de-listing only starts in Phase 2.
 
 - **Sobol indices** (`pnpm sobol`, [`calibration/reports/sobol.md`](../calibration/reports/sobol.md);
@@ -105,12 +106,16 @@ The generated report is [`calibration/reports/validation.md`](../calibration/rep
   −0.66% to −0.30%); 78% of the ensemble lies inside the first project's −3.3% to −0.4% bound
   (M3: 83%). The 5-95% range never reaches the −3.3% end, so the members outside the bound are
   ones with smaller effects (closer to zero) than the bound allows. Either way the effect is too
-  small to detect in the CPI data.
+  small to detect in the CPI data. This range holds the rent-market assumptions fixed. Varying the
+  asking-rent adjustment speed (`kappa`) and the vacancy pull on arrivals (`eta`) over a wide grid
+  moves the mean effect from about −0.1% to −2.2%. These two assumptions matter more than all 16
+  calibrated parameters ([`robustness.md`](../calibration/reports/robustness.md) §3). The bound check is
+  therefore weak evidence about the rent effect's size; the model does not measure it.
 - **CPI sanity (S1): not comparable by design.** Real CPI rented accommodation rose 19.5% (Sep 2023
   to Jun 2026); the sim's CPI-style index changed by −0.3%. The sim has no macro rent inflation
   (`rentDriftAnnual = 0`) because it isolates the STR channel. The STR-attributable part of the
-  CPI-style index is −0.24% (calibration report), too small to detect against CPI noise
-  (ASSUMPTIONS O7: 2.4% month-to-month).
+  CPI-style index is −0.24% (calibration report), too small to detect: the first project's
+  Phase 1 rent estimate (CPI level DiD, BC metros vs Ottawa) has a standard error of 1.1 points.
 - **In-sample misses** (T2, T5, T6a) are diagnosed in [CALIBRATION.md](CALIBRATION.md#results).
 
 ## 3. DiD-recovery experiment (M4)
@@ -135,52 +140,85 @@ inference over all 56 three-zone control groups.
 
 ![DiD recovery](../calibration/reports/did_recovery.png)
 
-| Spillover | True effect | DiD estimate |  Mean bias | Bias, 5-95% of runs | 95% CI covers truth |
-| --------: | ----------: | -----------: | ---------: | ------------------: | ------------------: |
-|        0× |      −0.346 |       −0.339 |     +0.007 |    −0.108 to +0.150 |                 93% |
-|      0.5× |      −0.350 |       −0.361 |     −0.010 |    −0.146 to +0.141 |                 93% |
-|    **1×** |  **−0.348** |   **−0.384** | **−0.037** |    −0.165 to +0.086 |                 92% |
-|        2× |      −0.356 |       −0.410 |     −0.054 |    −0.196 to +0.064 |                 87% |
-|        3× |      −0.356 |       −0.437 |     −0.080 |    −0.221 to +0.042 |                 75% |
+_Re-run on 2026-10-11 against the shipped M5 ensemble. The version committed with M4 (true effect
+−0.348, DiD −0.384 at 1×) had been generated from the earlier M3 ensemble and was not refreshed when
+the model and ensemble changed in M5; the numbers below replace it._
 
-**Plain answer: yes, the DiD is biased, and in the direction that overstates the effect.** At the
-calibrated spillover strength the covered-vs-exempt DiD estimates −0.384 against a true effect of
-−0.348. It overstates the fall in covered listings by 0.037 log points, about 11% of the true
-effect. The bias grows roughly linearly with spillover: about zero (+0.007) with no spillover,
-−0.054 at twice the calibrated strength and −0.080 at three times (23% of the true effect). Read
-back onto the real estimate, T1 = −0.390 would correspond to a true effect of about −0.35 at the
-calibrated spillover, and anywhere from about −0.40 (no spillover) to −0.31 (3×).
+| Spillover | True effect | DiD estimate |  Mean bias | Bias, 5-95% of runs | Control-group spillover | 95% CI covers truth |
+| --------: | ----------: | -----------: | ---------: | ------------------: | ----------------------: | ------------------: |
+|        0× |      −0.386 |       −0.366 |     +0.020 |    −0.093 to +0.165 |                  −0.005 |                 90% |
+|      0.5× |      −0.385 |       −0.396 |     −0.011 |    −0.138 to +0.127 |                  +0.019 |                 88% |
+|    **1×** |  **−0.385** |   **−0.425** | **−0.039** |    −0.160 to +0.062 |                  +0.044 |                 90% |
+|        2× |      −0.384 |       −0.454 |     −0.070 |    −0.185 to +0.019 |                  +0.066 |                 78% |
+|        3× |      −0.387 |       −0.466 |     −0.079 |    −0.190 to +0.021 |                  +0.077 |                 70% |
+
+Control-group spillover is the policy's true effect on listings in the zones the regression uses
+as controls: Juan de Fuca, the Southern Gulf Islands and Salt Spring before its opt-in, over the
+Phase 1 window.
+
+**What "2×" and "3×" mean.** Each level multiplies `demandSpillover` and `investorEntry`, but
+`demandSpillover` cannot exceed 1. At 2× it is capped for 63% of the members, and at 3× for 77%.
+`investorEntry` then goes beyond the calibration prior's maximum (0.01) for 53% and 85% of them.
+So the upper levels mostly test investor entry outside the prior; they are stress tests, not
+plausible worlds.
+
+**Plain answer: the DiD is biased towards overstating the effect when spillover is present, but
+only modestly.** At the calibrated spillover strength the covered-vs-exempt DiD estimates −0.425
+against a true effect of −0.385. It overstates the fall in covered listings by 0.039 log points,
+10% of the true effect. With no spillover it understates the fall slightly (+0.020, 5%). The bias
+grows with the control group's own policy-driven rise: −0.011 at 0.5×, −0.070 at 2× and −0.079 at
+3×.
+
+**Data check on spillover strength.** The calibration barely identifies spillover (contraction
+−0.13 for `demandSpillover` and 0.24 for `investorEntry`; CALIBRATION.md). But the control areas'
+own listing path before Salt Spring's opt-in is direct evidence. The report compares the simulated
+control-group path at ticks 3-24 with the observed one (targets T4 + H1):
+
+| Spillover | Mean gap, sim − data |  RMSE |
+| --------: | -------------------: | ----: |
+|        0× |               −0.033 | 0.081 |
+|      0.5× |               −0.005 | 0.073 |
+|        1× |               +0.022 | 0.080 |
+|        2× |               +0.049 | 0.099 |
+|        3× |               +0.066 | 0.108 |
+
+Half the calibrated strength fits best. The full strength runs above the observed path, and 2× and
+3× fit clearly worse. The differences between 0× and 1× are small relative to snapshot noise, so
+this is weak evidence. The observed path also includes a common trend the model attributes to tourist
+demand growth. Salt Spring alone shows the same thing: before its opt-in the model has its listings
+rising by +0.12 to +0.16 (spillover), while the data show −0.07 to +0.04 (CALIBRATION.md, H1).
+
+**Read back onto the real estimate.** T1 = −0.390 corresponds to a true Phase 1 effect of about
+−0.38 at the best-fitting spillover (0.5×, 3% overstatement) and −0.35 at the calibrated one (10%).
+Without spillover it would be about −0.41. The true effect is plausibly within about 10% of −0.390,
+more likely smaller than larger.
 
 What drives it, and what does not:
 
-- **Spillover into the control group is most of it.** In a 24-member check at 1×, the policy
-  raised listings in the control zones by +0.028 log points (equal weight per zone, as in the
-  regression); at 3× by +0.062. The DiD subtracts that rise as if it were the counterfactual
-  trend. The remaining ~0.01-0.02 comes from the regression's equal zone weighting and its
-  pre-period baseline (it is about −0.01 even with no spillover).
+- **Spillover into the control group is most of it.** The DiD subtracts the control group's
+  policy-driven rise as if it were the counterfactual trend. The mean bias tracks that rise closely
+  from 0.5× to 3×. With no spillover, the regression's equal zone weighting and log(1 + n) form
+  leave a small bias in the other direction (+0.020).
 - **Measurement noise adds almost no bias.** The same regression on the noise-free true panel
-  gives nearly the same mean (−0.388 vs −0.384 at 1×). Scrape noise and truncation add a run-level
+  gives nearly the same mean (−0.428 vs −0.425 at 1×). Scrape noise and truncation add a run-level
   SD of about 0.03. The first project's 75% rule catches nearly all truncated snapshots (0.02 missed
-  per run), but it also drops a complete snapshot in about 7% of runs, when the policy's own sharp
-  fall trips it. Runs with a false flag are not more biased (mean bias +0.015 vs −0.040 at 1×).
-- **Single-run error is large compared with the bias.** Even with no spillover the bias ranges
-  from −0.11 to +0.15 across runs (SD 0.085): with three small control areas, idiosyncratic swings
-  in the control zones move a single estimate a lot. The zone-clustered 95% CI still covers the
-  truth 92-93% of the time up to 1×, falling to 75% at 3× as bias grows relative to the SE.
-- **Inference.** The RI p-value sits at its floor of 1/56 = 0.018 in the median run at every level:
-  the true covered-area effect is far larger than any placebo assignment. The real data's RI p was
-  0.011. So the existence of a large effect is robust; its size is overstated by roughly 0-0.08 log
-  points depending on spillover.
+  per run). It also drops a complete snapshot in 3-7% of runs, when the policy's own sharp fall
+  trips it. At 1× the four runs with such a false flag are more biased (−0.080 vs −0.036), but four
+  runs are too few to say more.
+- **Single-run error is large compared with the bias.** Across runs the bias has an SD of about
+  0.07-0.08 at every level: with three small control areas, idiosyncratic swings in the control
+  zones move a single estimate a lot. The zone-clustered 95% CI covers the truth 88-90% of the time
+  up to 1×, falling to 70% at 3× as bias grows relative to the SE.
+- **Inference.** The RI p-value sits at its floor of 1/56 = 0.018 in the median run at every
+  level. The true covered-area effect is far larger than any placebo assignment, so RI cannot
+  rank runs further. The real data's RI p was 0.011, with 29 neighbourhoods. The existence of a
+  large effect is robust.
 
-**Why this cannot be settled with the listings data.** Spillover strength is weakly identified by
-the calibration (contraction −0.04 for `demandSpillover` and 0.10 for `investorEntry`,
-CALIBRATION.md). Within the model, the first project's estimate is more likely to overstate the
-fall than to understate it: the true effect is plausibly 0-20% smaller than −0.390.
-
-**Caveats.** This is a property of the model, not proof about the real world: the spillover
-mechanisms (tourist demand shifting in proportion to exempt demand; investor purchases responding to
-STR profits) are ASSUMED functional forms. The truth here is the Phase 1 window average; the
-first project's Phase 2 term is not examined.
+**Caveats.** This is a property of the model, not proof about the real world. The spillover
+mechanisms are ASSUMED functional forms: tourist demand shifts in proportion to exempt demand, and
+investor purchases respond to STR profits. The truth here is the Phase 1 window average, which
+differs from the June 2026 effect quoted elsewhere (−0.585, rule plus registry). The first
+project's Phase 2 term is not examined.
 
 ## 4. Balance playtests (M5)
 

@@ -243,6 +243,33 @@ screen. Done, UI only (`packages/sim` untouched):
 - Pitfall: in a JS `String.replace` replacement, `$$` becomes `$`; one patch dropped the "$"
   from lever costs. Use `split(a).join(b)` or a replacer function.
 
+## 6c. Skeptical-review pass (2026-10-11, after m8)
+
+An audit "as a hostile economist" found the plumbing sound (targets match the first project,
+TS DiD = pyfixest to 1e-14, reports reproduce bit-for-bit) but the claims overstated. Fixed:
+
+- **Stale DiD-recovery report.** `did_recovery.md` was last generated in M4 from the M3 ensemble.
+  Re-run on the M5 ensemble: truth −0.385, DiD −0.425, bias −0.039 (10%), not −0.348/−0.384/11%.
+  The script now measures spillover on the actual control group (incl. Salt Spring pre-opt-in),
+  reports how often 2×/3× hit the `demandSpillover` cap or leave the `investorEntry` prior, and
+  checks each level's control-area path against the observed one (0.5× fits best, weakly).
+- **New `calibration/robustness.py`** (`pnpm robustness`): duplicate concentration (one set = 62
+  of 300), distinct-set vs member means, distance vs a correct model (~10 vs best 43), and a
+  kappa × eta grid showing the rent effect ranges −0.1% to −2.2%. The fixed rent-market
+  assumptions dominate it.
+- README Results 1-3, VALIDATION §2-3, CALIBRATION, ASSUMPTIONS (A18, A26, A33, O7) rewritten to
+  match. README household count fixed (13k renter agents, not 36k). Enforcement lever badge
+  now "Assumed" (only the default level is calibrated). Debrief's rent-detectability line now cites
+  the first project's rent-DiD SE (1.1 points) instead of CPI month-to-month noise.
+- Pages now deploys only after CI succeeds on main (`workflow_run`), and CI was red on README
+  formatting.
+- **Rule from now on:** after any re-calibration, re-run every downstream report (validate,
+  sobol, did-recovery, robustness, playtest) before quoting numbers.
+
+Not fixed (would need modelling changes + ADR + re-calibration): `kappa`/`eta` in the ensemble;
+owner households (sold units currently house no renter, which biases rents towards zero); T5/T6a
+structural misses; the iid CPI noise model in the researcher view.
+
 ## 7. Open issues to report to the user
 
 - M5 calibration ESS 21 (M3: 146); T5/T6a misses got worse; H1 miss −0.38 vs data −0.02.
@@ -268,5 +295,5 @@ pnpm build && pnpm e2e                       # Playwright: hello, play, map, a11
 (cd packages/sim && npx vitest run --coverage --no-file-parallelism)   # if perf flakes under load
 pnpm art                                     # regenerate the atlas (+ --preview <dir> via node tools/art/src/build.ts)
 pnpm sim playtest --seeds 1,2,3,4,5,6,7,8 --out calibration/reports/playtest.json
-pnpm calibrate | pnpm validate | pnpm sobol | pnpm did-recovery
+pnpm calibrate | pnpm validate | pnpm sobol | pnpm did-recovery | pnpm robustness
 ```

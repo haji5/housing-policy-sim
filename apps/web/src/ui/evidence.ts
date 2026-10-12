@@ -26,8 +26,8 @@ export const LEVER_EVIDENCE: Record<string, { level: Evidence; why: string }> = 
     why: 'The listing response to the principal-residence rule and the registry is calibrated to Victoria 2023-2026 (T1-T7).',
   },
   enforcement: {
-    level: 'measured',
-    why: 'Detection and de-listing rates are pinned down by the same listing data; the cost per level is a game rule.',
+    level: 'assumed',
+    why: 'The detection and de-listing rates at the default level are calibrated to the listing data, but how detection changes as you raise or cut the level is assumed (ASSUMPTIONS A18); the cost per level is a game rule.',
   },
   vacancyTax: {
     level: 'assumed',
@@ -78,7 +78,7 @@ export const GLOSSARY: Record<string, { term: string; text: string }> = {
   },
   variant: {
     term: 'Model variant',
-    text: 'One of 300 calibrated parameter sets. They all fit the data about equally well but disagree on what the data cannot pin down.',
+    text: 'One of 300 draws from the calibrated ensemble (179 distinct parameter sets). Each fits the listing data within the calibration tolerance, though not equally well, and they disagree on what the data cannot pin down.',
   },
   burden: {
     term: 'Rent burden',

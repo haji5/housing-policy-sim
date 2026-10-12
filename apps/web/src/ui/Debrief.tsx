@@ -218,9 +218,9 @@ export function Debrief({ state }: { state: UiState }) {
             />
           </div>
           <p class="muted">
-            {Math.abs(endAsk) < 2.4
-              ? `Rents: an effect of ${signed(endAsk, 1)} points is smaller than the month-to-month noise in the published CPI rent series (about 2.4%), so it would be too small to detect in real data.`
-              : `Rents: an effect of ${signed(endAsk, 1)} points is larger than the CPI noise, but it rests on assumed rent responses.`}
+            {Math.abs(endAsk) < 2.2
+              ? `Rents: an effect of ${signed(endAsk, 1)} points would be too small to detect in real data: the first project's CPI rent estimate has a standard error of about 1.1 points. Its size here rests on assumed rent responses.`
+              : `Rents: an effect of ${signed(endAsk, 1)} points might be detectable in CPI data, but its size rests on assumed rent responses.`}
           </p>
         </article>
 

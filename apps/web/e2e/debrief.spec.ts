@@ -35,7 +35,7 @@ test('onboarding, evidence badges, glossary and the debrief', async ({ page }) =
   // Evidence badges on all six levers and both charts; tooltips open on focus.
   const levers = page.getByRole('region', { name: 'Policy levers' });
   await expect(levers.getByRole('button', { name: /^Evidence:/ })).toHaveCount(6);
-  await expect(levers.getByRole('button', { name: 'Evidence: Measured here' })).toHaveCount(2);
+  await expect(levers.getByRole('button', { name: 'Evidence: Measured here' })).toHaveCount(1);
   await levers.getByRole('button', { name: 'Evidence: Assumed' }).first().focus();
   await expect(page.getByRole('tooltip')).toContainText(/Assumed\./);
   await page.keyboard.press('Escape');
