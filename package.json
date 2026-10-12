@@ -24,7 +24,8 @@
     "calibrate:smoke": "node scripts/py.mjs smoke",
     "validate": "node scripts/py.mjs validate",
     "did-recovery": "node scripts/py.mjs did",
-    "sobol": "node scripts/py.mjs sobol"
+    "sobol": "node scripts/py.mjs sobol",
+    "robustness": "node scripts/py.mjs robustness"
   },
   "devDependencies": {
     "@eslint/js": "10.0.1",
