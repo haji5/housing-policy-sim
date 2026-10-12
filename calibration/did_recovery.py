@@ -35,7 +35,7 @@ import numpy as np  # noqa: E402
 import pandas as pd  # noqa: E402
 import pyfixest as pf  # noqa: E402
 
-from common import ENSEMBLE_PATH, REPORTS, ROOT, load_targets  # noqa: E402
+from common import ENSEMBLE_PATH, PRIORS_PATH, REPORTS, ROOT, load_targets  # noqa: E402
 from simbridge import CLI, default_workers  # noqa: E402
 
 HIST = {"announced": 1, "phase1": 8, "phase2": 20}
@@ -119,12 +119,34 @@ def true_att(p: dict) -> float:
     return float(np.mean(np.log(h) - np.log(n)))
 
 
-def true_exempt(p: dict) -> float:
+def control_zones(p: dict, t: int) -> list[int]:
+    """Zones in the DiD control group at tick t: never covered, or opted in later (until opt-in)."""
+    return [zi for zi, z in enumerate(p["zones"])
+            if not z["covered"] and (z.get("optInTick") is None or t < z["optInTick"])]
+
+
+def true_control(p: dict) -> float:
+    """Policy effect on the control group's listings (the SUTVA violation), Phase 1 window."""
     ks = [k for k, t in enumerate(p["snapshotTicks"]) if P1_WINDOW[0] <= t < P1_WINDOW[1]]
-    ex = [zi for zi, z in enumerate(p["zones"]) if not z["covered"] and z.get("optInTick") is None]
-    h = np.array([sum(p["hist"][zi][k] for zi in ex) for k in ks], dtype=float)
-    n = np.array([sum(p["none"][zi][k] for zi in ex) for k in ks], dtype=float)
+    h = np.array([sum(p["hist"][zi][k] for zi in control_zones(p, p["snapshotTicks"][k])) for k in ks], dtype=float)
+    n = np.array([sum(p["none"][zi][k] for zi in control_zones(p, p["snapshotTicks"][k])) for k in ks], dtype=float)
     return float(np.mean(np.log(h) - np.log(n)))
+
+
+def control_path(p: dict, ticks: list[int], ref: int) -> np.ndarray:
+    """log(control listings / control listings at ref) under the policy, for a fixed control group."""
+    T = p["snapshotTicks"]
+    zs = control_zones(p, max(ticks))
+    lev = lambda t: sum(p["hist"][zi][T.index(t)] for zi in zs)  # noqa: E731
+    return np.log(np.array([lev(t) for t in ticks], dtype=float) / lev(ref))
+
+
+def data_control_path() -> tuple[list[int], np.ndarray]:
+    """Observed control-group path (never-covered areas + Salt Spring before its opt-in): targets T4 + H1."""
+    tg = {t["id"]: t for t in load_targets()}
+    ticks = [t for t in tg["T4"]["ticks"] if t < 26]
+    lev = np.array([tg["T4"]["levels"][str(t)] + tg["H1"]["levels"][str(t)] for t in ticks], dtype=float)
+    return ticks, np.log(lev / (tg["T4"]["ref_level"] + tg["H1"]["ref_level"]))
 
 
 def main(argv=None) -> int:
@@ -137,23 +159,30 @@ def main(argv=None) -> int:
     levels = [float(x) for x in args.levels.split(",")]
     idx = np.linspace(0, len(ens["sets"]) - 1, args.members).round().astype(int)
     draws, meta = [], []
+    ie_max = next(p["hi"] for p in json.loads(PRIORS_PATH.read_text(encoding="utf-8"))["parameters"]
+                  if p["name"] == "host.investorEntry")
     for lv in levels:
         for i in idx:
             s = json.loads(json.dumps(ens["sets"][int(i)]))
-            s["str"]["demandSpillover"] = float(min(1.0, s["str"]["demandSpillover"] * lv))
+            raw = s["str"]["demandSpillover"] * lv
+            s["str"]["demandSpillover"] = float(min(1.0, raw))
             s["host"]["investorEntry"] = float(s["host"]["investorEntry"] * lv)
             draws.append({"params": s, "seed": SEED + int(i)})
-            meta.append({"level": lv, "member": int(i)})
+            meta.append({"level": lv, "member": int(i), "spill_capped": bool(raw > 1.0),
+                         "entry_beyond_prior": bool(s["host"]["investorEntry"] > ie_max)})
     print(f"DiD recovery: {len(draws)} paired runs ({len(levels)} spillover levels x {len(idx)} members)", flush=True)
     panels = run_panels(draws, default_workers())
 
+    obs_ticks, obs_path = data_control_path()
     rows = []
     for k, (p, m) in enumerate(zip(panels, meta)):
         df = panel_frame(p)
         est, se = estimate(df)
         clean, _ = estimate(panel_frame(p, "hist"))  # same estimator on the noise-free true panel
         row = {**m, "estimate": est, "se": se, "estimate_noiseless": clean, "truth": true_att(p),
-               "exempt_spillover": true_exempt(p), "dropped_snapshots": int(sum(p["incomplete"])),
+               "control_spillover": true_control(p),
+               "control_rmse": float(np.sqrt(np.mean((control_path(p, obs_ticks, -1) - obs_path) ** 2))),
+               "control_bias": float(np.mean(control_path(p, obs_ticks, -1) - obs_path)), "dropped_snapshots": int(sum(p["incomplete"])),
                "false_flags": int(sum(f and not t for f, t in zip(p["incomplete"], p["truncated"]))),
                "missed_truncations": int(sum(t and not f for f, t in zip(p["incomplete"], p["truncated"])))}
         if list(idx).index(m["member"]) < args.ri_members:
@@ -168,7 +197,8 @@ def main(argv=None) -> int:
     summ = res.groupby("level").agg(
         truth=("truth", "mean"), estimate=("estimate", "mean"), noiseless=("estimate_noiseless", "mean"),
         bias=("bias", "mean"), bias_lo=("bias", lambda x: np.quantile(x, 0.05)), bias_hi=("bias", lambda x: np.quantile(x, 0.95)),
-        exempt=("exempt_spillover", "mean"), coverage=("covered95", "mean"), ri_p=("ri_p", "median"),
+        control=("control_spillover", "mean"), ctrl_rmse=("control_rmse", "mean"), ctrl_bias=("control_bias", "mean"),
+        capped=("spill_capped", "mean"), beyond=("entry_beyond_prior", "mean"), coverage=("covered95", "mean"), ri_p=("ri_p", "median"),
         ri_reject=("ri_p", lambda x: float(np.mean(x.dropna() <= 0.05)) if x.notna().any() else float("nan")),
         false_flags=("false_flags", "mean"), missed=("missed_truncations", "mean"),
     ).reset_index()
@@ -213,11 +243,28 @@ def main(argv=None) -> int:
          "researcher-view panel. Bias = estimate - truth. Coverage = share of runs whose 95% CI (zone-clustered) contains "
          "the truth. RI p = placebo-in-space randomization inference over all 3-zone control groups (median over the "
          f"first {args.ri_members} members).", "",
-         "| Spillover | True effect | DiD estimate | DiD, noise-free panel | Bias (mean) | Bias 5-95% | Exempt-area spillover (true) | 95% CI coverage | RI p (median) |",
+         "| Spillover | True effect | DiD estimate | DiD, noise-free panel | Bias (mean) | Bias 5-95% | Control-group spillover (true) | 95% CI coverage | RI p (median) |",
          "|---:|---:|---:|---:|---:|---:|---:|---:|---:|"]
     for _, r in summ.iterrows():
         L.append(f"| {r['level']:.1f}x | {r['truth']:+.3f} | {r['estimate']:+.3f} | {r['noiseless']:+.3f} | {r['bias']:+.3f} | "
-                 f"{r['bias_lo']:+.3f} to {r['bias_hi']:+.3f} | {r['exempt']:+.3f} | {r['coverage'] * 100:.0f}% | {r['ri_p']:.3f} |")
+                 f"{r['bias_lo']:+.3f} to {r['bias_hi']:+.3f} | {r['control']:+.3f} | {r['coverage'] * 100:.0f}% | {r['ri_p']:.3f} |")
+    L += ["", "Control-group spillover = the policy's effect on listings in the zones the regression uses as controls "
+          "(the never-covered areas and Salt Spring before its opt-in), Phase 1 window, aggregate log points.", "",
+          "## What the spillover levels mean", "",
+          "Each level multiplies a member's `demandSpillover` (capped at 1, its upper bound) and `investorEntry`. Above 1x the "
+          "cap binds for many members, so higher levels mostly scale investor entry, often beyond the calibration prior.", "",
+          "| Spillover | Members with demandSpillover capped at 1 | Members with investorEntry above the prior maximum |",
+          "|---:|---:|---:|"]
+    for _, r in summ.iterrows():
+        L.append(f"| {r['level']:.1f}x | {r['capped'] * 100:.0f}% | {r['beyond'] * 100:.0f}% |")
+    L += ["", "## Data check: which spillover levels fit the observed control areas?", "",
+          f"The control areas are untreated until Salt Spring's opt-in (tick 26), so their listing path before then is direct "
+          f"evidence on spillover. Simulated path (policy run, noise-free) vs observed (targets T4 + H1, Juan de Fuca, "
+          f"Southern Gulf Islands and Salt Spring) at snapshot ticks {obs_ticks}, log change from Aug 2023. The observed path "
+          "also contains whatever common trend the model attributes to tourist demand growth.", "",
+          "| Spillover | Mean gap, sim - data | RMSE |", "|---:|---:|---:|"]
+    for _, r in summ.iterrows():
+        L.append(f"| {r['level']:.1f}x | {r['ctrl_bias']:+.3f} | {r['ctrl_rmse']:.3f} |")
     L += ["", "## Measurement", "",
           "Per run, averaged by spillover level: snapshots the analyst's 75% rule drops although they were complete "
           "(false flags; a genuine policy-driven fall can trip the rule), truncated snapshots the rule misses, and the "
@@ -232,7 +279,7 @@ def main(argv=None) -> int:
         L += ["", "## Numbers at the calibrated spillover (1x)", "",
               f"- DiD estimate {c['estimate']:+.3f} vs true effect {c['truth']:+.3f}: bias {c['bias']:+.3f} log points "
               f"(the DiD magnitude is {rel:+.0f}% relative to the true magnitude); the same DiD on the noise-free true panel gives {c['noiseless']:+.3f}.",
-              f"- True effect on never-covered (control) listings: {c['exempt']:+.3f}.",
+              f"- True effect on control-group listings: {c['control']:+.3f}.",
               "- Interpretation: docs/VALIDATION.md section 3 (written by hand from this report)."]
     L += ["", "![DiD recovery](did_recovery.png)", ""]
     (REPORTS / "did_recovery.md").write_text("\n".join(L) + "\n", encoding="utf-8", newline="\n")
