@@ -78,3 +78,53 @@ test('isometric map: zoom levels, overlays, keyboard pan, sprite preview', async
     await page.screenshot({ path: `${SHOTS}/art-preview-${k}x.png` });
   }
 });
+
+test.describe('touch', () => {
+  test.use({ viewport: { width: 390, height: 844 }, hasTouch: true, isMobile: true });
+
+  test('a vertical swipe on the map pans it instead of scrolling the page', async ({ page }) => {
+    test.setTimeout(120_000);
+    await page.goto('/?seed=1');
+    await page.getByTestId('start').click();
+    await expect(page.getByTestId('end-turn')).toBeEnabled({ timeout: 30_000 });
+    await page.getByRole('button', { name: 'Skip the tutorial' }).click();
+    const map = page.locator('.isomap');
+    const canvas = map.locator('canvas').first();
+    await canvas.scrollIntoViewIfNeeded();
+    // Put the map mid-screen so the page could scroll either way.
+    await canvas.evaluate((c) => c.scrollIntoView({ block: 'center' }));
+    // Real touch events (CDP), which honour touch-action as a phone does.
+    const cdp = await page.context().newCDPSession(page);
+    const swipeUp = async () => {
+      const b = (await canvas.boundingBox())!;
+      const x = b.x + b.width / 2;
+      const y0 = b.y + b.height * 0.7;
+      await cdp.send('Input.dispatchTouchEvent', {
+        type: 'touchStart',
+        touchPoints: [{ x, y: y0 }],
+      });
+      for (let i = 1; i <= 10; i++)
+        await cdp.send('Input.dispatchTouchEvent', {
+          type: 'touchMove',
+          touchPoints: [{ x, y: y0 - 15 * i }],
+        });
+      await cdp.send('Input.dispatchTouchEvent', { type: 'touchEnd', touchPoints: [] });
+      await page.waitForTimeout(300);
+    };
+    const top = async () => Math.round((await canvas.boundingBox())!.y);
+    const pixels = () => canvas.evaluate((c: HTMLCanvasElement) => c.toDataURL());
+
+    // Zoomed in (the default): the swipe pans the map; the page stays put.
+    const top0 = await top();
+    const img0 = await pixels();
+    await swipeUp();
+    expect(await top()).toBe(top0);
+    expect(await pixels()).not.toBe(img0);
+
+    // Whole-region view: nothing to pan, so the same swipe scrolls the page.
+    await map.getByRole('button', { name: 'Zoom out' }).click();
+    const top1 = await top();
+    await swipeUp();
+    expect(await top()).toBeLessThan(top1);
+  });
+});

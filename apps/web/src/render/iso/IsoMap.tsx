@@ -396,8 +396,13 @@ export function IsoMap({ layout, snapshot }: Props) {
     snapshot.levers.strRegime,
   ]);
 
-  // Pointer drag to pan.
-  const drag = useRef<{ x: number; y: number; cx: number; cy: number } | null>(null);
+  // Pointer drag to pan (mouse, pen or one finger). The canvas claims touch gestures only while
+  // there is something to pan (CSS class "pannable": touch-action none), so a vertical swipe pans
+  // the map instead of scrolling the page; in the whole-region view touches scroll the page.
+  const drag = useRef<{ id: number; x: number; y: number; cx: number; cy: number } | null>(null);
+  const endDrag = (e: PointerEvent) => {
+    if (drag.current?.id === e.pointerId) drag.current = null;
+  };
   const clampCam = (x: number, y: number) => ({
     x: Math.min(worldW, Math.max(0, x)),
     y: Math.min(worldH, Math.max(0, y)),
@@ -472,20 +477,25 @@ export function IsoMap({ layout, snapshot }: Props) {
       </div>
       <canvas
         ref={canvasRef}
+        class={zoom === 0 ? undefined : 'pannable'}
         tabIndex={0}
         style={{ width: `${size.w}px`, height: `${size.h}px` }}
         role="img"
         aria-label={`City map, each building stands for about ${homesPerLot} homes. Shown: ${counts.str} short-term rental buildings, ${counts.forrent} for rent, ${counts.held} held empty, ${counts.construction} under construction, ${delisted} stopped short-term renting this quarter. Arrow keys pan, plus and minus zoom.`}
         onPointerDown={(e) => {
+          if (zoom === 0 || drag.current) return; // follow the first finger only
           (e.target as HTMLCanvasElement).setPointerCapture(e.pointerId);
-          drag.current = { x: e.clientX, y: e.clientY, cx: view.x, cy: view.y };
+          drag.current = { id: e.pointerId, x: e.clientX, y: e.clientY, cx: view.x, cy: view.y };
         }}
         onPointerMove={(e) => {
           const d = drag.current;
-          if (!d || zoom === 0) return;
+          if (!d || d.id !== e.pointerId || zoom === 0) return;
+          e.preventDefault();
           setCam(clampCam(d.cx - (e.clientX - d.x) / z, d.cy - (e.clientY - d.y) / z));
         }}
-        onPointerUp={() => (drag.current = null)}
+        onPointerUp={endDrag}
+        onPointerCancel={endDrag}
+        onLostPointerCapture={endDrag}
         onWheel={(e) => {
           e.preventDefault();
           zoomBy(e.deltaY < 0 ? 1 : -1);

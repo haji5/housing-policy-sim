@@ -402,10 +402,16 @@ button:disabled {
 .isomap canvas {
   display: block;
   image-rendering: pixelated;
-  cursor: grab;
   max-width: 100%;
 }
-.isomap canvas:active {
+/* While the map can pan, a drag on it pans the map instead of scrolling the page. Browsers that
+   support it keep pinch-to-zoom for the page (the second declaration); others fall back to none. */
+.isomap canvas.pannable {
+  cursor: grab;
+  touch-action: none;
+  touch-action: pinch-zoom;
+}
+.isomap canvas.pannable:active {
   cursor: grabbing;
 }
 .map-tools {

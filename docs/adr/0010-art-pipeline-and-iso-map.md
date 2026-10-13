@@ -62,3 +62,8 @@ without an OFL-compatible licence.
   rule. The map is a god view of sampled homes; the charts remain the researcher view (ADR 0006).
 - The flat placeholder map (`render/MapCanvas.tsx`) stays as a fallback (`?map=flat`).
 - Licence: generated art is CC BY 4.0; code stays MIT.
+- **Touch (2026-10-13).** While the map can pan (any zoom but the whole-region view) its canvas has
+  `touch-action: none` (`pinch-zoom` where supported, so the page can still be pinch-zoomed): a
+  one-finger drag pans the map instead of scrolling the page. In the whole-region view touches
+  pass through and scroll the page. The drag follows the first finger only and ends on
+  `pointercancel`. `map.spec.ts` swipes with real touch events on a phone-sized viewport.
