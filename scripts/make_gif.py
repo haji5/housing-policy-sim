@@ -29,7 +29,8 @@ def main() -> int:
         Image.open(p).convert("RGB").quantize(colors=128, method=Image.Quantize.FASTOCTREE, dither=Image.Dither.NONE)
         for p in paths
     ]
-    durations = [1200] + [450] * (len(q) - 2) + [3000]
+    # Hold the first quarter, step through the term, hold the final state.
+    durations = [1500] + [550] * (len(q) - 2) + [3500]
     OUT.parent.mkdir(parents=True, exist_ok=True)
     q[0].save(OUT, save_all=True, append_images=q[1:], duration=durations, loop=0, optimize=True)
     print(f"wrote {OUT} ({len(q)} frames, {OUT.stat().st_size / 1024:.0f} KB)")

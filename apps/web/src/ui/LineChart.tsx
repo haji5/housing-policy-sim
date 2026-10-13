@@ -45,6 +45,11 @@ interface Props {
   summary: string;
   /** Small print under the legend (data source, caveats). */
   note?: string;
+  /**
+   * Always show the legend entry for hollow (dropped) points, so the legend, and the layout below
+   * the chart, do not change when the first one appears.
+   */
+  hollowLegend?: boolean;
 }
 
 const W = 520;
@@ -81,6 +86,7 @@ export function LineChart({
   yFormat = String,
   summary,
   note,
+  hollowLegend = false,
 }: Props) {
   const all = [
     ...lines.flatMap((l) => l.points.map((p) => p.y)),
@@ -114,7 +120,7 @@ export function LineChart({
   const sy = (y: number) => M.top + ih - ((y - lo) / (hi - lo)) * ih;
   const xTicks: number[] = [];
   for (let x = 0; x <= xMax; x += 12) xTicks.push(x);
-  const hasHollow = lines.some((l) => l.points.some((p) => p.hollow));
+  const hasHollow = hollowLegend || lines.some((l) => l.points.some((p) => p.hollow));
 
   return (
     <figure class="chart">

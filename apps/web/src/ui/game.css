@@ -507,6 +507,9 @@ input[type='range']:disabled {
 .news-row {
   display: grid;
   gap: 1rem;
+  /* Room for a headline, a line and two reactions, or a shock card beside the paper: ordinary turns
+     then leave the charts below where they were (no layout shift as the quarters go by). */
+  min-height: 11.5rem;
 }
 .news-row.two {
   grid-template-columns: minmax(0, 1fr) minmax(0, 1.5fr);

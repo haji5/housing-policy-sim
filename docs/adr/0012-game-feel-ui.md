@@ -64,3 +64,10 @@ Acceptance criteria (restated before implementing):
 - The floating deltas stay fully opaque and are removed on `animationend`: a fading text fails
   contrast while it fades (axe caught one mid-fade).
 - Focus rings on dark surfaces use the palette yellow (9:1) instead of orange (3.1:1 there).
+- **Layout stability (2026-10-13).** Between turns nothing above the charts may change height, so
+  the charts never move while the player watches them update. Three fixes: `AtlasSprite` sizes its
+  canvas from the atlas frame in markup and draws before paint (an unsized canvas is 300 × 150 px
+  until drawn, which ballooned the shock card to about 500 px and pushed the charts below the fold
+  at 1366 × 768); the news row reserves 11.5 rem; the listings chart always shows its "flagged
+  incomplete" legend entry. Measured over 20 turns on seeds 1-4 at 1366 px, the charts stay at the
+  same position from turn 1 to 19; `media.spec.ts` fails if they move between GIF frames.

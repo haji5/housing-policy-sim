@@ -325,6 +325,7 @@ function Play({ state, quote, setDraft, endTurn, setup }: Game) {
                 xLabel={label}
                 yFormat={(y) => fmt(y)}
                 markers={markers}
+                hollowLegend
                 lines={[
                   { label: 'Covered areas', points: view.covered, color: '#d55e00', dots: true },
                   {

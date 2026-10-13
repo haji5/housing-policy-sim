@@ -14,6 +14,11 @@ happened.
 
 ![One term of play: the quarterly paper, listings and rent charts above the isometric city](docs/media/zoned-out.gif)
 
+At the end of the term, the debrief replays your decisions in 32 calibrated model variants and
+shows what really happened, against what the noisy data let you see:
+
+![Debrief: effect of your term on covered-area listings and asking rents, your world against the spread of model variants](docs/media/debrief-fans.png)
+
 ## At a glance
 
 My [first project](https://github.com/haji5/bc-str-ban-analysis) estimated the effect of BC's

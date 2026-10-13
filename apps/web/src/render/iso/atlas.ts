@@ -18,6 +18,12 @@ export interface Atlas {
 }
 
 let cached: Promise<Atlas> | null = null;
+let loaded: Atlas | null = null;
+
+/** The atlas if it has already loaded (lets sprites draw on their first render), else null. */
+export function peekAtlas(): Atlas | null {
+  return loaded;
+}
 
 export function loadAtlas(): Promise<Atlas> {
   cached ??= (async () => {
@@ -37,7 +43,8 @@ export function loadAtlas(): Promise<Atlas> {
     ctx.globalCompositeOperation = 'source-in';
     ctx.fillStyle = '#1b1b2a';
     ctx.fillRect(0, 0, ink.width, ink.height);
-    return { image, frames: json.frames, inkFont: ink };
+    loaded = { image, frames: json.frames, inkFont: ink };
+    return loaded;
   })();
   return cached;
 }
