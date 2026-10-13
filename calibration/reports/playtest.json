@@ -93,78 +93,78 @@
    "id": "crackdown",
    "label": "STR crackdown (rule + registry, max enforcement)",
    "effects": {
-    "rentBurdenPp": -0.21899914399723802,
-    "stressed": 181.25,
-    "stressRatePp": 0.04078953420120421,
-    "completions": -40,
-    "strListingsPct": -40.41774519628265,
-    "askingRentPct": -0.31719831279888666,
-    "fiscalBalance": -17.7590625,
+    "rentBurdenPp": -0.10600455629838773,
+    "stressed": 28.125,
+    "stressRatePp": -0.008537615707918111,
+    "completions": -66.25,
+    "strListingsPct": -40.32023915277514,
+    "askingRentPct": 0.2540114948494132,
+    "fiscalBalance": -17.296875,
     "capital": 12
    },
    "points": {
-    "affordability": 0.8759965759889521,
-    "stress": -0.4078953420120419,
-    "supply": -0.08,
-    "fiscal": -1.7759062499999998,
-    "visitors": -20.208872598141326,
+    "affordability": 0.4240182251935509,
+    "stress": 0.08537615707918106,
+    "supply": -0.1325,
+    "fiscal": -1.7296874999999998,
+    "visitors": -20.16011957638757,
     "capital": 12
    },
    "composite": {
-    "balanced": -1.5994462690274032,
-    "affordability": -0.6363364547872069,
-    "budget": -1.1238990997112792,
-    "tourism": -6.616463356903175
+    "balanced": -1.5854854490191397,
+    "affordability": -0.6244022728689723,
+    "budget": -1.1017904070132505,
+    "tourism": -6.591894716040673
    },
    "refusedTurns": 0,
    "perSeedComposite": [
     {
-     "balanced": -1.281688192518774,
-     "affordability": -0.6080697746068287,
-     "budget": -0.7401783640514589,
-     "tourism": -5.87821704166598
+     "balanced": -1.327826869831221,
+     "affordability": 0.415247851970588,
+     "budget": -0.99928398680623,
+     "tourism": -7.00510409784429
     },
     {
-     "balanced": -1.932062025024166,
-     "affordability": -0.8946791255949486,
-     "budget": -1.4549564019398078,
-     "tourism": -7.177147040079801
+     "balanced": -0.9255022694158234,
+     "affordability": -0.2937505172851275,
+     "budget": -0.6735015711340313,
+     "tourism": -5.078746240222643
     },
     {
-     "balanced": -1.1020919837747343,
-     "affordability": -0.3570747373652996,
-     "budget": -0.8781406041517391,
-     "tourism": -5.444033580740368
+     "balanced": -2.6366350345525156,
+     "affordability": -1.0210287368143467,
+     "budget": -1.7501031008440495,
+     "tourism": -9.18581875154555
     },
     {
-     "balanced": -1.240542506032068,
-     "affordability": -0.16118012102623658,
-     "budget": -0.9677313503298935,
-     "tourism": -6.084558273406817
+     "balanced": -0.7019180329302935,
+     "affordability": -0.22414188490638465,
+     "budget": -0.49811633049020326,
+     "tourism": -4.541255022872361
     },
     {
-     "balanced": -2.828666043725136,
-     "affordability": -1.4109384103936586,
-     "budget": -2.0972880302712484,
-     "tourism": -9.108198286681503
+     "balanced": -2.110469991253344,
+     "affordability": -1.5266963655532892,
+     "budget": -1.5150657631753925,
+     "tourism": -6.974993189652475
     },
     {
-     "balanced": -1.4433758342544731,
-     "affordability": -0.75324080670951,
-     "budget": -0.8258659621761737,
-     "tourism": -6.205897715306763
+     "balanced": -0.815226109405374,
+     "affordability": -0.6115953746506597,
+     "budget": -0.5404161526652587,
+     "tourism": -4.464237399933113
     },
     {
-     "balanced": -1.0842071776447082,
-     "affordability": -0.38792460530355466,
-     "budget": -0.6179991999078752,
-     "tourism": -5.571299414801304
+     "balanced": -2.4803817135892903,
+     "affordability": -0.9744976204659337,
+     "budget": -1.8058892632541235,
+     "tourism": -8.670999448133623
     },
     {
-     "balanced": -1.8829363892451656,
-     "affordability": -0.5175840572976182,
-     "budget": -1.4090328848620375,
-     "tourism": -7.462355502542865
+     "balanced": -1.6859235711752554,
+     "affordability": -0.7587555352466258,
+     "budget": -1.0319470877367154,
+     "tourism": -6.814003578121331
     }
    ]
   },
@@ -172,78 +172,78 @@
    "id": "supply",
    "label": "Supply push (aggressive upzoning + non-market homes)",
    "effects": {
-    "rentBurdenPp": -0.2238478024420676,
-    "stressed": 110,
-    "stressRatePp": -0.14860925169741995,
-    "completions": 6809.375,
-    "strListingsPct": 1.3080534582151415,
-    "askingRentPct": -0.8438839557907745,
+    "rentBurdenPp": -0.15012639381556114,
+    "stressed": 51.875,
+    "stressRatePp": -0.16378901297183363,
+    "completions": 6780.625,
+    "strListingsPct": 1.959503022939335,
+    "askingRentPct": -1.0598574039690636,
     "fiscalBalance": -29.999999999999993,
     "capital": 12
    },
    "points": {
-    "affordability": 0.8953912097682704,
-    "stress": 1.4860925169741992,
-    "supply": 13.618750000000002,
+    "affordability": 0.6005055752622446,
+    "stress": 1.6378901297183361,
+    "supply": 13.561250000000001,
     "fiscal": -2.999999999999999,
-    "visitors": 0.6540267291075708,
+    "visitors": 0.9797515114696675,
     "capital": 12
    },
    "composite": {
-    "balanced": 4.275710075975007,
-    "affordability": 3.570573972005958,
-    "budget": 2.6139531295211587,
-    "tourism": 3.020806479665505
+    "balanced": 4.296566202741708,
+    "affordability": 3.5427564870301533,
+    "budget": 2.6283919865134906,
+    "tourism": 3.122940470370709
    },
    "refusedTurns": 0,
    "perSeedComposite": [
     {
-     "balanced": 4.279926466599763,
-     "affordability": 3.5783430705765715,
-     "budget": 2.6168721691844516,
-     "tourism": 2.953518668752299
+     "balanced": 4.265891528358821,
+     "affordability": 3.4613303166545473,
+     "budget": 2.6071556734791836,
+     "tourism": 3.0680366728217203
     },
     {
-     "balanced": 4.24138993186604,
-     "affordability": 3.5943988254880335,
-     "budget": 2.590193029753413,
-     "tourism": 2.936388099421152
+     "balanced": 4.282081140157271,
+     "affordability": 3.4387560205588668,
+     "budget": 2.6183638662627264,
+     "tourism": 3.249938656975094
     },
     {
-     "balanced": 4.164061788929605,
-     "affordability": 3.3544838759789766,
-     "budget": 2.536658161566651,
-     "tourism": 2.9764574926703293
+     "balanced": 4.401651072146236,
+     "affordability": 3.7310929185963246,
+     "budget": 2.7011430499473943,
+     "tourism": 3.173808749028188
     },
     {
-     "balanced": 4.458999609441062,
-     "affordability": 3.8117794987483355,
-     "budget": 2.740845883459197,
-     "tourism": 3.3882817808950927
+     "balanced": 3.953027503178864,
+     "affordability": 3.0445318235766172,
+     "budget": 2.390557502200752,
+     "tourism": 2.8558937148748145
     },
     {
-     "balanced": 4.328310190608798,
-     "affordability": 3.8298473848601997,
-     "budget": 2.650368593498399,
-     "tourism": 2.9324198755496798
+     "balanced": 4.239113455120364,
+     "affordability": 3.622471753584394,
+     "budget": 2.5886170073910217,
+     "tourism": 3.00484945462232
     },
     {
-     "balanced": 4.552742683824388,
-     "affordability": 3.9804577893599693,
-     "budget": 2.8057449349553454,
-     "tourism": 3.2357335509904726
+     "balanced": 4.1602521491545295,
+     "affordability": 3.2764367392979046,
+     "budget": 2.534020718645444,
+     "tourism": 2.9005158184127717
     },
     {
-     "balanced": 4.072629512011795,
-     "affordability": 3.0534975851964097,
-     "budget": 2.473358892931243,
-     "tourism": 2.965070146330066
+     "balanced": 4.511843591354009,
+     "affordability": 3.828969746732128,
+     "budget": 2.7774301786296993,
+     "tourism": 3.3086285939482867
     },
     {
-     "balanced": 4.107620424518603,
-     "affordability": 3.361783745839165,
-     "budget": 2.4975833708205717,
-     "tourism": 2.778582222714947
+     "balanced": 4.558669182463574,
+     "affordability": 3.9384625772404434,
+     "budget": 2.809847895551705,
+     "tourism": 3.421852102282474
     }
    ]
   },
@@ -251,78 +251,78 @@
    "id": "tenants",
    "label": "Tenant protection (low rent cap, 3% vacancy tax, PR rule)",
    "effects": {
-    "rentBurdenPp": -2.732091057705392,
-    "stressed": 175.625,
-    "stressRatePp": -0.14764750163387685,
-    "completions": -513.125,
-    "strListingsPct": -24.266664502606357,
-    "askingRentPct": -0.7505472288486015,
-    "fiscalBalance": 162.59203125,
+    "rentBurdenPp": -2.7416934103145425,
+    "stressed": 26.25,
+    "stressRatePp": -0.08716081650852539,
+    "completions": -576.875,
+    "strListingsPct": -25.178654810685106,
+    "askingRentPct": -0.3669135879245964,
+    "fiscalBalance": 148.52765625,
     "capital": 12
    },
    "points": {
-    "affordability": 10.928364230821568,
-    "stress": 1.4764750163387685,
-    "supply": -1.02625,
-    "fiscal": 16.259203125,
-    "visitors": -12.133332251303178,
+    "affordability": 10.96677364125817,
+    "stress": 0.8716081650852538,
+    "supply": -1.15375,
+    "fiscal": 14.852765625000002,
+    "visitors": -12.589327405342553,
     "capital": 12
    },
    "composite": {
-    "balanced": 4.584076686809526,
-    "affordability": 4.899440604795244,
-    "budget": 8.012607778368135,
-    "tourism": 0.5322791434018928
+    "balanced": 4.158011671000145,
+    "affordability": 4.562266572694703,
+    "budget": 7.338983440500099,
+    "tourism": 0.06044937944633581
    },
    "refusedTurns": 0,
    "perSeedComposite": [
     {
-     "balanced": 3.16937532185157,
-     "affordability": 4.402321251058733,
-     "budget": 4.271105992051087,
-     "tourism": -0.5244860563499506
+     "balanced": 5.083925289170067,
+     "affordability": 5.655396589079256,
+     "budget": 9.673794430963891,
+     "tourism": -0.03925224885201791
     },
     {
-     "balanced": 2.036217582112831,
-     "affordability": 3.4079908255973708,
-     "budget": 3.2353189030011906,
-     "tourism": -2.4064886141065664
+     "balanced": 6.121651029131027,
+     "affordability": 5.030161207310607,
+     "budget": 11.824561289398401,
+     "tourism": 2.4088154948951663
     },
     {
-     "balanced": 5.130871991497188,
-     "affordability": 5.02091626858344,
-     "budget": 9.275493109498054,
-     "tourism": 1.1823134829651658
+     "balanced": 0.8887009813933103,
+     "affordability": 2.5287830786493966,
+     "budget": 1.9832256794261385,
+     "tourism": -4.238322337022822
     },
     {
-     "balanced": 2.6512611286466945,
-     "affordability": 3.7635947210180736,
-     "budget": 3.6242673198323274,
-     "tourism": -1.0518288340138267
+     "balanced": 6.531879941816395,
+     "affordability": 5.2104514403538635,
+     "budget": 12.61559476741135,
+     "tourism": 2.9278655898851014
     },
     {
-     "balanced": 4.328172540148922,
-     "affordability": 5.42834600818702,
-     "budget": 7.621215604718485,
-     "tourism": -0.6395920875892074
+     "balanced": 3.829651930366565,
+     "affordability": 5.141563428630457,
+     "budget": 5.938749413330698,
+     "tourism": -0.48425696748710634
     },
     {
-     "balanced": 5.78050777659431,
-     "affordability": 5.104570544787545,
-     "budget": 10.020351537642215,
-     "tourism": 2.689702651644492
+     "balanced": 3.4667779555587663,
+     "affordability": 3.1636509016675407,
+     "budget": 5.681875123079146,
+     "tourism": 0.693050949773075
     },
     {
-     "balanced": 2.8662233304210942,
-     "affordability": 3.8860844582670984,
-     "budget": 4.11029884413768,
-     "tourism": -0.8324693121643989
+     "balanced": 3.427263700166456,
+     "affordability": 4.354702207438368,
+     "budget": 4.607648907807546,
+     "tourism": 0.09552423794950772
     },
     {
-     "balanced": 10.7099838232036,
-     "affordability": 8.181700760862672,
-     "budget": 21.942810916064033,
-     "tourism": 5.841081916829435
+     "balanced": 3.9142425403985754,
+     "affordability": 5.413423728428139,
+     "budget": 6.386417912583629,
+     "tourism": -0.8798296835702174
     }
    ]
   },
@@ -330,84 +330,84 @@
    "id": "balanced",
    "label": "Balanced (rule + registry, 1% vacancy tax, moderate upzoning, data)",
    "effects": {
-    "rentBurdenPp": -0.7443602333678703,
-    "stressed": 427.5,
-    "stressRatePp": -0.06307010416866203,
-    "completions": 1823.75,
-    "strListingsPct": -38.19985365369854,
-    "askingRentPct": -1.3518031375193242,
-    "fiscalBalance": 83.61031249999999,
+    "rentBurdenPp": -0.7952096587316313,
+    "stressed": 251.875,
+    "stressRatePp": -0.1367103336331407,
+    "completions": 1771.875,
+    "strListingsPct": -37.784686650908064,
+    "askingRentPct": -1.2473437718156486,
+    "fiscalBalance": 71.79593750000001,
     "capital": 12
    },
    "points": {
-    "affordability": 2.977440933471481,
-    "stress": 0.6307010416866203,
-    "supply": 3.6474999999999995,
-    "fiscal": 8.36103125,
-    "visitors": -19.09992682684927,
+    "affordability": 3.180838634926525,
+    "stress": 1.367103336331407,
+    "supply": 3.54375,
+    "fiscal": 7.17959375,
+    "visitors": -18.892343325454032,
     "capital": 12
    },
    "composite": {
-    "balanced": 1.4194577330514717,
-    "affordability": 1.7683594095217794,
-    "budget": 3.6952868440356337,
-    "tourism": -3.838008359346862
+    "balanced": 1.3964903993006503,
+    "affordability": 1.9666552545828997,
+    "budget": 3.3613070552850655,
+    "tourism": -3.84346085926025
    },
    "refusedTurns": 0,
    "perSeedComposite": [
     {
-     "balanced": 1.2603003475580012,
-     "affordability": 1.84082350249256,
-     "budget": 2.364198317540155,
-     "tourism": -3.30616360985829
+     "balanced": 1.3522099336618065,
+     "affordability": 2.3283349180729904,
+     "budget": 3.5561741848427895,
+     "tourism": -4.636132977842579
     },
     {
-     "balanced": -0.03493068859197024,
-     "affordability": 0.7222130448551886,
-     "budget": 1.1777402925132516,
-     "tourism": -5.473282050631278
+     "balanced": 3.559421191713272,
+     "affordability": 3.7828529479931636,
+     "budget": 6.044892555801495,
+     "tourism": -0.8080110731670707
     },
     {
-     "balanced": 1.7816201411197783,
-     "affordability": 1.6187800288040228,
-     "budget": 4.182087982313693,
-     "tourism": -2.842705914007377
+     "balanced": -1.3049443051780536,
+     "affordability": 0.15866784816392418,
+     "budget": -0.22114894204634467,
+     "tourism": -7.947361024774936
     },
     {
-     "balanced": 0.5823541107436222,
-     "affordability": 1.4656235231310815,
-     "budget": 1.5859086151302004,
-     "tourism": -4.5098285643569795
+     "balanced": 3.2577918028750474,
+     "affordability": 3.1378198117416174,
+     "budget": 5.767418363528879,
+     "tourism": -0.8012637516695711
     },
     {
-     "balanced": 1.009157881274256,
-     "affordability": 2.0555909236711534,
-     "budget": 3.773003533189869,
-     "tourism": -5.646041338605002
+     "balanced": 1.2050312289804062,
+     "affordability": 1.6020026658665034,
+     "budget": 3.3392860431402815,
+     "tourism": -4.004968714874379
     },
     {
-     "balanced": 2.682624045122584,
-     "affordability": 2.2652207530056234,
-     "budget": 6.338153185084865,
-     "tourism": -2.3925519295679227
+     "balanced": 1.1478108086497796,
+     "affordability": 0.40186116045165476,
+     "budget": 2.671893059834463,
+     "tourism": -2.383924565139097
     },
     {
-     "balanced": 1.1786470800514708,
-     "affordability": 1.6900291523483342,
-     "budget": 2.3295777861894797,
-     "tourism": -3.408336552465024
+     "balanced": 0.03897592949733072,
+     "affordability": 1.717714145839905,
+     "budget": 1.3575314127289213,
+     "tourism": -6.55075424260287
     },
     {
-     "balanced": 2.8958889471340314,
-     "affordability": 2.4885943478662726,
-     "budget": 7.811625040323559,
-     "tourism": -3.125156915283023
+     "balanced": 1.9156266042056131,
+     "affordability": 2.60398853853344,
+     "budget": 4.37440976445004,
+     "tourism": -3.615270524011498
     }
    ]
   }
  ],
  "best": {
-  "balanced": "tenants",
+  "balanced": "supply",
   "affordability": "tenants",
   "budget": "tenants",
   "tourism": "supply"

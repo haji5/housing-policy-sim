@@ -3,617 +3,689 @@
   "rows": [
    {
     "term": "antic",
-    "pyfixest": -0.15486535272156257,
-    "typescript": -0.15486535272156532,
-    "abs_diff": 2.7478019859472624e-15,
-    "se_crv1": 0.06168140144291264
+    "pyfixest": -0.21504320869405835,
+    "typescript": -0.21504320869405602,
+    "abs_diff": 2.3314683517128287e-15,
+    "se_crv1": 0.08624492333800424
    },
    {
     "term": "p1",
-    "pyfixest": -0.4192095793367321,
-    "typescript": -0.41920957933674186,
-    "abs_diff": 9.769962616701378e-15,
-    "se_crv1": 0.042976008979032275
+    "pyfixest": -0.36458564151292866,
+    "typescript": -0.3645856415129231,
+    "abs_diff": 5.551115123125783e-15,
+    "se_crv1": 0.06263449593602392
    },
    {
     "term": "p2",
-    "pyfixest": -0.17657546109030844,
-    "typescript": -0.1765754610903007,
-    "abs_diff": 7.743805596760467e-15,
-    "se_crv1": 0.06300416636267173
+    "pyfixest": -0.1997197457293524,
+    "typescript": -0.1997197457293559,
+    "abs_diff": 3.524958103184872e-15,
+    "se_crv1": 0.0546772311496872
    }
   ],
-  "max_abs_diff": 9.769962616701378e-15,
+  "max_abs_diff": 5.551115123125783e-15,
   "nobs": 118
  },
  "recovery": [
   {
    "case": 1,
    "param": "host.pReview",
-   "truth": 0.0706161,
-   "lo": 0.0309515,
-   "hi": 0.279521,
+   "truth": 0.203753,
+   "lo": 0.0269223,
+   "hi": 0.2602547999999999,
    "covered": true,
-   "width_vs_prior": 0.8126348469546194
+   "width_vs_prior": 0.8377637204594458
   },
   {
    "case": 1,
    "param": "host.beta",
-   "truth": 2.41886,
-   "lo": 0.42453875,
-   "hi": 4.18704,
+   "truth": 3.93567,
+   "lo": 0.339708,
+   "hi": 4.36594,
    "covered": true,
-   "width_vs_prior": 0.8135129436558476
+   "width_vs_prior": 0.9076180573874444
   },
   {
    "case": 1,
    "param": "host.complianceBase",
-   "truth": 0.399032,
-   "lo": 0.03621909000000001,
-   "hi": 0.58457235,
+   "truth": 0.315025,
+   "lo": 0.06352900500000001,
+   "hi": 0.607523,
    "covered": true,
-   "width_vs_prior": 0.6854415749999999
+   "width_vs_prior": 0.6799924937499999
   },
   {
    "case": 1,
    "param": "host.multiComplianceShift",
-   "truth": -0.205997,
-   "lo": -0.394465,
-   "hi": 0.25286729999999963,
+   "truth": -0.165378,
+   "lo": -0.370687,
+   "hi": 0.29496184999999975,
    "covered": true,
-   "width_vs_prior": 0.8091653749999995
+   "width_vs_prior": 0.8320610624999997
   },
   {
    "case": 1,
    "param": "host.anticipation",
-   "truth": 0.259517,
-   "lo": 0.06941643,
-   "hi": 0.46297799999999995,
+   "truth": 0.381615,
+   "lo": 0.0585569,
+   "hi": 0.466057,
    "covered": true,
-   "width_vs_prior": 0.7871231399999998
+   "width_vs_prior": 0.8150002
   },
   {
    "case": 1,
    "param": "host.prShare",
-   "truth": 0.248252,
-   "lo": 0.225074,
-   "hi": 0.521301,
-   "covered": true,
-   "width_vs_prior": 0.8976575757575758
+   "truth": 0.515517,
+   "lo": 0.271571,
+   "hi": 0.50266285,
+   "covered": false,
+   "width_vs_prior": 0.7002783333333332
   },
   {
    "case": 1,
    "param": "host.investorEntry",
-   "truth": 0.00157903,
-   "lo": 0.0008222910500000001,
-   "hi": 0.00944683,
+   "truth": 0.00284911,
+   "lo": 7.93742e-05,
+   "hi": 0.008426826499999993,
    "covered": true,
-   "width_vs_prior": 0.8624538949999999
+   "width_vs_prior": 0.8347452299999993
   },
   {
    "case": 1,
    "param": "enforcement.detectMax",
-   "truth": 0.072048,
-   "lo": 0.0179597,
-   "hi": 0.21474119999999963,
+   "truth": 0.175277,
+   "lo": 0.0243115,
+   "hi": 0.323553,
    "covered": true,
-   "width_vs_prior": 0.5045679487179477
+   "width_vs_prior": 0.7672858974358974
   },
   {
    "case": 1,
    "param": "enforcement.delistProb",
-   "truth": 0.0702067,
-   "lo": 0.0291826,
-   "hi": 0.226748,
+   "truth": 0.255362,
+   "lo": 0.0290296,
+   "hi": 0.636969,
    "covered": true,
-   "width_vs_prior": 0.22450613636363637
+   "width_vs_prior": 0.6908402272727273
   },
   {
    "case": 1,
    "param": "enforcement.regTakeup",
-   "truth": 0.495565,
-   "lo": 0.074168605,
-   "hi": 0.6236615999999991,
+   "truth": 0.214101,
+   "lo": 0.19410415,
+   "hi": 0.7810090999999999,
    "covered": true,
-   "width_vs_prior": 0.7366758135281616
+   "width_vs_prior": 0.4816653522229684
   },
   {
    "case": 1,
    "param": "enforcement.exemptClaimShare",
-   "truth": 0.0491679,
-   "lo": 0.0030116,
-   "hi": 0.12777905,
+   "truth": 0.0528536,
+   "lo": 0.03958254000000001,
+   "hi": 0.147594,
    "covered": true,
-   "width_vs_prior": 0.62383725
+   "width_vs_prior": 0.5400573
   },
   {
    "case": 1,
    "param": "str.demandSpillover",
-   "truth": 0.497716,
-   "lo": 0.0445538,
-   "hi": 0.8497427499999993,
+   "truth": 0.379616,
+   "lo": 0.129941,
+   "hi": 0.923138,
    "covered": true,
-   "width_vs_prior": 0.8051889499999993
+   "width_vs_prior": 0.793197
   },
   {
    "case": 1,
    "param": "str.demandGrowthAnnual",
-   "truth": 0.0767725,
-   "lo": -0.0472477,
-   "hi": 0.0967971,
-   "covered": true,
-   "width_vs_prior": 0.9602986666666665
+   "truth": 0.097684,
+   "lo": -0.0373513,
+   "hi": 0.0951408,
+   "covered": false,
+   "width_vs_prior": 0.8832806666666665
   },
   {
    "case": 1,
    "param": "rental.arrivalRentElasticity",
-   "truth": 3.35692,
-   "lo": 0.8568401,
-   "hi": 4.583709999999999,
+   "truth": 3.82272,
+   "lo": 0.8542580000000001,
+   "hi": 4.2967,
    "covered": true,
-   "width_vs_prior": 0.8281933111111109
+   "width_vs_prior": 0.7649871111111112
   },
   {
    "case": 1,
    "param": "host.vacantHeldShare",
-   "truth": 0.0118931,
-   "lo": 0.00874321,
-   "hi": 0.0784956,
+   "truth": 0.0748114,
+   "lo": 0.00532367,
+   "hi": 0.07517522,
    "covered": true,
-   "width_vs_prior": 0.9300318666666667
+   "width_vs_prior": 0.931354
   },
   {
    "case": 1,
    "param": "host.sellRateAnnual",
-   "truth": 0.0690369,
-   "lo": 0.025889685000000003,
-   "hi": 0.0946642,
+   "truth": 0.020052,
+   "lo": 0.0230649,
+   "hi": 0.0998729,
+   "covered": false,
+   "width_vs_prior": 0.9601
+  },
+  {
+   "case": 1,
+   "param": "rental.kappa",
+   "truth": 0.135816,
+   "lo": 0.0368009,
+   "hi": 0.299802,
    "covered": true,
-   "width_vs_prior": 0.8596814375
+   "width_vs_prior": 0.9109760858545509
+  },
+  {
+   "case": 1,
+   "param": "rental.arrivalVacancySemiElasticity",
+   "truth": 41.2467,
+   "lo": 3.7944135,
+   "hi": 45.793129999999984,
+   "covered": true,
+   "width_vs_prior": 0.8399743299999998
   },
   {
    "case": 2,
    "param": "host.pReview",
-   "truth": 0.0259912,
-   "lo": 0.03583,
-   "hi": 0.28871,
-   "covered": false,
-   "width_vs_prior": 0.7705312080017633
+   "truth": 0.207178,
+   "lo": 0.030420345,
+   "hi": 0.270838,
+   "covered": true,
+   "width_vs_prior": 0.8073739649571323
   },
   {
    "case": 2,
    "param": "host.beta",
-   "truth": 1.89554,
-   "lo": 0.38558445,
-   "hi": 3.87063,
+   "truth": 0.441681,
+   "lo": 0.321892,
+   "hi": 2.963384499999998,
    "covered": true,
-   "width_vs_prior": 0.8197922594710495
+   "width_vs_prior": 0.7890320483607155
   },
   {
    "case": 2,
    "param": "host.complianceBase",
-   "truth": 0.669043,
-   "lo": 0.0424032,
-   "hi": 0.67872,
+   "truth": 0.30418,
+   "lo": 0.09591481,
+   "hi": 0.6402165499999992,
    "covered": true,
-   "width_vs_prior": 0.795396
+   "width_vs_prior": 0.680377174999999
   },
   {
    "case": 2,
    "param": "host.multiComplianceShift",
-   "truth": -0.328558,
-   "lo": -0.34431049999999996,
-   "hi": 0.310158,
+   "truth": -0.118388,
+   "lo": -0.31672849999999997,
+   "hi": 0.21551889999999985,
    "covered": true,
-   "width_vs_prior": 0.8180856249999998
+   "width_vs_prior": 0.6653092499999997
   },
   {
    "case": 2,
    "param": "host.anticipation",
-   "truth": 0.262151,
-   "lo": 0.1315373,
-   "hi": 0.4806685,
+   "truth": 0.33756,
+   "lo": 0.0301504,
+   "hi": 0.45971,
    "covered": true,
-   "width_vs_prior": 0.6982624
+   "width_vs_prior": 0.8591192
   },
   {
    "case": 2,
    "param": "host.prShare",
-   "truth": 0.218679,
-   "lo": 0.24539650000000002,
-   "hi": 0.498566,
-   "covered": false,
-   "width_vs_prior": 0.7671803030303029
+   "truth": 0.444581,
+   "lo": 0.262846,
+   "hi": 0.51525855,
+   "covered": true,
+   "width_vs_prior": 0.764886515151515
   },
   {
    "case": 2,
    "param": "host.investorEntry",
-   "truth": 0.000544762,
-   "lo": 0.0007580080500000001,
-   "hi": 0.00930811,
+   "truth": 0.0097891,
+   "lo": 0.0005163517500000001,
+   "hi": 0.00936834,
    "covered": false,
-   "width_vs_prior": 0.855010195
+   "width_vs_prior": 0.8851988249999999
   },
   {
    "case": 2,
    "param": "enforcement.detectMax",
-   "truth": 0.0101285,
-   "lo": 0.027904190000000002,
-   "hi": 0.26828594999999994,
-   "covered": false,
-   "width_vs_prior": 0.616363487179487
+   "truth": 0.272911,
+   "lo": 0.0295918,
+   "hi": 0.37487,
+   "covered": true,
+   "width_vs_prior": 0.8853287179487178
   },
   {
    "case": 2,
    "param": "enforcement.delistProb",
-   "truth": 0.0972216,
-   "lo": 0.028115,
-   "hi": 0.3297918499999998,
+   "truth": 0.0696215,
+   "lo": 0.026479839999999998,
+   "hi": 0.45757,
    "covered": true,
-   "width_vs_prior": 0.34281460227272703
+   "width_vs_prior": 0.4898751818181818
   },
   {
    "case": 2,
    "param": "enforcement.regTakeup",
-   "truth": 0.756003,
-   "lo": 0.122207,
-   "hi": 0.753145,
-   "covered": false,
-   "width_vs_prior": 0.6291721606868382
+   "truth": 0.447183,
+   "lo": 0.124679,
+   "hi": 0.78741,
+   "covered": true,
+   "width_vs_prior": 0.6376365389971381
   },
   {
    "case": 2,
    "param": "enforcement.exemptClaimShare",
-   "truth": 0.0332769,
-   "lo": 0.0109418225,
-   "hi": 0.11405934999999993,
+   "truth": 0.113411,
+   "lo": 0.01913646,
+   "hi": 0.19103304999999993,
    "covered": true,
-   "width_vs_prior": 0.5155876374999996
+   "width_vs_prior": 0.8594829499999996
   },
   {
    "case": 2,
    "param": "str.demandSpillover",
-   "truth": 0.752234,
-   "lo": 0.112547,
-   "hi": 0.991486,
+   "truth": 0.628711,
+   "lo": 0.08814472500000002,
+   "hi": 0.8968547999999997,
    "covered": true,
-   "width_vs_prior": 0.878939
+   "width_vs_prior": 0.8087100749999997
   },
   {
    "case": 2,
    "param": "str.demandGrowthAnnual",
-   "truth": 0.0849201,
-   "lo": -0.0448883,
-   "hi": 0.09200428999999996,
+   "truth": -0.0240389,
+   "lo": -0.03858644,
+   "hi": 0.09056870999999996,
    "covered": true,
-   "width_vs_prior": 0.9126172666666662
+   "width_vs_prior": 0.8610343333333328
   },
   {
    "case": 2,
    "param": "rental.arrivalRentElasticity",
-   "truth": 3.08747,
-   "lo": 0.79070745,
-   "hi": 4.6027305,
+   "truth": 4.46168,
+   "lo": 0.763543,
+   "hi": 4.8846455,
    "covered": true,
-   "width_vs_prior": 0.8471162333333333
+   "width_vs_prior": 0.9158005555555556
   },
   {
    "case": 2,
    "param": "host.vacantHeldShare",
-   "truth": 0.00690911,
-   "lo": 0.0124935,
-   "hi": 0.0737263,
-   "covered": false,
-   "width_vs_prior": 0.8164373333333333
+   "truth": 0.0738654,
+   "lo": 0.018633025,
+   "hi": 0.0775705,
+   "covered": true,
+   "width_vs_prior": 0.7858330000000001
   },
   {
    "case": 2,
    "param": "host.sellRateAnnual",
-   "truth": 0.0845667,
-   "lo": 0.02511768,
-   "hi": 0.0944423,
+   "truth": 0.0272291,
+   "lo": 0.024242,
+   "hi": 0.09034727,
    "covered": true,
-   "width_vs_prior": 0.86655775
+   "width_vs_prior": 0.8263158749999999
+  },
+  {
+   "case": 2,
+   "param": "rental.kappa",
+   "truth": 0.0460562,
+   "lo": 0.03601635,
+   "hi": 0.2741034999999997,
+   "covered": true,
+   "width_vs_prior": 0.8814148829697723
+  },
+  {
+   "case": 2,
+   "param": "rental.arrivalVacancySemiElasticity",
+   "truth": 38.905,
+   "lo": 2.563874,
+   "hi": 47.8469,
+   "covered": true,
+   "width_vs_prior": 0.90566052
   },
   {
    "case": 3,
    "param": "host.pReview",
-   "truth": 0.274927,
-   "lo": 0.0380972,
-   "hi": 0.286674,
-   "covered": true,
-   "width_vs_prior": 0.7452612555733773
+   "truth": 0.299237,
+   "lo": 0.0327427,
+   "hi": 0.25877239999999974,
+   "covered": false,
+   "width_vs_prior": 0.7633790812177995
   },
   {
    "case": 3,
    "param": "host.beta",
-   "truth": 1.27821,
-   "lo": 0.490568,
-   "hi": 3.218377,
+   "truth": 1.64359,
+   "lo": 0.33368615,
+   "hi": 4.228749499999996,
    "covered": true,
-   "width_vs_prior": 0.6686078785271201
+   "width_vs_prior": 0.902627087533938
   },
   {
    "case": 3,
    "param": "host.complianceBase",
-   "truth": 0.363094,
-   "lo": 0.05174614,
-   "hi": 0.4871582499999996,
+   "truth": 0.650041,
+   "lo": 0.0551929,
+   "hi": 0.759663,
    "covered": true,
-   "width_vs_prior": 0.5442651374999995
+   "width_vs_prior": 0.880587625
   },
   {
    "case": 3,
    "param": "host.multiComplianceShift",
-   "truth": -0.202885,
-   "lo": -0.32289609999999996,
-   "hi": 0.2449,
+   "truth": -0.0593856,
+   "lo": -0.382903,
+   "hi": 0.214727,
    "covered": true,
-   "width_vs_prior": 0.709745125
+   "width_vs_prior": 0.7470374999999999
   },
   {
    "case": 3,
    "param": "host.anticipation",
-   "truth": 0.28768,
-   "lo": 0.0415181,
-   "hi": 0.4233975499999999,
+   "truth": 0.289453,
+   "lo": 0.03755995,
+   "hi": 0.46859045,
    "covered": true,
-   "width_vs_prior": 0.7637588999999998
+   "width_vs_prior": 0.862061
   },
   {
    "case": 3,
    "param": "host.prShare",
-   "truth": 0.340073,
-   "lo": 0.266613,
-   "hi": 0.51725,
+   "truth": 0.28266,
+   "lo": 0.241306,
+   "hi": 0.509421,
    "covered": true,
-   "width_vs_prior": 0.7595060606060605
+   "width_vs_prior": 0.812469696969697
   },
   {
    "case": 3,
    "param": "host.investorEntry",
-   "truth": 0.00977083,
-   "lo": 0.00185086,
-   "hi": 0.00833565,
-   "covered": false,
-   "width_vs_prior": 0.6484789999999999
+   "truth": 0.00250385,
+   "lo": 0.0008788321500000001,
+   "hi": 0.009559462500000001,
+   "covered": true,
+   "width_vs_prior": 0.8680630350000001
   },
   {
    "case": 3,
    "param": "enforcement.detectMax",
-   "truth": 0.0943436,
-   "lo": 0.05006276,
-   "hi": 0.18556489999999998,
+   "truth": 0.0405499,
+   "lo": 0.03363552500000001,
+   "hi": 0.3012026,
    "covered": true,
-   "width_vs_prior": 0.3474413846153846
+   "width_vs_prior": 0.686069423076923
   },
   {
    "case": 3,
    "param": "enforcement.delistProb",
-   "truth": 0.409443,
-   "lo": 0.054958445,
-   "hi": 0.522743,
+   "truth": 0.188572,
+   "lo": 0.033425,
+   "hi": 0.45100989999999996,
    "covered": true,
-   "width_vs_prior": 0.5315733579545454
+   "width_vs_prior": 0.47452829545454545
   },
   {
    "case": 3,
    "param": "enforcement.regTakeup",
-   "truth": 0.872892,
-   "lo": 0.139777,
-   "hi": 0.7195302999999997,
-   "covered": false,
-   "width_vs_prior": 0.5668995131929974
+   "truth": 0.653962,
+   "lo": 0.116097,
+   "hi": 0.7697351999999998,
+   "covered": true,
+   "width_vs_prior": 0.6544557826700341
   },
   {
    "case": 3,
    "param": "enforcement.exemptClaimShare",
-   "truth": 0.130796,
-   "lo": 0.08330086,
-   "hi": 0.17205084999999998,
+   "truth": 0.0885727,
+   "lo": 0.027075685000000002,
+   "hi": 0.16083,
    "covered": true,
-   "width_vs_prior": 0.44374994999999984
+   "width_vs_prior": 0.6687715750000001
   },
   {
    "case": 3,
    "param": "str.demandSpillover",
-   "truth": 0.201211,
-   "lo": 0.0465626,
-   "hi": 0.951404,
+   "truth": 0.829569,
+   "lo": 0.06766499000000002,
+   "hi": 0.949874,
    "covered": true,
-   "width_vs_prior": 0.9048414
+   "width_vs_prior": 0.88220901
   },
   {
    "case": 3,
    "param": "str.demandGrowthAnnual",
-   "truth": 0.0988804,
-   "lo": -0.044741,
-   "hi": 0.08620109,
-   "covered": false,
-   "width_vs_prior": 0.8729472666666667
+   "truth": 0.0489456,
+   "lo": -0.0439141,
+   "hi": 0.08913388999999998,
+   "covered": true,
+   "width_vs_prior": 0.8869865999999997
   },
   {
    "case": 3,
    "param": "rental.arrivalRentElasticity",
-   "truth": 3.94001,
-   "lo": 1.5378815000000001,
-   "hi": 4.522990499999997,
+   "truth": 2.39572,
+   "lo": 0.973417,
+   "hi": 4.691587999999999,
    "covered": true,
-   "width_vs_prior": 0.6633575555555549
+   "width_vs_prior": 0.8262602222222221
   },
   {
    "case": 3,
    "param": "host.vacantHeldShare",
-   "truth": 0.0652825,
-   "lo": 0.01403758,
-   "hi": 0.07558659499999999,
+   "truth": 0.0152994,
+   "lo": 0.0083822945,
+   "hi": 0.07438405999999999,
    "covered": true,
-   "width_vs_prior": 0.8206535333333332
+   "width_vs_prior": 0.8800235399999999
   },
   {
    "case": 3,
    "param": "host.sellRateAnnual",
-   "truth": 0.0202037,
-   "lo": 0.02782909,
-   "hi": 0.07122719999999999,
+   "truth": 0.0561211,
+   "lo": 0.0211522,
+   "hi": 0.08865707499999999,
+   "covered": true,
+   "width_vs_prior": 0.8438109374999999
+  },
+  {
+   "case": 3,
+   "param": "rental.kappa",
+   "truth": 0.275209,
+   "lo": 0.033644645,
+   "hi": 0.24252869999999999,
    "covered": false,
-   "width_vs_prior": 0.5424763749999999
+   "width_vs_prior": 0.857847188649175
+  },
+  {
+   "case": 3,
+   "param": "rental.arrivalVacancySemiElasticity",
+   "truth": 48.311,
+   "lo": 0.79994,
+   "hi": 47.49476,
+   "covered": false,
+   "width_vs_prior": 0.9338964
   }
  ],
  "sensitivity": [
   {
    "base": {
-    "coveredListings": -0.47476714043090595,
-    "exemptListings": 0.057114808431768735,
-    "askingRent": -0.0053905710090905706,
-    "cpiRent": -0.0027718009904931793,
-    "rentBurden": 0.6803760907541945,
-    "completions": 18710
+    "coveredListings": -0.5868861008352677,
+    "exemptListings": 0.07149699794292844,
+    "askingRent": -0.005834191929015886,
+    "cpiRent": -0.002675522922494779,
+    "rentBurden": 0.6822922452697158,
+    "completions": 18725
    }
   },
   {
    "param": "enforcement.delistProb",
-   "low": 0.027036775000000002,
-   "high": 0.303027,
-   "d_coveredEffect": -0.38092089513903193,
-   "d_askingRentEffect_pp": -0.17532845029932537,
-   "d_didP1": -5.662137425588298e-15,
-   "d_exemptEffect": -0.02738986631225883
+   "low": 0.02906399,
+   "high": 0.29119140000000043,
+   "d_coveredEffect": -0.3814522872105891,
+   "d_askingRentEffect_pp": -0.20585833329521938,
+   "d_didP1": 1.4988010832439613e-15,
+   "d_exemptEffect": -0.03797167712814857
   },
   {
    "param": "enforcement.detectMax",
-   "low": 0.039799970000000004,
-   "high": 0.251143,
-   "d_coveredEffect": -0.296975903208012,
-   "d_askingRentEffect_pp": -0.32279985220872476,
-   "d_didP1": -0.42718289897884243,
-   "d_exemptEffect": 0.08805870430102301
-  },
-  {
-   "param": "host.pReview",
-   "low": 0.0259912,
-   "high": 0.27889415,
-   "d_coveredEffect": 0.26264284972024166,
-   "d_askingRentEffect_pp": 0.28934267591810225,
-   "d_didP1": 0.11126985570645581,
-   "d_exemptEffect": 0.00032996554592543137
-  },
-  {
-   "param": "host.complianceBase",
-   "low": 0.010531,
-   "high": 0.787415,
-   "d_coveredEffect": -0.25891163869709455,
-   "d_askingRentEffect_pp": -0.28056085622307586,
-   "d_didP1": -0.36164086494534636,
-   "d_exemptEffect": 0.084148601306286
+   "low": 0.0341058,
+   "high": 0.260279,
+   "d_coveredEffect": -0.27839412079197956,
+   "d_askingRentEffect_pp": -0.26269244774489076,
+   "d_didP1": -0.41961953484394415,
+   "d_exemptEffect": 0.05716564871575958
   },
   {
    "param": "host.prShare",
-   "low": 0.22447530000000002,
-   "high": 0.47040570000000004,
-   "d_coveredEffect": 0.19967026023346157,
-   "d_askingRentEffect_pp": 0.17116127973575085,
-   "d_didP1": 0.162396800108758,
-   "d_exemptEffect": -0.012302532042525141
+   "low": 0.223251,
+   "high": 0.515517,
+   "d_coveredEffect": 0.26340784636971426,
+   "d_askingRentEffect_pp": 0.19831374033364044,
+   "d_didP1": 0.2519677663636679,
+   "d_exemptEffect": -0.06174238025906591
   },
   {
-   "param": "host.multiComplianceShift",
-   "low": -0.3881159,
-   "high": 0.07131766500000004,
-   "d_coveredEffect": -0.07701818320067866,
-   "d_askingRentEffect_pp": -0.08798271588087073,
-   "d_didP1": -0.12040624771447206,
-   "d_exemptEffect": 0.0247417178110097
+   "param": "host.pReview",
+   "low": 0.0276021,
+   "high": 0.271132,
+   "d_coveredEffect": 0.21882127608382507,
+   "d_askingRentEffect_pp": 0.18242051674471713,
+   "d_didP1": 0.10288360807420621,
+   "d_exemptEffect": 0.03089190056069087
+  },
+  {
+   "param": "host.complianceBase",
+   "low": 0.1119595,
+   "high": 0.728568,
+   "d_coveredEffect": -0.1724335895117075,
+   "d_askingRentEffect_pp": -0.20661416498854437,
+   "d_didP1": -0.2873777126028775,
+   "d_exemptEffect": 0.02375951525948064
   },
   {
    "param": "enforcement.regTakeup",
-   "low": 0.20311395000000002,
-   "high": 0.8455068,
-   "d_coveredEffect": 0.06517048583142859,
-   "d_askingRentEffect_pp": -0.013010184956319636,
-   "d_didP1": 1.1102230246251565e-15,
-   "d_exemptEffect": 0.0628264361454062
+   "low": 0.214101,
+   "high": 0.7569076,
+   "d_coveredEffect": 0.09402351810650378,
+   "d_askingRentEffect_pp": -0.0009007501060029517,
+   "d_didP1": 1.1102230246251565e-16,
+   "d_exemptEffect": 0.07112221601007165
+  },
+  {
+   "param": "host.multiComplianceShift",
+   "low": -0.3722112,
+   "high": 0.05372049000000001,
+   "d_coveredEffect": -0.07121998337397095,
+   "d_askingRentEffect_pp": -0.10501754722616183,
+   "d_didP1": -0.11218134485294151,
+   "d_exemptEffect": 0.02243058482862228
   },
   {
    "param": "host.beta",
-   "low": 0.439523,
-   "high": 4.343186500000001,
-   "d_coveredEffect": -0.06279516652724754,
-   "d_askingRentEffect_pp": -0.041376039094828065,
-   "d_didP1": -0.06542227098653985,
-   "d_exemptEffect": 0.09300224842154561
+   "low": 0.369061,
+   "high": 4.58637,
+   "d_coveredEffect": -0.05734422074763201,
+   "d_askingRentEffect_pp": -0.10627043533056194,
+   "d_didP1": -0.10776761198101192,
+   "d_exemptEffect": 0.1140794600483091
   },
   {
    "param": "str.demandGrowthAnnual",
-   "low": -0.0357169,
-   "high": 0.09606452,
-   "d_coveredEffect": -0.04340583492689565,
-   "d_askingRentEffect_pp": -0.03794643773659973,
-   "d_didP1": -0.012506352323961745,
-   "d_exemptEffect": 0.030129420018042086
-  },
-  {
-   "param": "rental.arrivalRentElasticity",
-   "low": 0.7862499,
-   "high": 4.669309000000001,
-   "d_coveredEffect": 0.017731601029222055,
-   "d_askingRentEffect_pp": 0.10811391046476292,
-   "d_didP1": -0.007419628888275354,
-   "d_exemptEffect": 0.02930316010753581
-  },
-  {
-   "param": "enforcement.exemptClaimShare",
-   "low": 0.013371935000000003,
-   "high": 0.130796,
-   "d_coveredEffect": 0.01614072936618277,
-   "d_askingRentEffect_pp": 0.029907363633829495,
-   "d_didP1": 3.9968028886505635e-15,
-   "d_exemptEffect": -0.0003759713299462536
-  },
-  {
-   "param": "host.investorEntry",
-   "low": 0.0008252914500000001,
-   "high": 0.009639489499999999,
-   "d_coveredEffect": -0.008998672864763302,
-   "d_askingRentEffect_pp": -0.014840673109928378,
-   "d_didP1": -0.05642681858710985,
-   "d_exemptEffect": 0.047968617183900615
-  },
-  {
-   "param": "host.anticipation",
-   "low": 0.03931291,
-   "high": 0.46207005,
-   "d_coveredEffect": -0.006962102901205247,
-   "d_askingRentEffect_pp": -0.031504493531449906,
-   "d_didP1": 0.0020282186827729753,
-   "d_exemptEffect": -0.001039895414328161
-  },
-  {
-   "param": "host.vacantHeldShare",
-   "low": 0.007556664000000001,
-   "high": 0.0747559,
-   "d_coveredEffect": -0.0029720729017871372,
-   "d_askingRentEffect_pp": -0.022624572932875963,
-   "d_didP1": 0.01392545068889467,
-   "d_exemptEffect": -0.00764773554424264
-  },
-  {
-   "param": "str.demandSpillover",
-   "low": 0.076837295,
-   "high": 0.967931,
-   "d_coveredEffect": -0.001484939461824819,
-   "d_askingRentEffect_pp": 0.004275024207450219,
-   "d_didP1": -0.06551276195050948,
-   "d_exemptEffect": 0.13608264287772812
+   "low": -0.035425004999999996,
+   "high": 0.097684,
+   "d_coveredEffect": -0.05242734407658867,
+   "d_askingRentEffect_pp": -0.03681787017908714,
+   "d_didP1": -0.007646086823121123,
+   "d_exemptEffect": 0.06815514716547619
   },
   {
    "param": "host.sellRateAnnual",
-   "low": 0.0211507,
-   "high": 0.069037875,
-   "d_coveredEffect": 0.0011244351181527446,
-   "d_askingRentEffect_pp": 0.11326428262378799,
-   "d_didP1": 0.03450495246081681,
-   "d_exemptEffect": -6.0839837310311395e-06
+   "low": 0.020052,
+   "high": 0.07228199,
+   "d_coveredEffect": 0.03160578987352236,
+   "d_askingRentEffect_pp": 0.22989925424420224,
+   "d_didP1": -0.016947339018638208,
+   "d_exemptEffect": -0.00198353689571841
+  },
+  {
+   "param": "host.vacantHeldShare",
+   "low": 0.008746039,
+   "high": 0.0757815,
+   "d_coveredEffect": 0.028725410612594704,
+   "d_askingRentEffect_pp": 0.15249921344075112,
+   "d_didP1": 0.008296556061623717,
+   "d_exemptEffect": 0.05197519543913572
+  },
+  {
+   "param": "rental.kappa",
+   "low": 0.03904843,
+   "high": 0.27847740000000004,
+   "d_coveredEffect": -0.02824900116435447,
+   "d_askingRentEffect_pp": -0.6803719882300286,
+   "d_didP1": 0.00694329092475271,
+   "d_exemptEffect": -0.012706468532709812
+  },
+  {
+   "param": "enforcement.exemptClaimShare",
+   "low": 0.009009606500000005,
+   "high": 0.11372525000000007,
+   "d_coveredEffect": 0.024012085505990877,
+   "d_askingRentEffect_pp": 0.012836938846207124,
+   "d_didP1": -9.43689570931383e-16,
+   "d_exemptEffect": 0.011402260252787372
+  },
+  {
+   "param": "rental.arrivalVacancySemiElasticity",
+   "low": 5.42358,
+   "high": 47.216205000000016,
+   "d_coveredEffect": 0.018782296259678533,
+   "d_askingRentEffect_pp": 0.8232502410024215,
+   "d_didP1": -0.003382564895020146,
+   "d_exemptEffect": 0.0029979877768131005
+  },
+  {
+   "param": "rental.arrivalRentElasticity",
+   "low": 0.726925,
+   "high": 4.85819,
+   "d_coveredEffect": -0.013737514908944037,
+   "d_askingRentEffect_pp": 0.1584253695195467,
+   "d_didP1": -0.010238532058285787,
+   "d_exemptEffect": -0.0005239278773438438
+  },
+  {
+   "param": "host.anticipation",
+   "low": 0.065069425,
+   "high": 0.4163980500000001,
+   "d_coveredEffect": 0.012681064676587361,
+   "d_askingRentEffect_pp": -0.05574004616768508,
+   "d_didP1": 0.008547574005476843,
+   "d_exemptEffect": 0.0055245213941467475
+  },
+  {
+   "param": "str.demandSpillover",
+   "low": 0.07016949000000001,
+   "high": 0.97108375,
+   "d_coveredEffect": 0.010512155628252917,
+   "d_askingRentEffect_pp": 0.012690896214254555,
+   "d_didP1": -0.057827865198377515,
+   "d_exemptEffect": 0.1593773173132788
+  },
+  {
+   "param": "host.investorEntry",
+   "low": 0.001514607,
+   "high": 0.0097891,
+   "d_coveredEffect": -0.007463600945072257,
+   "d_askingRentEffect_pp": 0.0025973491768901957,
+   "d_didP1": -0.027174655110869972,
+   "d_exemptEffect": 0.08241431230534006
   }
  ]
 }

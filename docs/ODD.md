@@ -174,8 +174,8 @@ and, for one month, to a unit just removed from the platforms. SELL turns the un
 owner-occupied home (it leaves the investor stock).
 
 **Renter buyers** (ADR 0013). With probability `renterBuyerShare` the buyer of a sold investor home
-is a renter household already housed in the region: the richest of 4 housed renters drawn at
-random (region-wide, keyed by the sold dwelling and tick). It becomes BOUGHT and its rental becomes
+is a renter household already housed in the region, drawn uniformly (region-wide, keyed by the
+sold dwelling and tick; not income-selected, so the renter income distribution stays stationary). It becomes BOUGHT and its rental becomes
 vacant and `due`. Otherwise the buyer comes from outside the rental market.
 
 PR owners review with probability

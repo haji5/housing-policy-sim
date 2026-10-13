@@ -1,6 +1,6 @@
 # Handoff: where the build stands and exactly what to do next
 
-_Last updated 2026-10-11 (fifth session: deployed, m8 tagged; all milestones done). Read this,
+_Last updated 2026-10-12 (sixth session: review fixes, ADR 0013, re-calibrated; §6d). Read this,
 then `WORKING_AGREEMENTS.md` and `docs/PLAN.md`._
 
 ## 0. What the user asked for (standing instructions)
@@ -51,7 +51,7 @@ push to `main` redeploys). Use `gh` for GitHub; the GitHub MCP server fails to a
 - **Ensemble hash covers exact bytes** of `calibration/priors.json`,
   `calibration/inputs/targets.json`, `packages/sim/src/params/defaults.json`,
   `packages/sim/src/scenarios/victoria.json` (+ SIM_VERSION). They are in `.prettierignore`.
-  Editing them (or SIM_VERSION) means re-calibrating (~45 min).
+  Editing them (or SIM_VERSION) means re-calibrating (~2.3 h since ADR 0013; less when the stage cache in calibration/reports/.cache/ applies).
 - `apps/web/public/atlas/` is generated (`pnpm art`) and prettier-ignored; the PNG is committed.
 - ESLint ignores `**/.venv/**`, `calibration/reports/**`.
 - Shell pitfalls: Bash `node -e` with template literals gets mangled; heredocs break on
@@ -270,22 +270,63 @@ Not fixed (would need modelling changes + ADR + re-calibration): `kappa`/`eta` i
 owner households (sold units currently house no renter, which biases rents towards zero); T5/T6a
 structural misses; the iid CPI noise model in the researcher view.
 
+## 6d. Review fixes: renter buyers, rent dynamics in the ensemble, ABC-SMC (2026-10-12, ADR 0013)
+
+Owner's request: fix the open issues a recruiter or skeptical senior analyst would notice. Done
+(sim 0.6.0, re-calibrated, every downstream report re-run):
+
+- **Renter buyers.** A share (`renterBuyerShare` 0.4, VERIFY) of homes investors sell is bought by
+  a local renter, drawn uniformly, whose rental is freed (new status BOUGHT); the steady state
+  counts it as turnover. Effect on the rent result: −0.02 points (robustness §4). The rule causes
+  few net sales; displaced homes mostly house more households. A first version picked the richest
+  of 4 renters and made the no-policy rent-burden level drift up to +3.5 points; replaced, and
+  `renterBuyers.test.ts` now checks the burden level.
+- **`kappa` and `eta` in the priors** (log-uniform 0.03-0.3, uniform 0-50). Weakly identified, so
+  the ensemble, the reported rent range and the game carry the rent-dynamics uncertainty: asking
+  rents −0.57% (5-95% −1.52% to −0.14%) instead of M5's overconfident −0.66% to −0.30%.
+- **ABC-SMC Stage 3** (`calibrate.py`): population Monte Carlo, exact truncated-kernel weights,
+  stops at tolerance 93.3 (M5's). Final: 11 generations, D ≤ 89.4, **ESS ~63** (M5: 21), 174
+  distinct, most frequent set 26× (M5: 62×). Stages 1-2 and each generation are cached in
+  `calibration/reports/.cache/` (gitignored), keyed by every input incl. a hash of the sim
+  sources; a re-run with unchanged inputs resumes. Three stopping rules were tried and discarded
+  (ADR 0013 lists them). Full calibration now ~2.3 h (stage 1 ~35 min on a busy machine, then
+  ~6-10 min per generation).
+- **Results that changed:** T3's last point now misses narrowly (−0.535 vs −0.432); DiD
+  overstatement at calibrated spillover 3% (was 10%); recovery coverage 87% (was 79%); Sobol:
+  `kappa`/`eta` dominate the rent effect, rent burden and completions.
+- `robustness.py` text is now derived from the data (ESS, top misfit targets, parameter count),
+  with a renter-buyer sweep; `validate.py` recovery uses 2 SMC generations of 768.
+- README Results 1-3, model summary and limitations; CALIBRATION, VALIDATION §1.1-5, ODD,
+  ASSUMPTIONS (A26, A33, R1-R5), ADR 0011 note, in-game "Model variant" glossary text.
+- VALIDATION §5 corrected: the "held-empty +16% creep" was stock growth (share of investor units
+  is flat).
+
 ## 7. Open issues to report to the user
 
-- M5 calibration ESS 21 (M3: 146); T5/T6a misses got worse; H1 miss −0.38 vs data −0.02.
-- Tenant protection is strong under the current points scales (game-design constants, ADR 0009).
-- Uncalibrated levels: rent burden ~68%, stress ~15% of renters over 6 years (scored only as
-  changes vs the no-policy run). Held-empty stock +16% over 6 years with no policy.
-- VERIFY items unchanged: fine, registration cost, incomes, BC rent caps by year, assessed value,
-  CRD census counts, construction rates.
-- Parameter recovery (M5 ensemble): 79% coverage; misses are truths at prior edges (VALIDATION §1.1).
+- Calibration ESS ~63 of 600: much better than 21 but the 5-95% tails rest on ~3 effective
+  draws. The noise floor of the 4-seed distance (D ≈ 90) limits further tightening; more seeds
+  per draw would lower it at proportional cost.
+- Structural misses unchanged: T5 (multi-host share), T6a (registered share), T2 (Phase 2, weight
+  ¼), H1 Salt Spring hold-out (−0.43 vs −0.02), and now T3's endpoint narrowly. Fixing them needs
+  model changes (multi-host compliance structure, island enforcement); H1 can no longer serve as a
+  hold-out once used for that.
+- **Long-run rent sign.** Over a full term the PR rule's asking-rent effect turns positive in about
+  a third of runs (VALIDATION §5): the IIA logit makes every covered-zone investor more likely to
+  sell once STR is gone (~1,160 extra owner-occupied homes by month 59). Visible on the game's
+  end-of-term card (e2e seed 1: +1.0 points). Re-specifying (nested choice set or
+  return-sensitive purchases) needs an ADR and a re-calibration.
+- Tenant protection is strong under the current points scales (vacancy-tax revenue ~$150M/term at
+  1 point per $10M; ADR 0009). The balance depends on the weakly identified held-vacant share (an
+  intermediate ensemble flipped it). Re-tuning the scales is a game-design decision for the owner.
+- Uncalibrated levels: rent burden ~69% (no income-rent sorting in matching), ~20-24% of the
+  starting renter households double up or leave over 6 years; scored only as changes.
+- VERIFY items: `renterBuyerShare` (new), fine, registration cost, incomes, BC rent caps by year,
+  assessed value, CRD census counts, construction rates.
 - `pnpm test` can fail `perf.test.ts` on a busy machine when test files run in parallel under
   coverage; `npx vitest run --coverage --no-file-parallelism` in `packages/sim` passes.
 - Debrief uses 32 variants, not PLAN's 200 (ADR 0011).
-- In some ensemble members the rule takes effect almost at once: switching it on in turn 1 cuts
-  covered listings 41% in the first month (seed 5, member 183) because `complianceBase` (weakly
-  identified, up to ~0.79) makes many hosts comply immediately. Consistent with the quarterly
-  calibration data, but it makes turn-1 play look abrupt.
+- Some ensemble members make turn-1 play look abrupt (`complianceBase` up to ~0.73 makes many
+  hosts comply at once).
 
 ## 8. Useful commands
 
@@ -295,5 +336,5 @@ pnpm build && pnpm e2e                       # Playwright: hello, play, map, a11
 (cd packages/sim && npx vitest run --coverage --no-file-parallelism)   # if perf flakes under load
 pnpm art                                     # regenerate the atlas (+ --preview <dir> via node tools/art/src/build.ts)
 pnpm sim playtest --seeds 1,2,3,4,5,6,7,8 --out calibration/reports/playtest.json
-pnpm calibrate | pnpm validate | pnpm sobol | pnpm did-recovery | pnpm robustness
+pnpm calibrate | pnpm validate | pnpm sobol | pnpm did-recovery | pnpm robustness   # calibrate resumes from calibration/reports/.cache/
 ```

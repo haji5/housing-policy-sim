@@ -104,12 +104,15 @@ def main(argv=None) -> int:
     bres = evaluate(bdraws, seeds=CAL_SEEDS, counterfactual=True)
     buyers = {b: [r["effects"]["askingRent"] for r in bres[j * len(pick):(j + 1) * len(pick)]]
               for j, b in enumerate(BUYER_SHARES)}
+    dbuy = np.array(buyers[BUYER_SHARES[-1]]) - np.array(buyers[0.0])
     n_cal = len(load_priors())
     ens_kappa = np.array([s["rental"]["kappa"] for s in sets])
     ens_eta = np.array([s["rental"]["arrivalVacancySemiElasticity"] for s in sets])
     ens_ask = np.array([r["effects"]["askingRent"] for r in res])
     corr_k = float(np.corrcoef(np.log(ens_kappa), ens_ask)[0, 1])
     corr_e = float(np.corrcoef(ens_eta, ens_ask)[0, 1])
+    worst = int(np.argmin(ens_ask))
+    extremes = (float(ens_ask.min()), float(ens_ask.max()), float(ens_kappa[worst]), float(ens_eta[worst]))
     ess = float(ens["meta"]["ess"])
     top2 = [k for k, _ in sorted(contrib.items(), key=lambda kv: -kv[1])[:2]]
     share_top2 = sum(contrib[k] for k in top2) / max(1e-9, sum(contrib.values()) - expected) \
@@ -150,7 +153,8 @@ def main(argv=None) -> int:
           f"The ensemble draws all {n_cal} calibrated parameters, including the asking-rent adjustment speed (`kappa`, prior "
           "0.03-0.3) and the vacancy pull on renter arrivals (`eta`, prior 0-50), which the listing data barely identify "
           f"(ADR 0013). Across the ensemble the asking-rent effect correlates {corr_k:+.2f} with log kappa and {corr_e:+.2f} "
-          "with eta. The grid below fixes both at each cell, overriding the members' own draws. "
+          f"with eta. Across the distinct sets it runs from {pct(extremes[0])} (kappa {extremes[2]:.3g}, eta {extremes[3]:.3g}) "
+          f"to {pct(extremes[1])}. The grid below fixes both at each cell, overriding the members' own draws. "
           f"Asking-rent effect by Jun 2026 (mean and 5-95% over {len(pick)} distinct members), cell at the parameter "
           "defaults in bold:", "",
           "| kappa \\ eta | " + " | ".join(f"{e:g}" for e in ETA) + " |", "|---" * (len(ETA) + 1) + "|"]
@@ -176,8 +180,10 @@ def main(argv=None) -> int:
           "Share of homes sold by investors that a local renter buys, freeing a rental (ADR 0013; R1, VERIFY). "
           f"Asking-rent effect by Jun 2026, mean over the same {len(pick)} members at their own kappa and eta: "
           + ", ".join(f"{b:g}: {pct(np.mean(buyers[b]))}" for b in BUYER_SHARES)
-          + f". Largest change across members between 0 and {BUYER_SHARES[-1]:g}: "
-          f"{100 * np.max(np.abs(np.array(buyers[BUYER_SHARES[-1]]) - np.array(buyers[0.0]))):.3f} points.",
+          + f". Per member, the change between 0 and {BUYER_SHARES[-1]:g} averages {100 * np.mean(dbuy):+.3f} points "
+          f"(mean absolute {100 * np.mean(np.abs(dbuy)):.3f}, 95th percentile of the absolute change "
+          f"{100 * np.quantile(np.abs(dbuy), 0.95):.3f}, largest {100 * np.max(np.abs(dbuy)):.3f}). Changes of either "
+          "sign at the member level are simulation noise: a different buyer changes later draws.",
           ""]
     (REPORTS / "robustness.md").write_text("\n".join(L) + "\n", encoding="utf-8", newline="\n")
     out = {"distinct": len(uniq), "members": len(keys), "maxMultiplicity": int(w.max()), "expectedDistance": expected,
@@ -187,6 +193,9 @@ def main(argv=None) -> int:
                         for (k, e), g in grid.items()],
            "rentGridEnvelope": [float(np.quantile(allask, 0.05)), float(np.quantile(allask, 0.95))],
            "ensembleRentCorrelation": {"logKappa": corr_k, "eta": corr_e},
+           "ensembleRentExtremes": {"min": extremes[0], "max": extremes[1], "kappaAtMin": extremes[2], "etaAtMin": extremes[3]},
+           "renterBuyerChange": {"mean": float(np.mean(dbuy)), "meanAbs": float(np.mean(np.abs(dbuy))),
+                                 "p95Abs": float(np.quantile(np.abs(dbuy), 0.95)), "maxAbs": float(np.max(np.abs(dbuy)))},
            "renterBuyers": {str(b): q(v) for b, v in buyers.items()}}
     (REPORTS / "robustness.json").write_text(json.dumps(out, indent=1) + "\n", encoding="utf-8", newline="\n")
     print("\n".join(L))

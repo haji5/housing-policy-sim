@@ -55,6 +55,12 @@ describe('renter buyers (ADR 0013)', () => {
     expect(Math.abs(ask(0.6) / ask(0) - 1)).toBeLessThan(0.01);
   });
 
+  it('the no-policy rent-burden level does not drift because of buyers (renter incomes stay stationary)', () => {
+    const burden = (share: number) =>
+      mean(SEEDS.map((s) => last(run(s, 'none', 60, withShare(share)).series.rentBurdenShare)));
+    expect(Math.abs(burden(0.6) - burden(0))).toBeLessThan(0.005);
+  });
+
   it('with buyers, the STR rule lowers asking rents by more (sold homes free rentals)', () => {
     const effect = (share: number) =>
       mean(

@@ -78,7 +78,7 @@ export const GLOSSARY: Record<string, { term: string; text: string }> = {
   },
   variant: {
     term: 'Model variant',
-    text: 'One of 300 draws from the calibrated ensemble (179 distinct parameter sets). Each fits the listing data within the calibration tolerance, though not equally well, and they disagree on what the data cannot pin down.',
+    text: 'One of 300 draws from the calibrated ensemble (174 distinct parameter sets). Each fits the listing data within the calibration tolerance, though not equally well, and they disagree on what the data cannot pin down, such as how fast rents react to vacancies and how many renters a vacancy draws in.',
   },
   burden: {
     term: 'Rent burden',

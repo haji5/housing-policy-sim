@@ -74,7 +74,69 @@ below (filled in after each full calibration run).
 
 <!-- results-summary -->
 
-### Run of 2026-10-10 evening (sim 0.5.0, M5 full mechanics, ADRs 0007-0009)
+### Run of 2026-10-12 (sim 0.6.0, ADR 0013: renter buyers, `kappa`/`eta` in the ensemble, ABC-SMC)
+
+18 parameters (M5's 16 plus `rental.kappa` and `rental.arrivalVacancySemiElasticity`). Stage 1:
+8,192 Sobol draws (best distance 46.9); Stage 2 Nelder-Mead 41.0. Stage 3 is now ABC-SMC:
+generations of 2,048 proposals with a population of 600, stopped once the tolerance reached the
+previous ensemble's (93.3), a rule fixed before this run. Tolerance path 179 → 154 → 132 → 120 →
+115 → 116 → 108 → 103 → 98 → 96 → 94 → **89.4** (11 generations). **Effective sample size 63** of
+600 (M5: 21); 300 members, **174 distinct**. ESS per generation ranged 33-212: it falls as the
+tolerance nears the noise floor of the 4-seed distance (about D = 90), where keeping the best
+proposals starts to select lucky simulations. Wall time 139 min on a busy machine. ADR 0013
+reports the stopping rules tried and discarded on an earlier version of the renter-buyer rule.
+
+**Fit, new vs M5** (ensemble mean; pass = within 2 SE, paths judged at the last point).
+
+| ID  | Target   | New mean (5-95%)                      | M5 mean | Pass (new) |
+| --- | -------- | ------------------------------------- | ------- | ---------- |
+| T1  | −0.390   | −0.379 (−0.569 to −0.264)             | −0.399  | yes        |
+| T1a | −0.124   | −0.093 (−0.190 to −0.024)             | −0.083  | yes        |
+| T2  | −0.115   | −0.241 (−0.396 to −0.090)             | −0.220  | **no** (¼) |
+| T3  | −0.432   | −0.535 (−0.698 to −0.343), RMSE 0.058 | −0.505  | **no**     |
+| T4  | +0.062   | +0.176 (+0.052 to +0.327), RMSE 0.052 | +0.191  | yes        |
+| T5  | 37.6%    | 26.0% (21.8% to 30.8%)                | 26.4%   | **no**     |
+| T6a | 70.0%    | 59.7% (50.6% to 69.8%)                | 58.4%   | **no**     |
+| T6b | 9.4%     | 8.1% (0.8% to 16.0%)                  | 7.9%    | yes        |
+| T7  | leads ≈0 | −0.024, −0.015, +0.009, −0.002        | ≈0      | yes        |
+| H1  | −0.024   | −0.426 (−0.661 to −0.196), held out   | −0.382  | **no**     |
+
+Nothing was tuned by hand. The misses are those of M3 and M5 plus **T3** at its last point: the
+covered-area path ends at −0.535 against −0.432, just outside 2 SE (M5 −0.505 passed). The path
+as a whole fits as before (RMSE 0.058; M5 0.054): the model's covered areas keep falling a little
+too long. With ESS 63, each tail of a 5-95% range rests on about three effective draws (M5:
+about one).
+
+**Identification.** Identified (contraction ≥ 0.5): `multiComplianceShift` (0.67), `detectMax`
+(0.66), `delistProb` (0.88), `regTakeup` (0.73), `exemptClaimShare` (0.69), `sellRateAnnual`
+(0.50). `prShare` fell from partly (0.35) to weakly identified (0.15). `kappa` (0.08) and `eta`
+(0.15) are weakly identified, as expected: their posteriors stay close to their priors, which is
+what carries the rent-dynamics uncertainty into the ensemble. Strongest trade-offs: `pReview` vs
+`detectMax` (+0.52), `complianceBase` vs `detectMax` (−0.50), `pReview` vs `delistProb` (+0.50).
+
+**Rents (not fitted).** STR-attributable change in asking rents by Jun 2026: −0.57% (5-95%
+−1.52% to −0.14%), 60% of the ensemble inside the first project's −3.3% to −0.4% bound. On the
+CPI-style index −0.30%. The range is about three times wider than M5's (−0.66% to −0.30%) because
+`kappa` and `eta` now vary: it is the honest range, not a worse fit. True effect on covered
+listings −0.640 log points; on never-covered listings +0.043 (spillover).
+
+**Fit diagnostics and robustness** ([`robustness.md`](../calibration/reports/robustness.md),
+`pnpm robustness`, generated from this ensemble).
+
+- **Goodness of fit.** A correctly specified model with the right target SEs would score about 10.
+  The distinct sets score 41 (best) to 89, median 77. T5 and T6a contribute about 78% of the
+  excess, T3 most of the rest. Individual members miss T1 by about 1.5 SE; the mean matches it.
+- **Duplicates.** The most frequent set is 26 of 300 members (9%; M5: 62). Equal weighting of the
+  174 distinct sets gives nearly the same headline numbers (Phase 1 DiD −0.377 vs −0.379; asking
+  rents −0.64% vs −0.57%).
+- **Rent effect vs rent dynamics.** Across the ensemble the asking-rent effect correlates −0.53
+  with log `kappa` and +0.52 with `eta`, and runs from −2.88% to −0.09% across distinct sets.
+  Fixing both on a grid (kappa 0.03-0.3, eta 0-50) spans −2.2% to −0.1%; the listing effect
+  barely moves (−0.61 to −0.60 log points).
+- **Renter buyers.** Asking-rent effect −0.59%, −0.60%, −0.61% at `renterBuyerShare` 0, 0.4,
+  0.6 (30 members); per member −0.02 points on average.
+
+### Run of 2026-10-10 evening (sim 0.5.0, M5 full mechanics, ADRs 0007-0009; superseded by the run above)
 
 Same pipeline and budget as M3: 8,192 Sobol draws, 4 Nelder-Mead starts, 4,096 ABC proposals,
 16 parameters (M3's 14 plus `host.vacantHeldShare` and `host.sellRateAnnual`). 600 accepted
@@ -126,7 +188,7 @@ once and detection later produce the same listing path. Identified: `multiCompli
 M3). On the CPI-style index −0.24%: too small to detect against a +19.5% CPI rise. True effect on
 covered listings −0.585 log points; on never-covered listings +0.083 (spillover).
 
-**Fit diagnostics and robustness (2026-10-11, [`robustness.md`](../calibration/reports/robustness.md),
+**Fit diagnostics and robustness of the M5 ensemble (2026-10-11, [`robustness.md`](../calibration/reports/robustness.md),
 `pnpm robustness`).** Generated from the shipped ensemble; no parameters changed.
 
 - **Goodness of fit.** If the model were correctly specified and the target SEs right, the

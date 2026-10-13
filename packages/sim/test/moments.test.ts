@@ -58,8 +58,8 @@ describe('calibration moments on the Victoria scenario', () => {
     expect(m.registeredShareEnd + m.exemptClaimShareEnd).toBeLessThanOrEqual(1);
   });
 
-  it('no-policy runs show no listing effect and no pre-trends (mean over seeds, T7)', () => {
-    const seeds = [1, 2, 3, 4, 5, 6, 7, 8];
+  it('no-policy runs show no listing effect and no pre-trends (mean over 16 seeds, T7)', () => {
+    const seeds = Array.from({ length: 16 }, (_, i) => i + 1);
     const ms = seeds.map((seed) =>
       computeMoments(
         runSim({
@@ -74,12 +74,13 @@ describe('calibration moments on the Victoria scenario', () => {
     );
     const avg = (f: (m: (typeof ms)[number]) => number) =>
       ms.reduce((a, m) => a + f(m), 0) / ms.length;
-    // Single-seed sampling SD is ~0.04-0.07 at scale 0.2; the mean of 8 seeds has SE ~0.02.
+    // Single-seed sampling SD is ~0.04-0.07 at scale 0.2; the mean of 16 seeds has SE ~0.015. (With 8
+    // seeds, six moments at 2.5 SE each failed by chance when ADR 0013 reshuffled the draws.)
     expect(Math.abs(avg((m) => m.didP1))).toBeLessThan(0.05);
     expect(Math.abs(avg((m) => m.didP2))).toBeLessThan(0.05);
     for (let j = 0; j < 4; j++) expect(Math.abs(avg((m) => m.leads[j]!))).toBeLessThan(0.05);
     for (const m of ms) expect(m.registeredShareEnd).toBe(0);
-  }, 120_000); // 8 full Victoria runs: a few seconds plain, 30+ s under coverage on a busy machine
+  }, 240_000); // 16 full Victoria runs: a few seconds plain, 60+ s under coverage on a busy machine
 
   it('the historical policy cuts covered listings relative to exempt ones', () => {
     const m = computeMoments(run('historical'));

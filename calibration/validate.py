@@ -192,7 +192,7 @@ def main(argv=None) -> int:
         cov = df.groupby("param")["covered"].mean()
         width = df.groupby("param")["width_vs_prior"].mean()
         L += [f"{len(df['case'].unique())} cases: pseudo-data simulated at known parameters (ensemble members) on the validation "
-              "seeds, then a reduced calibration (1,024 + 1,024 draws) re-estimated them. Coverage = share of cases where the "
+              "seeds, then a reduced calibration (1,024 Sobol draws + 2 ABC-SMC generations of 768) re-estimated them. Coverage = share of cases where the "
               "truth lies in the recovered 5-95% interval; width = interval width as a share of the prior range "
               "(1 = nothing learned).", "",
               f"Overall coverage: {df['covered'].mean() * 100:.0f}% of {len(df)} parameter-cases.", "",

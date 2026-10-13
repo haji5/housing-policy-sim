@@ -111,13 +111,14 @@ interface BuyerPool {
   ids: number[] | null;
 }
 
-/** Candidates drawn per renter purchase; the richest one buys (expected ~80th income percentile). */
-const BUYER_CANDIDATES = 4;
+/** Draws per renter purchase (a draw that hits a household that already bought this tick is retried). */
+const BUYER_TRIES = 4;
 
 /**
  * Renter buyers (ADR 0013): with probability renterBuyerShare the owner-occupier who buys sold
- * investor home d is a renter household already housed in the region. Buyers come from the upper
- * part of the renter income distribution: the richest of a few randomly drawn housed renters. The
+ * investor home d is a renter household already housed in the region, drawn uniformly (region-wide).
+ * Uniform, not income-selected, so the renter income distribution stays stationary: removing richer
+ * renters while arrivals have the starting distribution would make the rent-burden level drift. The
  * buyer leaves the rental market (BOUGHT) and its rental becomes vacant and `due`, as after any
  * move-out. Otherwise the buyer comes from outside the rental market and no rental is freed.
  */
@@ -133,11 +134,10 @@ function renterBuyer(state: SimState, d: number, pool: BuyerPool): void {
   const ids = pool.ids;
   if (ids.length === 0) return;
   let buyer = -1;
-  for (let j = 1; j <= BUYER_CANDIDATES; j++) {
+  for (let j = 1; j <= BUYER_TRIES && buyer < 0; j++) {
     const h = ids[Math.floor(uniform(seed, key, tick, Purpose.RENTER_BUYER, j) * ids.length)]!;
     // Skip households that already bought this tick.
-    if (hh.status[h] !== HouseholdStatus.HOUSED) continue;
-    if (buyer < 0 || hh.income[h]! > hh.income[buyer]!) buyer = h;
+    if (hh.status[h] === HouseholdStatus.HOUSED) buyer = h;
   }
   if (buyer < 0) return;
   const home = hh.dwelling[buyer]!;

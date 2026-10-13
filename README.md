@@ -19,12 +19,13 @@ it locally, see [Reproduce](#reproduce)).
 **1. The model reproduces the headline Bill 35 estimate it was calibrated to, but not every
 target.** The first project estimated that BC's principal-residence rule cut entire-home listings
 in Victoria's covered areas by −0.390 log points (about −32%) against the exempt areas, with no
-pre-trends. The calibrated ensemble's mean is −0.399 (−0.366 averaging its 179 distinct
+pre-trends. The calibrated ensemble's mean is −0.379 (−0.377 averaging its 174 distinct
 parameter sets equally), it tracks the covered-area listing path and it shows no pre-trends.
-That is a fitted target, not an out-of-sample test. The fit is imperfect: the model overshoots
-the exempt areas' growth from late 2025, and misses the multi-listing-host share, the registered
-share and the weak Phase 2 term. Even the best-fitting parameter set's calibration distance is
-about four times what a correctly specified model would give. The one held-out test, Salt Spring Island's November 2025
+That is a fitted target, not an out-of-sample test. The fit is imperfect: the covered areas keep
+falling a little too long (the June 2026 point is just outside two standard errors), the model
+overshoots the exempt areas' growth from late 2025, and it misses the multi-listing-host share,
+the registered share and the weak Phase 2 term. Even the best-fitting parameter set's calibration
+distance is about four times what a correctly specified model would give. The one held-out test, Salt Spring Island's November 2025
 opt-in, fails. All of this is reported, not tuned away
 ([CALIBRATION.md](docs/CALIBRATION.md), [VALIDATION.md](docs/VALIDATION.md),
 [robustness report](calibration/reports/robustness.md)).
@@ -33,31 +34,33 @@ opt-in, fails. All of this is reported, not tuned away
 
 **2. The policy moves listings a lot and rents little, but how little rests on assumptions.**
 Inside the model, where the counterfactual is known exactly, the rules (principal residence plus
-registry) cut covered-area listings by 0.585 log points by June 2026. At the default rent-market
-assumptions, asking rents fall by 0.48% (5-95% across the calibrated ensemble: −0.66% to
-−0.30%) and the all-tenant CPI-style index falls by 0.24%. That ensemble range understates the
-uncertainty. The listing data cannot pin down how fast rents adjust to vacancy, or how strongly
-vacancy draws renters into the region, and both are fixed assumptions. Varying them over a wide
-range moves the asking-rent effect from about −0.1% to −2.2%, more than all 16 calibrated
-parameters together ([robustness report](calibration/reports/robustness.md)). Even the upper end
-is at or below the 1-3% that the first project's CPI design cannot detect: its Phase 1 rent
-estimate has a standard error of 1.1 points. So the effect is **too small to detect** in the
-data, which is what the first project found. That is not the same as no effect, and the model
-does not measure its size.
+registry) cut covered-area listings by 0.640 log points by June 2026. Asking rents fall by 0.57%
+(5-95% across the calibrated ensemble: −1.52% to −0.14%) and the all-tenant CPI-style index by
+0.30%. Most of that spread comes from two things the listing data cannot pin down: how fast rents
+adjust to vacancy, and how strongly vacancy draws renters into the region. Both are drawn in the
+ensemble over wide priors rather than fixed, so the range carries their uncertainty (they explain
+most of its variance; [Sobol](calibration/reports/sobol.md),
+[robustness](calibration/reports/robustness.md)). Displaced homes mostly end up housing more
+households, not cutting rents. Homes sold to owner-occupiers can free a renter's home (a share of
+buyers are local renters), but the rule causes too few net sales for that to matter (−0.02 points).
+Even the low end of the range is within the 1-3% that the first project's CPI design cannot
+detect: its Phase 1 rent estimate has a standard error of 1.1 points. So the effect is **too
+small to detect** in the data, which is what the first project found. That is not the same as no
+effect, and the model does not measure its size.
 
 ![STR-attributable rent effect across the ensemble](calibration/reports/rent_effect.png)
 
-**3. Spillover into the exempt areas biases the DiD towards overstating the effect, but only
-modestly.** I ran the first project's regression on simulated scraped data, where the truth is
-known. Over the Phase 1 window, at the calibrated spillover strength, it estimates −0.425 against
-a true −0.385, overstating the fall by 0.039 log points (10%). With no spillover it understates
-the fall by 5%. Spillover strength is barely identified by the calibration, so I also checked
-it directly against the data: the control areas, including Salt Spring before its opt-in, are
-untreated until late 2025. Their observed listing path fits half the calibrated spillover
-slightly better than the full strength, though the evidence is weak. At half strength the
-overstatement is about 3%. Read back onto the real estimate, the true Phase 1 effect is
-plausibly within about 10% of −0.390, more likely smaller than larger
-([VALIDATION.md §3](docs/VALIDATION.md#3-did-recovery-experiment-m4)).
+**3. Spillover into the exempt areas barely biases the DiD at plausible strengths.** I ran the
+first project's regression on simulated scraped data, where the truth is known. Over the Phase 1
+window, at the calibrated spillover strength, it estimates −0.377 against a true −0.366,
+overstating the fall by 0.011 log points (3%). With no spillover it understates the fall by 7%;
+only spillover well beyond the calibrated range (2-3×) overstates it by 13-18%. Spillover
+strength is barely identified by the calibration, so I also checked it directly against the data:
+the control areas, including Salt Spring before its opt-in, are untreated until late 2025. Their
+observed listing path fits half and full calibrated strength equally well, and no spillover
+slightly worse, though the evidence is weak. Read back onto the real estimate, the true Phase 1
+effect is plausibly within about 7% of −0.390, in either direction
+([VALIDATION.md §3](docs/VALIDATION.md#3-did-recovery-experiment-m4-re-run-on-the-current-ensemble)).
 
 ![DiD estimate vs true effect across spillover strengths](calibration/reports/did_recovery.png)
 
@@ -78,16 +81,18 @@ whether the estimate itself is biased.
   District (1 agent per 5 real units: about 198,000 homes and 66,000 renter households;
   owner-occupiers are a tenure, not agents); five zones are covered by the rule, three are exempt.
 - Investors choose short-term rental, long-term rental, holding empty or selling by a
-  multinomial logit; hosts of their own principal residence stay legal.
+  multinomial logit; hosts of their own principal residence stay legal. Some buyers of sold
+  homes are local renters, whose rentals are freed.
 - Enforcement detects and fines illegal listings; a registry de-lists unregistered ones.
 - Market rents adjust to vacancy; sitting tenants' rents follow a cap on lease anniversaries.
 - Developers start homes on margin, the policy rate and zoning headroom; completions lag 18-30
   months.
 - Households search, double up or leave the region when they cannot find a home.
 - A noisy "researcher view" (scraped snapshots, a noisy CPI) is what the player sees.
-- 16 behavioural parameters are calibrated by simulated method of moments and ABC; the game
-  draws from a 300-member ensemble (179 distinct parameter sets; effective sample size 21), so
-  different seeds usually play different plausible models.
+- 18 parameters (host behaviour, enforcement, spillover and the rent dynamics) are calibrated by
+  simulated method of moments and sequential Monte Carlo ABC; the game draws from a 300-member
+  ensemble (174 distinct parameter sets; effective sample size about 63), so different seeds play
+  different plausible models.
 - Fully deterministic: a counter-based hashed RNG gives common random numbers, so every effect is
   a paired comparison with a no-policy run of the same city and luck.
 
@@ -102,12 +107,19 @@ tagged DATA / LITERATURE / ASSUMED / VERIFY), [calibration](docs/CALIBRATION.md)
   of British Columbia.** It is a calibrated, simplified model, not a digital twin of Victoria.
 - The listing response is calibrated; the rent, vacancy-tax, rent-cap, upzoning and
   non-market responses are assumptions (shown with "Assumed" badges in the game).
-- The calibration's effective sample size is low (21; 179 distinct parameter sets among 300, one
-  of them repeated 62 times), its 5-95% ranges are indicative only, and several targets and the
-  Salt Spring hold-out are missed ([CALIBRATION.md](docs/CALIBRATION.md)).
-- The rent effect's size is set by assumed rent dynamics (above), and homes sold to
-  owner-occupiers house no one from the rental market in the model (it has no owner households),
-  which pushes the rent effect towards zero.
+- The calibration's effective sample size is moderate (about 63 of 600; 174 distinct parameter
+  sets among 300, the most frequent repeated 26 times), so the tails of its 5-95% ranges rest on
+  a few effective draws. Several targets and the Salt Spring hold-out are missed
+  ([CALIBRATION.md](docs/CALIBRATION.md)).
+- The rent effect's size is set by rent dynamics the data cannot identify (above). Their priors
+  are wide but assumed. Owner-occupiers are not agents: a share of buyers of sold homes are
+  local renters (an unverified 40%), and sellers are assumed to leave the rental market.
+- Over a full five-year game term the listing rule's rent effect fades, and in about a third of
+  model variants asking rents end slightly above the no-policy run (mean −0.11 points at month 59,
+  against −0.34 at month 33). With the short-term option gone, the logit raises every covered-zone
+  investor's odds of selling to an owner-occupier, so about 1,200 homes on average leave the rental
+  stock over the term (ADR 0007, VALIDATION §5). How strong that channel really is has not been
+  measured.
 - Enforcement levels other than the default are an extrapolation: detection at the default
   level is calibrated, but how it scales with the level is assumed.
 - Levels of rent burden and housing stress are not calibrated; the game scores only changes

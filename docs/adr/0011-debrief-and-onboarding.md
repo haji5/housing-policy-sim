@@ -22,7 +22,7 @@ lesson card, a DiD-recovery card for the player's own world, and a shareable see
    run on the development machine (busy, Chromium headless): 8.0-9.6 s for 32 × 2 runs
    alone, 12.4 s with another e2e test running in parallel. N = 200 would take about 50-60 s
    there, far over PLAN's 10 s budget, so **N = 32 is a deliberate
-   deviation from PLAN §6.4**. With 300 sets of which 179 are distinct (ESS 21, CALIBRATION.md),
+   deviation from PLAN §6.4**. With 300 sets of which 179 were distinct (ESS 21 at the time; 174 and about 63 since ADR 0013),
    32 evenly spaced members already span the ensemble; the fan shows 5-95% and 25-75% bands
    and the median, which 32 paths estimate adequately for a teaching display (not for inference).
    What varies across the fan is model uncertainty (parameters), not seed noise: every variant

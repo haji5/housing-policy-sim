@@ -28,10 +28,18 @@ caveat:
 
 **Renter buyers.** When an investor unit is sold to an owner-occupier (U_SELL wins), with
 probability `renterBuyerShare` (default 0.4, VERIFY) the buyer is a renter household already
-housed in the region: of 4 housed renters drawn at random region-wide (keyed by the sold
-dwelling and the tick), the one with the highest income. It gets the new status BOUGHT (leaves
-the rental market; not scored), and its rental becomes vacant and `due`, as after any move-out.
-Otherwise the buyer comes from outside the rental market, as before.
+housed in the region, drawn uniformly region-wide (keyed by the sold dwelling and the tick). It
+gets the new status BOUGHT (leaves the rental market; not scored), and its rental becomes vacant
+and `due`, as after any move-out. Otherwise the buyer comes from outside the rental market, as
+before.
+
+Real buyers are richer than the average renter. A first version drew the richest of 4 random
+renters, but then the renter income distribution was not stationary: richer renters left while
+arrivals kept the starting distribution, so the no-policy rent-burden share drifted up by up to
+3.5 points over five years (Victoria, 6 ensemble members). Selecting buyers by income would need an
+initial income distribution that is already stationary under that selection; this was not built.
+The uniform draw keeps the mechanism that matters (a freed rental) without the drift, and a test
+now checks the burden level.
 
 The steady state accounts for it: the renter-buyer hazard
 `h_b = renterBuyerShare · (sellRateAnnual/12) · Inv / O` (steady-state sales bought by renters,
@@ -39,11 +47,12 @@ spread over all O renter households) is added to tenant turnover when the invest
 matching efficiencies are solved, and baseline arrivals replace it as they replace ordinary exits.
 Sellers of owner-occupied homes bought by investors do not become renter agents (R5).
 
-`renterBuyerShare` is not calibrated: over 0, 0.2, 0.4 and 0.6 the historical policy's Jun 2026
-asking-rent effect is −0.383%, −0.378%, −0.377% and −0.377% (mean of 8 ensemble members × 2
-seeds of the previous ensemble), because the rule causes only a few hundred extra sales and
-investor purchases offset most of them (net owner-occupied stock moves by −40 to +230 homes,
-against 600-1,000 displaced units that become occupied long-term rentals). The omission was real
+`renterBuyerShare` is not calibrated. Over 0, 0.4 and 0.6 the historical policy's Jun 2026
+asking-rent effect is −0.59%, −0.60% and −0.61% (30 distinct members of the final ensemble,
+calibration seeds; robustness report §4); per member, 0 → 0.6 changes it by −0.02 points on
+average. The reason: the rule causes only a few hundred extra sales and investor purchases offset
+most of them (net owner-occupied stock moves by −40 to +230 homes in 4 members of the M5
+ensemble, against 600-1,000 displaced units that become occupied long-term rentals). The omission was real
 but quantitatively negligible. What sets the rent effect is how far extra rentals draw new
 households in (`eta`) versus lower rents (`kappa`).
 
@@ -76,8 +85,8 @@ On a 4-D toy problem with two unidentified dimensions and one posterior at a pri
 population matched a brute-force rejection sample at the same tolerance in every mean and SD (to
 0.01) with ESS of about 575 of 600.
 
-**Stopping rules that were tried and discarded** (same seeds; reported so the choice is not a
-hidden degree of freedom):
+**Stopping rules that were tried and discarded** (same seeds, on the first version of the
+renter-buyer rule, richest of 4; reported so the choice is not a hidden degree of freedom):
 
 1. Beaumont's kernel of twice the covariance shrank the tolerance only from 180 to 171 in its
    first generation: in 18 dimensions most wide perturbations land outside the accepted region.
@@ -91,7 +100,9 @@ hidden degree of freedom):
 3. Stopping when the tolerance falls by less than 2% in one generation. It fired on a stall at
    generation 4 (124 to 122), leaving a looser fit than the old ensemble (T3 failed). Any
    per-step threshold chosen after seeing trajectory 2 would be tuned to it, so a target fixed in
-   advance (the old tolerance) was used instead.
+   advance (the old tolerance) was used instead. With it, the richest-of-4 version stopped at
+   generation 8 (tolerance 91.6, ESS 135); that ensemble was discarded with the buyer rule, and
+   the final model was calibrated once with the same fixed rule.
 
 ## Consequences
 
@@ -100,12 +111,32 @@ hidden degree of freedom):
 - The golden snapshot changed (renter buyers with the default share). The CRN decoupling test
   also switches renter buyers off, because they are drawn region-wide and couple the zones.
 - New tests: `test/renterBuyers.test.ts` (no buyers at share 0; invariants every tick; no-policy
-  renter population within 2% and asking rent within 1% of the share-0 run; the rule lowers
-  asking rents by more with buyers).
+  renter population within 2%, asking rent within 1% and rent-burden share within 0.5 points of the
+  share-0 run; the rule lowers asking rents by more with buyers).
 - Parameter recovery (validate.py) now runs 2 SMC generations of 768 proposals with a population
   of 256 per case (no tolerance target: a fixed budget per case).
 - ODD §2, §3, §5, §7.1, §7.5; ASSUMPTIONS A26, A33, R1-R5; CALIBRATION method and results.
 
 ## Results
 
-Filled in from the re-calibration below.
+Final calibration (sim 0.6.0, uniform renter buyers; CALIBRATION.md, `calibration/reports/`):
+
+- **Ensemble.** 11 SMC generations, tolerance 179 → 89.4 (the old ensemble's was 93.3). **ESS
+  about 63** of 600 (M5: 21); 174 distinct sets; the most frequent set is 26 of 300 members (M5:
+  62). ESS fell in the last generations (51, 33, 63) as the tolerance neared the noise floor.
+- **Fit.** Same passes and misses as M5 (T1, T1a, T4, T6b, T7 pass; T2, T5, T6a, H1 miss) except
+  T3, whose last point (−0.535 vs −0.432) is now just outside 2 SE; its path RMSE (0.058) is
+  unchanged.
+- **Rents.** Asking-rent effect by Jun 2026 −0.57% (5-95% −1.52% to −0.14%; M5 −0.48%, −0.66%
+  to −0.30%); CPI-style −0.30%. Sobol: `kappa` and `eta` have total indices 0.44 and 0.39 for the
+  rent effect, and the one-at-a-time sensitivity moves it by 0.68 and 0.82 points. The headline
+  rent range is now honest about its main uncertainty and still "too small to detect".
+- **DiD recovery.** At the calibrated spillover the DiD overstates the true Phase 1 effect by 3%
+  (−0.377 vs −0.366; M5 ensemble: 10%). The data check no longer separates 0.5× from 1× (RMSE
+  0.078 both).
+- **Validation.** Parameter recovery 87% of 54 parameter-cases (M5: 79% of 48); all seven misses
+  are truths in the outer 4% of their prior range. Estimator check 5.6e-15.
+- **Game balance.** Unchanged in kind: supply wins the balanced (5 of 8 seeds) and tourism
+  mandates, tenant protection affordability (6 of 8) and budget (7 of 8); only the crackdown is
+  dominated. (On the discarded richest-of-4 ensemble, supply won three mandates: the balance
+  depends on the weakly identified held-vacant share through vacancy-tax revenue.)
