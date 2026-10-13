@@ -104,7 +104,7 @@ def recovery(ens: dict, cases: int, tmp: Path) -> list[dict]:
         print(f"Recovery case {k + 1}/{cases} (ensemble member {idx})", flush=True)
         calibrate.main(["--targets", str(tpath), "--out", str(epath), "--report-dir", str(tmp / f"case{k}"),
                         "--stage1", "1024", "--stage2-starts", "2", "--stage2-maxfev", "60",
-                        "--stage3", "1024", "--ensemble", "200"])
+                        "--stage3", "768", "--generations", "2", "--tolerance", "0", "--accept", "256", "--ensemble", "200"])
         rec = json.loads(epath.read_text(encoding="utf-8"))["sets"]
         for p in priors:
             g, key = p.name.split(".")

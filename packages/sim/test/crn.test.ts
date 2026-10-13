@@ -36,15 +36,16 @@ describe('common random numbers', () => {
   });
 
   it('exempt-zone host draws are unchanged by covered-zone policy when markets are decoupled', async () => {
-    // With rents frozen (kappa = 0), no tourist-demand spillover, arrivals independent of vacancy
-    // and households locked to their preferred zone, the exempt zone shares nothing with the
-    // covered zone except the RNG seed.
+    // With rents frozen (kappa = 0), no tourist-demand spillover, arrivals independent of vacancy,
+    // households locked to their preferred zone and no renter buyers (who are drawn region-wide,
+    // ADR 0013), the exempt zone shares nothing with the covered zone except the RNG seed.
     const { DEFAULT_PARAMS } = await import('../src/index.ts');
     const decoupled = structuredClone(DEFAULT_PARAMS);
     decoupled.rental.kappa = 0;
     decoupled.rental.searchOtherZoneProb = 0;
     decoupled.rental.arrivalVacancySemiElasticity = 0;
     decoupled.str.demandSpillover = 0;
+    decoupled.host.renterBuyerShare = 0;
     const a = run(8, 'none', 60, decoupled);
     // PR rule only: the Phase 2 registry applies to exempt zones too (ADR 0004), so it is excluded.
     const b = run(8, ruleAt(8), 60, decoupled);

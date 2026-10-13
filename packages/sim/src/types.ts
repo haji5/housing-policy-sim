@@ -22,6 +22,8 @@ export const HouseholdStatus = {
   GONE: 3,
   /** Left the region for ordinary, non-housing reasons (exogenous hazard). Not scored. */
   LEFT: 4,
+  /** Left the rental market by buying a home an investor sold (ADR 0013). Not scored. */
+  BOUGHT: 5,
 } as const;
 export type HouseholdStatusCode = (typeof HouseholdStatus)[keyof typeof HouseholdStatus];
 
@@ -166,6 +168,11 @@ export interface Params {
     vacantHeldShare: number;
     /** Annual share of investor units sold to owner-occupiers in the steady state (calibrated). */
     sellRateAnnual: number;
+    /**
+     * Share of those sales whose buyer is a renter household already housed in the region, which
+     * frees its rental (ADR 0013). The other buyers come from outside the rental market.
+     */
+    renterBuyerShare: number;
     /**
      * Years of expected rent growth foregone that investors weigh when a nominal rent cap is
      * below inflation plus expected real market growth (cuts expected LTR revenue).

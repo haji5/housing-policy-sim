@@ -138,4 +138,5 @@ export const Purpose = {
   NONMARKET_START: 34,
   NONMARKET_ZONE: 35,
   SHOCK_DRAW: 36, // agent 0, tick = turn; sub 0: whether, sub 1: which card
+  RENTER_BUYER: 37, // per sold dwelling; sub 0: whether a renter buys, sub 1..: candidate draws
 } as const;

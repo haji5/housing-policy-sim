@@ -28,6 +28,9 @@ export interface EnsembleFile {
     ess: number;
     bestDistance: number;
     smoke: boolean;
+    /** ABC-SMC generations (from 2026-10-12): proposals, tolerance and ESS of each population. */
+    generations?: { generation: number; draws: number; tolerance: number; ess: number }[];
+    distinctSets?: number;
   };
   sets: ParamOverrides[];
 }

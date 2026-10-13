@@ -1,6 +1,6 @@
 """Sobol sensitivity indices (PLAN §8.1) -> calibration/reports/sobol.{md,json}
 
-Variance-based global sensitivity of four outputs of the historical-policy run to the 16
+Variance-based global sensitivity of four outputs of the historical-policy run to the 18
 calibrated parameters, each varied uniformly over its posterior 5-95% range (in the prior's own
 scale: log for log-uniform priors). Uses scipy.stats.sobol_indices (Saltelli sampling with the
 Jansen / Saltelli estimators), n * (d + 2) model evaluations.

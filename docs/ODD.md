@@ -43,7 +43,8 @@ Dwelling types:
 - **Under construction**: CONSTRUCTION until `completeTick`.
 
 **Households** (renters only): `income` ($k/month, real), `dwelling`, `status` ∈ {HOUSED,
-SEARCHING, DOUBLED_UP, GONE, LEFT}, `searchMonths`, `prefZone`. Owner-occupiers are not agents.
+SEARCHING, DOUBLED_UP, GONE, LEFT, BOUGHT}, `searchMonths`, `prefZone`. Owner-occupiers are not
+agents; a renter who buys a home an investor sold leaves the agent set as BOUGHT (§7.1, ADR 0013).
 
 **Zones**: spec (covered, opt-in tick, counts, rents, STR prices), `marketRent m_z` (real asking
 rent for new leases), STR demand `D_z` (start value `D_z0`), occupancy, matching efficiency `A_z`,
@@ -66,7 +67,7 @@ Each tick runs in fixed order (`step.ts`), and agents are iterated in ascending 
    factor), the policy rate, the vacancy tax and the upzoning multipliers in force; enforce
    (anticipatory exits, compliant exits, detection with fines, registration, de-listing).
 3. **Hosts** (`systems/hosts.ts`): purchases from owner-occupiers, investor entry, then use
-   decisions.
+   decisions (a sale may free the rental of a renter who buys it).
 4. **Developers** (`systems/developers.ts`): completions, then market and non-market starts.
 5. **Rental market** (`systems/rentalMarket.ts`): matching, asking-rent update, sitting-tenant
    anniversaries.
@@ -116,9 +117,12 @@ Sitting rents are `m_z·q·(1 − sittingDiscount·u)`, with lease anniversaries
 months. Initial searchers are `initialSearchingShare × renters`. Incomes are lognormal.
 
 The investor ASCs are solved so the start is flow-balanced (ADR 0007): with reviewers per month
-`R = r(S + V + H) + h·O`, the logit shares of STR, held-vacant and sell among reviewers equal
+`R = r(S + V + H) + h·O` (h = move + exit hazard + the renter-buyer hazard of ADR 0013), the logit shares of STR, held-vacant and sell among reviewers equal
 `rS/R`, `rH/R` and `(sellRateAnnual/12)·Inv/R`, the rest LTR. `buyProb_z` makes purchases equal
-sales. Matching efficiency and baseline arrivals are solved as in ADR 0002.
+sales. Matching efficiency and baseline arrivals are solved as in ADR 0002, with renters who buy
+homes counted as turnover: the renter-buyer hazard is
+`renterBuyerShare · (sellRateAnnual/12) · Inv / O` (steady-state sales by renters, spread over all
+renter households), and baseline arrivals replace it as well as ordinary exits.
 
 **Spin-up** (ADR 0005, extended by ADR 0007). If the scenario sets `spinUpMonths` (Victoria: 24),
 the model runs that many months with no policy before the first recorded tick. After each month
@@ -167,7 +171,14 @@ capFactor_z = max(0.5, 1 − capPenaltyYears · max(0, π + max(0, g_z) − cap)
 where π is general inflation, `cap` the nominal rent cap in force and `g_z` the zone's real asking
 rent growth over the past 12 months. STR is unavailable to compliant hosts while the rule binds
 and, for one month, to a unit just removed from the platforms. SELL turns the unit into an
-owner-occupied home (it leaves the investor stock). PR owners review with probability
+owner-occupied home (it leaves the investor stock).
+
+**Renter buyers** (ADR 0013). With probability `renterBuyerShare` the buyer of a sold investor home
+is a renter household already housed in the region: the richest of 4 housed renters drawn at
+random (region-wide, keyed by the sold dwelling and tick). It becomes BOUGHT and its rental becomes
+vacant and `due`. Otherwise the buyer comes from outside the rental market.
+
+PR owners review with probability
 `prReview`: `U_list = ASC_pr + β_pr (strNet_z − regCost) + σG₁` vs `U_not = σG₀`.
 
 **Purchases.** Each owner-occupied, non-listing home is bought by a small investor after a
@@ -221,7 +232,8 @@ Sitting tenants, on each 12-month anniversary (real terms, nominal cap; ADR 0007
 ### 7.5 Households
 
 Turnover per housed household per month: exit with `exitHazard` (LEFT); otherwise move with
-`moveHazard · exp(−k · discount)`, where `discount = max(0, 1 − rent/new-lease rent)`.
+`moveHazard · exp(−k · discount)`, where `discount = max(0, 1 − rent/new-lease rent)`. Renters
+also leave the rental market by buying sold investor homes (BOUGHT, §7.1).
 
 Arrivals: `Poisson((λ₀ + λ_c) · askIdx^(−ε) · e^(η (v − v*)) · arrivalsMult)`, where `λ_c` is the
 baseline flow of new rental homes (rental completions at reference conditions), `askIdx` the

@@ -157,9 +157,11 @@ def write_calibration_report(*, priors, targets, meta, sets, U_ens, stage, out_d
         "## Run",
         "",
         f"- Method: {meta['method']}.",
-        f"- Stage 1: {meta['nStage1']} Sobol draws; Stage 3: {meta['nStage3']} proposal draws; common seeds {meta['seeds']}.",
-        f"- Distance tolerance D <= {meta['tolerance']}; {meta['nAccepted']} accepted; effective sample size {meta['ess']}; "
-        f"ensemble of {len(sets)} parameter sets (resampled by importance weight).",
+        f"- Stage 1: {meta['nStage1']} Sobol draws; Stage 3: {meta['nStage3']} ABC-SMC proposals; common seeds {meta['seeds']}.",
+        "- ABC-SMC generations (tolerance, ESS of the population): "
+        + "; ".join(f"{g['generation']}: D <= {g['tolerance']:.1f}, ESS {g['ess']:.0f}" for g in meta.get("generations", [])) + ".",
+        f"- Final tolerance D <= {meta['tolerance']}; population {meta['nAccepted']}; effective sample size {meta['ess']}; "
+        f"ensemble of {len(sets)} parameter sets ({meta.get('distinctSets', '?')} distinct), resampled by importance weight.",
         f"- Best distance found: {meta['bestDistance']}. Stage-1 median distance: {np.median(stage['D1']):.1f}.",
         f"- Hashes: priors `{meta['priorsHash']}`, targets `{meta['targetsHash']}`, defaults `{meta['defaultsHash']}`, "
         f"scenario `{meta['scenarioHash']}` (checked by `packages/sim/test/ensemble.test.ts`).",

@@ -267,6 +267,12 @@ export function buildWorld(config: RunConfig): SimState {
       ? 0
       : Math.min(1, (scenario.multiHostShare * totalStr) / totalInvStr);
   const nSearch0 = Math.round(totalOcc * scenario.initialSearchingShare);
+  // Monthly hazard that a housed renter buys a home an investor sold (ADR 0013): steady-state sales
+  // times the renter-buyer share, spread over all renter households.
+  const totalInv = plan.reduce((a, p) => a + p.nInvStr + p.nOcc + p.nVac + p.nHeld, 0);
+  const buyHazard =
+    (params.host.renterBuyerShare * (params.host.sellRateAnnual / 12) * totalInv) /
+    Math.max(1, totalOcc);
 
   const dw = allocDwellings(totalD + pipelineGuess + 1024);
   const hh = allocHouseholds((totalOcc + nSearch0) * 3 + 1024);
@@ -342,7 +348,7 @@ export function buildWorld(config: RunConfig): SimState {
   }
 
   // ---- zone state, steady-state constants
-  const turnover = params.rental.moveHazard + params.rental.exitHazard;
+  const turnover = params.rental.moveHazard + params.rental.exitHazard + buyHazard;
   const r = params.host.pReview;
   const sigma = params.host.gumbelScale;
   const psi = nZones > 1 ? params.rental.searchOtherZoneProb : 0;
@@ -446,7 +452,7 @@ export function buildWorld(config: RunConfig): SimState {
       askingRent: askingBase,
       cpiIndexBase: qRent / Math.max(1, nRented),
       askingIndexBase: askingBase,
-      arrivalsPerMonth: baseArrivals(params, scenario, renterWeights, nRented),
+      arrivalsPerMonth: baseArrivals(params, scenario, renterWeights, nRented, buyHazard),
       renterWeights,
       rentalCompletionsPerMonth: zones.reduce((a, z) => a + z.startsBase * z.rentalShare, 0),
     },
@@ -471,7 +477,7 @@ export function emptyAcc(nZones: number): SimState['acc'] {
 
 /**
  * Baseline monthly arrivals that keep the renter population stationary with no policy change:
- * replace ordinary exits, grossed up for the share of arrivals who cannot afford even the cheapest
+ * replace ordinary exits and renters who buy homes (ADR 0013), grossed up for the share of arrivals who cannot afford even the cheapest
  * unit in their preferred zone (they eventually leave as GONE).
  */
 function baseArrivals(
@@ -479,6 +485,7 @@ function baseArrivals(
   scenario: Scenario,
   weights: readonly number[],
   housed: number,
+  buyHazard: number,
 ): number {
   const { incomeMedian, incomeSigma } = params.households;
   const total = weights.reduce((a, b) => a + b, 0);
@@ -489,7 +496,7 @@ function baseArrivals(
     pUnaffordable +=
       (weights[zi]! / total) * normCdf(Math.log(minIncome / incomeMedian) / incomeSigma);
   });
-  return (params.rental.exitHazard * housed) / Math.max(0.05, 1 - pUnaffordable);
+  return ((params.rental.exitHazard + buyHazard) * housed) / Math.max(0.05, 1 - pUnaffordable);
 }
 
 /** Utility weight on net revenue for a host class (commercial operators may be more sensitive). */

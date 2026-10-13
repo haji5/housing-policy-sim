@@ -112,6 +112,20 @@
       "lo": 0.02,
       "hi": 0.1,
       "note": "annual share of investor units sold to owner-occupiers in the steady state (destination simplex; ADR 0007)"
+    },
+    {
+      "name": "rental.kappa",
+      "dist": "loguniform",
+      "lo": 0.03,
+      "hi": 0.3,
+      "note": "asking-rent adjustment to the vacancy gap (1 pp gap = 0.36-3.6%/yr); barely identified by listing moments, in the ensemble so rent-effect uncertainty propagates (ADR 0013)"
+    },
+    {
+      "name": "rental.arrivalVacancySemiElasticity",
+      "dist": "uniform",
+      "lo": 0,
+      "hi": 50,
+      "note": "renter arrivals vs the vacancy gap; barely identified by listing moments, in the ensemble so rent-effect uncertainty propagates (ADR 0013)"
     }
   ]
 }

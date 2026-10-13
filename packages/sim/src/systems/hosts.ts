@@ -1,6 +1,6 @@
 import { gumbel, Purpose, uniform } from '../rng.ts';
 import type { SimState } from '../types.ts';
-import { HostClass, RegStatus, StrRegime, Tenure } from '../types.ts';
+import { HostClass, HouseholdStatus, RegStatus, StrRegime, Tenure } from '../types.ts';
 import { classBeta, classCompliance, scheduleBuy } from '../world.ts';
 import { anticipatedPenalty, DUE_REMOVED, illegalPenalty } from './enforcement.ts';
 
@@ -22,6 +22,8 @@ import { anticipatedPenalty, DUE_REMOVED, illegalPenalty } from './enforcement.t
  *  - a unit whose tenant just left, that was just bought or completed, or that was just removed
  *    from the platforms is `due` and decides now (a removed one cannot relist this month);
  *  - purpose-built and non-market rentals never review (they stay long-term rentals).
+ *
+ * A sale can free a rental: some buyers are renter households already in the region (ADR 0013).
  */
 export function hostDecisions(state: SimState): void {
   purchases(state);
@@ -31,6 +33,7 @@ export function hostDecisions(state: SimState): void {
   const registry = state.levers.strRegime >= StrRegime.PR_REGISTRY;
   const regCost = registry ? params.enforcement.registrationCost : 0;
   const tax = derived.vacancyTaxMonthly;
+  const pool: BuyerPool = { ids: null };
 
   for (let d = 0; d < dw.n; d++) {
     const t = dw.tenure[d];
@@ -92,6 +95,7 @@ export function hostDecisions(state: SimState): void {
       dw.tenant[d] = -1;
       scheduleBuy(state, d, tick);
       state.acc.sales[zi]!++;
+      renterBuyer(state, d, pool);
     } else if (best === uVac) {
       dw.tenure[d] = Tenure.VACANT;
       dw.tenant[d] = -1;
@@ -100,6 +104,48 @@ export function hostDecisions(state: SimState): void {
       dw.tenant[d] = -1;
     }
   }
+}
+
+/** Housed renter households at the first sale of the tick (built lazily, once per tick). */
+interface BuyerPool {
+  ids: number[] | null;
+}
+
+/** Candidates drawn per renter purchase; the richest one buys (expected ~80th income percentile). */
+const BUYER_CANDIDATES = 4;
+
+/**
+ * Renter buyers (ADR 0013): with probability renterBuyerShare the owner-occupier who buys sold
+ * investor home d is a renter household already housed in the region. Buyers come from the upper
+ * part of the renter income distribution: the richest of a few randomly drawn housed renters. The
+ * buyer leaves the rental market (BOUGHT) and its rental becomes vacant and `due`, as after any
+ * move-out. Otherwise the buyer comes from outside the rental market and no rental is freed.
+ */
+function renterBuyer(state: SimState, d: number, pool: BuyerPool): void {
+  const { dwellings: dw, households: hh, params, seed, tick } = state;
+  const share = params.host.renterBuyerShare;
+  const key = dw.key[d]!;
+  if (!(share > 0) || uniform(seed, key, tick, Purpose.RENTER_BUYER, 0) >= share) return;
+  if (pool.ids === null) {
+    pool.ids = [];
+    for (let h = 0; h < hh.n; h++) if (hh.status[h] === HouseholdStatus.HOUSED) pool.ids.push(h);
+  }
+  const ids = pool.ids;
+  if (ids.length === 0) return;
+  let buyer = -1;
+  for (let j = 1; j <= BUYER_CANDIDATES; j++) {
+    const h = ids[Math.floor(uniform(seed, key, tick, Purpose.RENTER_BUYER, j) * ids.length)]!;
+    // Skip households that already bought this tick.
+    if (hh.status[h] !== HouseholdStatus.HOUSED) continue;
+    if (buyer < 0 || hh.income[h]! > hh.income[buyer]!) buyer = h;
+  }
+  if (buyer < 0) return;
+  const home = hh.dwelling[buyer]!;
+  dw.tenant[home] = -1;
+  dw.due[home] = 1;
+  hh.dwelling[buyer] = -1;
+  hh.status[buyer] = HouseholdStatus.BOUGHT;
+  hh.searchMonths[buyer] = 0;
 }
 
 /**

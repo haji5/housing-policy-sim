@@ -1,6 +1,6 @@
 /** Public entry point of the simulation core. */
 
-export const SIM_VERSION = '0.5.0';
+export const SIM_VERSION = '0.6.0';
 
 export * from './types.ts';
 export { createSim } from './create.ts';

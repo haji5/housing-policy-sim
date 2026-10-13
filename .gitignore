@@ -20,3 +20,5 @@ Thumbs.db
 
 # calibration smoke output
 calibration/reports/smoke/
+# cached calibration stages 1-2 (calibrate.py)
+calibration/reports/.cache/

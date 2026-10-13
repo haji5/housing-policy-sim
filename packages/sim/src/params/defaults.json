@@ -18,6 +18,7 @@
     "investorEntry": 0,
     "vacantHeldShare": 0.03,
     "sellRateAnnual": 0.05,
+    "renterBuyerShare": 0.4,
     "capPenaltyYears": 2
   },
   "enforcement": {

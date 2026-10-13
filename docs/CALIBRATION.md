@@ -38,11 +38,16 @@ Simulated method of moments / approximate Bayesian computation (`calibration/cal
 2. **Distance.** `D(θ) = Σ_k w_k ((m_k(θ) − target_k)/se_k)²` over fit targets (paths element-wise),
    plus the T7 leads as a soft constraint.
 3. **Stage 1.** A scrambled Sobol sample of 8,192 points from the priors
-   ([`calibration/priors.json`](../calibration/priors.json), 14 parameters).
-4. **Stage 2.** Nelder-Mead from the 4 best points (reported; centres the next stage).
-5. **Stage 3.** ABC importance sampling: 4,096 draws from a Gaussian proposal fitted to the best
-   points. The ~600 closest are accepted, weighted by prior/proposal density and resampled into
-   an ensemble of 300 parameter sets.
+   ([`calibration/priors.json`](../calibration/priors.json), 18 parameters since ADR 0013).
+4. **Stage 2.** Nelder-Mead from the 4 best points (a diagnostic of the best attainable distance).
+5. **Stage 3.** ABC-SMC (population Monte Carlo, ADR 0013). Generation 0 is the best 600 Stage-1
+   draws. Each generation draws 2,048 proposals by perturbing the previous population with a
+   Gaussian kernel (its weighted covariance, truncated to the prior support), keeps the best 600
+   and weights them by prior / proposal density. Generations stop once the tolerance is at most
+   93.3, the previous ensemble's, so successive ensembles meet the same fit standard (at most 12;
+   ADR 0013 lists the stopping rules tried and discarded). The final population is resampled into an ensemble
+   of 300 parameter sets. (Until 2026-10-12 this stage was a single importance-sampling
+   step from one Gaussian, whose weights were degenerate: ESS 21.)
 6. **Product.** [`packages/sim/src/params/ensemble.json`](../packages/sim/src/params/ensemble.json)
    with metadata: sim version, git commit, and hashes of the priors, targets, default parameters
    and scenario. `packages/sim/test/ensemble.test.ts` fails if any of them change without
