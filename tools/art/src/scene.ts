@@ -1,5 +1,5 @@
 /**
- * A small composed test scene from the atlas sprites, for the screenshot quality loop (PLAN §9.4):
+ * A small composed test scene from the atlas sprites, for the screenshot quality loop (ADR 0010):
  * checks that ground tiles meet without gaps and buildings sit on the grid.
  */
 import type { Sprite } from './draw.ts';

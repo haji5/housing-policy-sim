@@ -6,7 +6,7 @@
 
 ## Context
 
-A skeptical review (HANDOFF §6c-7) left three objections that the documentation could only
+A skeptical review of the M5 model left three objections that the documentation could only
 caveat:
 
 1. **Sold homes housed no one from the rental market.** When an investor sold a unit to an
@@ -107,7 +107,7 @@ renter-buyer rule, richest of 4; reported so the choice is not a hidden degree o
 ## Consequences
 
 - `SIM_VERSION` 0.6.0; re-calibrated; every downstream report re-run (validate, Sobol,
-  DiD recovery, robustness, playtests) before any number is quoted (HANDOFF §6c rule).
+  DiD recovery, robustness, playtests) before any number is quoted.
 - The golden snapshot changed (renter buyers with the default share). The CRN decoupling test
   also switches renter buyers off, because they are drawn region-wide and couple the zones.
 - New tests: `test/renterBuyers.test.ts` (no buyers at share 0; invariants every tick; no-policy

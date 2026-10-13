@@ -5,7 +5,7 @@ import prettier from 'eslint-config-prettier';
 import globals from 'globals';
 
 /**
- * WORKING_AGREEMENTS.md hard rules, enforced mechanically for the sim core:
+ * Determinism rules, enforced mechanically for the sim core:
  * no Math.random / Date.now / wall-clock reads, no module-level mutable state,
  * and no Node built-ins outside the CLI entry point.
  */
@@ -58,7 +58,6 @@ export default tseslint.config(
       '**/playwright-report/**',
       '**/.venv/**',
       'calibration/reports/**',
-      'docs/handoff/staged/**',
     ],
   },
   js.configs.recommended,

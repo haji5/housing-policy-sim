@@ -4,7 +4,7 @@ import { dirname, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 /**
- * README media (PLAN §12): frames of one term for the GIF (assembled by scripts/make_gif.py)
+ * README media: frames of one term for the GIF (assembled by scripts/make_gif.py)
  * and a debrief still. Opt-in, because it is slow and only needed when the UI changes:
  *   MEDIA=1 npx playwright test e2e/media.spec.ts && node scripts/py.mjs ... (see README)
  */

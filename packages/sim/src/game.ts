@@ -1,5 +1,5 @@
 /**
- * Game rules (PLAN §5.8-5.9, §6.1-6.2; ADR 0009): resources, lever costs and cooldowns, the seeded
+ * Game rules (ADR 0009): resources, lever costs and cooldowns, the seeded
  * shock-card schedule and mandates. Pure functions, so the web game and the headless playtests use
  * exactly the same rules. All money is $M per quarter-turn; political capital is in points. The
  * constants are ASSUMED game-design choices, not model parameters.
@@ -240,7 +240,7 @@ export function fiscalBalance(game: GameState): number {
 }
 
 // --------------------------------------------------------------------------------------------
-// Mandates (PLAN §6.2): weights over the scorecard's objectives.
+// Mandates (ADR 0009): weights over the scorecard's objectives.
 
 export const MANDATES = {
   balanced: {

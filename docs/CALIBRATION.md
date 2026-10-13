@@ -1,6 +1,6 @@
 # Calibration
 
-How the model is calibrated to the Bill 35 evidence (PLAN §7). The generated report with every
+How the model is calibrated to the Bill 35 evidence. The generated report with every
 number and figure is [`calibration/reports/calibration.md`](../calibration/reports/calibration.md).
 
 ## Targets
@@ -59,7 +59,7 @@ documented defaults (ASSUMPTIONS.md).
 ## Reproduce
 
 ```bash
-pnpm calibrate          # ~30 min on 16 workers; writes ensemble.json and calibration/reports/
+pnpm calibrate          # ~2.5 h on 16 workers (resumes from a cache); writes ensemble.json and reports
 pnpm validate           # estimator cross-check, parameter recovery, held-out checks, sensitivity
 pnpm calibrate:smoke    # 1-minute version used in CI (does not touch the committed ensemble)
 ```
@@ -260,7 +260,7 @@ hand to close the gap. Diagnostics:
 Weakly: `beta`, `anticipation`, `investorEntry`, `demandSpillover`, `demandGrowthAnnual`,
 `arrivalRentElasticity`. The weakly identified ones are the behavioural responses the first
 project could not measure (where displaced units go, spillover). Their uncertainty is carried into
-the game through the ensemble, as PLAN §5.4 intends.
+the game through the ensemble, by design.
 
 **Rents (not fitted).** The STR-attributable change in asking rents by Jun 2026 is −0.61% (5-95%
 −0.92% to −0.09%); 83% of the ensemble lies inside the first project's −3.3% to −0.4% bound. On a

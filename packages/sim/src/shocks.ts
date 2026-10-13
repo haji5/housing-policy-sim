@@ -1,5 +1,5 @@
 /**
- * Shock cards (PLAN §5.9, ADR 0009). The sim only applies them: a 'shock' policy event with a
+ * Shock cards (ODD §7.10, ADR 0009). The sim only applies them: a 'shock' policy event with a
  * card code switches the card's effects on for its duration. Which cards a game draws, and when,
  * is decided by the game rules (game.ts) from the seed, so draws are reproducible.
  */

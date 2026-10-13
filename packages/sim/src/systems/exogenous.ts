@@ -5,7 +5,7 @@ import { drawIncome, pickWeighted, reserveHouseholds } from '../world.ts';
 import { newLeaseRent } from './rentalMarket.ts';
 
 /**
- * Exogenous update (PLAN §5.3 step 1): household arrivals from migration, and ordinary tenant
+ * Exogenous update (ODD §3, step 1): household arrivals from migration, and ordinary tenant
  * turnover. A housed household leaves the region with probability exitHazard (status LEFT) or
  * moves within the region with probability moveHazard * exp(-k * discount) (back to SEARCHING),
  * where discount is how far its rent is below the unit's current new-lease rent: tenants with a

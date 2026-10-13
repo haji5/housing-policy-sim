@@ -1,7 +1,7 @@
 /**
  * "Zoned Out Mono": an original 5x7 pixel font drawn for this project (CC BY 4.0, like the rest of
  * the art), used for the title and map labels. Body text stays in the system UI font for
- * readability (PLAN §6.7: minimum 16px UI text). Each glyph is 5 columns by 7 rows; '#' is ink.
+ * readability (ACCESSIBILITY.md: minimum 16px UI text). Each glyph is 5 columns by 7 rows; '#' is ink.
  */
 import { Sprite } from './draw.ts';
 import { C } from './palette.ts';

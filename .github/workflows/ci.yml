@@ -30,7 +30,7 @@ jobs:
           python-version: '3.11'
           cache: pip
           cache-dependency-path: calibration/requirements.txt
-      - name: Calibration smoke test (PLAN §11)
+      - name: Calibration smoke test
         run: node scripts/py.mjs smoke
       - uses: actions/upload-artifact@v4
         if: failure()

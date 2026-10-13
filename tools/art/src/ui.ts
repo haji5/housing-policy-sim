@@ -1,5 +1,5 @@
 /**
- * UI kit pieces (PLAN §9.3): a 9-slice panel frame and button states (used through CSS
+ * UI kit pieces (ADR 0010): a 9-slice panel frame and button states (used through CSS
  * border-image, slice 4 px), a tab, and slider parts. Generated, so they share the palette.
  */
 import { Sprite } from './draw.ts';

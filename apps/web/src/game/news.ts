@@ -2,7 +2,7 @@ import type { Decision, PolicyEvent } from '@zoned-out/sim';
 import type { ResearcherView } from './observe.ts';
 
 /**
- * The quarterly briefing (PLAN §6.1: "stakeholder headlines, generated from templates"). Flavour
+ * The quarterly briefing (ADR 0012): stakeholder headlines generated from templates. Flavour
  * only: nothing here feeds the score or the sim. Headlines use the player's own decisions and
  * the data the player can already see (scraped listing snapshots, the published rent index), never
  * the true series, so the paper cannot leak what the debrief reveals. Reactions are stakeholder

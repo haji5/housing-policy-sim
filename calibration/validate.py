@@ -1,4 +1,4 @@
-"""Validation (PLAN §8.1-8.2) -> calibration/reports/validation.md
+"""Validation (docs/VALIDATION.md §1.1-2) -> calibration/reports/validation.md
 
 1. Estimator cross-check: the TypeScript DiD (packages/sim/src/moments.ts) equals pyfixest's feols
    on the same simulated zone x snapshot panel (the estimator the first project used).

@@ -6,9 +6,9 @@
 
 ## Context
 
-After launch the owner asked for the game to "feel more like a game and less of a simulation",
-and reported tooltips clipped at the screen edge. PLAN §6.1 asks for a quarterly briefing with
-"stakeholder headlines (generated from templates)", and §6.6 for a tabbed right-hand panel and a
+After launch, play-testing feedback was that the game should "feel more like a game and less of
+a simulation", and that tooltips clipped at the screen edge. The game design asks for a quarterly
+briefing with "stakeholder headlines (generated from templates)", a tabbed right-hand panel and a
 top bar with the turn, date, budget and political capital. Neither the headlines nor the tabs
 existed. The rest of the screen was a white document layout with pixel-art borders.
 
@@ -46,7 +46,7 @@ Acceptance criteria (restated before implementing):
 3. **Layout kept charts-first.** Putting the isometric map beside the charts would make it more
    prominent but shrinks each chart to about 360 px (tick labels near 10 px). ADR 0003's rule
    (charts visible without scrolling at 1366×768) stands; the map stays below the charts. A
-   map-first layout is left to the owner as an option.
+   map-first layout remains an option.
 4. **Seed and model variant** moved from the top bar to the City tab, so the HUD fits on one
    row down to 1024 px; the logo and the word "Political" are dropped below 1250 px.
 5. **New art** (tools/art, within the 32-colour palette): icons for the rent cap, upzoning

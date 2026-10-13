@@ -1,7 +1,7 @@
 import { expect, test } from '@playwright/test';
 
 /**
- * PLAN §11 budgets that only a browser can measure, and the privacy promise (PLAN §10 M8: no
+ * performance budgets that only a browser can measure (README "Performance"), and the privacy promise (no
  * analytics): every request the game makes goes to its own origin.
  */
 test('first interaction budget and no third-party requests', async ({ page, baseURL }) => {
@@ -15,7 +15,7 @@ test('first interaction budget and no third-party requests', async ({ page, base
   await page.goto('/?seed=4');
   const start = page.getByTestId('start');
   await expect(start).toBeEnabled();
-  // Navigation start -> start screen interactive (PLAN §11: first interaction < 2 s).
+  // Navigation start -> start screen interactive (budget: first interaction < 2 s).
   const interactive = await page.evaluate(() => performance.now());
   console.log(`start screen interactive after ${interactive.toFixed(0)} ms`);
   expect(interactive).toBeLessThan(2000);

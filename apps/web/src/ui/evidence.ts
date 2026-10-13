@@ -1,5 +1,5 @@
 /**
- * Evidence badges (PLAN §6.3) and the glossary (§6.5). Each badge ties a lever or a displayed
+ * Evidence badges and the glossary (ADR 0011). Each badge ties a lever or a displayed
  * effect to where its behaviour comes from, using the tags in docs/ASSUMPTIONS.md.
  */
 

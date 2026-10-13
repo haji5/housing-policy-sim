@@ -1,5 +1,5 @@
 /**
- * Ground tiles (PLAN §9.3): 32x16 isometric diamonds. Roads are described by which of the four
+ * Ground tiles (ADR 0010): 32x16 isometric diamonds. Roads are described by which of the four
  * diamond edges they reach (N = upper-right, E = lower-right, S = lower-left, W = upper-left), so
  * straights, corners, T-junctions and the cross all come from one function.
  */

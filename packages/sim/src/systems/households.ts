@@ -2,7 +2,7 @@ import type { SimState } from '../types.ts';
 import { HouseholdStatus } from '../types.ts';
 
 /**
- * Household stress transitions (PLAN §5.7): searching longer than kDouble months => DOUBLED_UP
+ * Household stress transitions (ODD §7.5): searching longer than kDouble months => DOUBLED_UP
  * (still searching); longer than kLeave => GONE (leaves the region because of housing stress).
  */
 export function householdUpdate(state: SimState): void {

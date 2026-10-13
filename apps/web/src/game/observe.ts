@@ -4,7 +4,7 @@ import type { Point } from '../ui/LineChart.tsx';
 import type { Snapshot, WorldLayout } from './protocol.ts';
 
 /**
- * The player's view of the city ("fog of data", PLAN §5.10): quarterly listing snapshots with
+ * The player's view of the city ("fog of data", ODD §7.8): quarterly listing snapshots with
  * scrape noise and the analyst's incomplete-snapshot flag, a noisy quarterly CPI rent series,
  * and the asking-rent index only for months covered by a data purchase.
  */

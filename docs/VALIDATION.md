@@ -1,6 +1,6 @@
 # Validation
 
-Internal validation, external validation and the DiD-recovery experiment (PLAN §8).
+Internal validation, external validation and the DiD-recovery experiment.
 
 ## 1. Internal validation (automated, `packages/sim/test/`)
 
@@ -209,7 +209,7 @@ project's Phase 2 term is not examined.
 
 ## 4. Balance playtests
 
-**Question (PLAN §10 M5).** With all six levers, the scorecard and the mandates, does any single
+**Question.** With all six levers, the scorecard and the mandates, does any single
 strategy dominate? Five scripted strategies (`packages/sim/src/playtest.ts`) play full 20-turn
 terms under the game rules, each against its paired no-policy run (same seed, same ensemble
 member, same shock cards), on seeds 1-8 with the current ensemble (re-run 2026-10-12):

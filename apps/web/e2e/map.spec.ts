@@ -62,7 +62,7 @@ test('isometric map: zoom levels, overlays, keyboard pan, sprite preview', async
     await map.screenshot({ path: `${SHOTS}/${name}.png` });
   }
 
-  // Greyscale check of the whole map (PLAN §9.4).
+  // Greyscale check of the whole map (ADR 0010).
   await map.getByLabel('Overlay').selectOption('none');
   await page.keyboard.press('+');
   await page.keyboard.press('+');

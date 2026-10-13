@@ -1,10 +1,10 @@
-"""Cross-platform task runner for the calibration pipeline (PLAN D9: replaces `make`).
+"""Cross-platform task runner for the calibration pipeline (replaces `make`, which Windows lacks).
 
     python calibration/run.py setup        # create calibration/.venv and install pinned deps
     python calibration/run.py calibrate    # full calibration -> packages/sim/src/params/ensemble.json
     python calibration/run.py smoke        # tiny calibration for CI (does not touch the ensemble)
-    python calibration/run.py validate     # PLAN §8.1-8.2 checks -> calibration/reports/validation.md
-    python calibration/run.py sobol        # Sobol indices (PLAN §8.1) -> calibration/reports/sobol.md
+    python calibration/run.py validate     # validation checks -> calibration/reports/validation.md
+    python calibration/run.py sobol        # Sobol indices -> calibration/reports/sobol.md
     python calibration/run.py robustness   # ensemble fit + rent-assumption sensitivity -> reports/robustness.md
 
 Extra arguments after the task are passed through, e.g. `calibrate --stage1 2048`.

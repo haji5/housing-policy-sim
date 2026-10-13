@@ -20,7 +20,7 @@ interface Prior {
   hi: number;
 }
 
-// PLAN §7.2: fail if the committed ensemble no longer matches the inputs it was calibrated on.
+// Fail if the committed ensemble no longer matches the inputs it was calibrated on.
 describe('calibrated ensemble', () => {
   it('was calibrated against the current priors, targets, defaults, scenario and model version', () => {
     const m = ENSEMBLE.meta;

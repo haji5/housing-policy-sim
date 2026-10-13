@@ -1,5 +1,5 @@
 /**
- * The calibrated parameter ensemble (PLAN §7.2). Written by calibration/calibrate.py; never edit
+ * The calibrated parameter ensemble (docs/CALIBRATION.md). Written by calibration/calibrate.py; never edit
  * by hand. Each set is a ParamOverrides object applied on top of DEFAULT_PARAMS. The game samples
  * one set per seed, so weakly identified parameters show up as run-to-run uncertainty.
  */

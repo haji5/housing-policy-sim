@@ -2,7 +2,7 @@ import type { SimState, TickRecord } from './types.ts';
 import { HostClass, HouseholdStatus, RegStatus, RentalKind, Tenure } from './types.ts';
 
 /**
- * Observation (PLAN §5.3 step 7): the true ("god view") state at the end of a tick.
+ * Observation (ODD §3, step 7): the true ("god view") state at the end of a tick.
  * The noisy researcher view (researcher.ts) is computed from these records.
  */
 export function observe(state: SimState): TickRecord {

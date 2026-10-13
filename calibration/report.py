@@ -1,4 +1,4 @@
-"""Calibration report: fit table, identification diagnostics, figures (PLAN §7.2-7.3)."""
+"""Calibration report: fit table, identification diagnostics, figures (docs/CALIBRATION.md)."""
 from __future__ import annotations
 
 import json
@@ -204,7 +204,7 @@ def write_calibration_report(*, priors, targets, meta, sets, U_ens, stage, out_d
         "## Parameters and identification",
         "",
         "Contraction = 1 - Var(posterior)/Var(prior) on the unit-cube scale. Labels: >= 0.5 identified, "
-        "0.2-0.5 partly identified, < 0.2 weakly identified (PLAN §7.3). Weakly identified parameters carry their "
+        "0.2-0.5 partly identified, < 0.2 weakly identified. Weakly identified parameters carry their "
         "uncertainty into the game through the ensemble.",
         "",
         "| Parameter | Prior | Median | 5% | 95% | Contraction | Label |",

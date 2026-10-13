@@ -1,5 +1,5 @@
 /**
- * Building sprites (PLAN §9.3). Each building type is drawn procedurally from iso boxes, roofs and
+ * Building sprites (ADR 0010). Each building type is drawn procedurally from iso boxes, roofs and
  * windows, in two window states: occupied (glass windows) and vacant (dark windows). Anchors are
  * the centre of the ground footprint; `roof` is where rooftop markers sit.
  */

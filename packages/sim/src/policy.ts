@@ -3,7 +3,7 @@ import type { LeverState, PolicyEvent, StrRegimeCode } from './types.ts';
 import { RentCap, StrRegime } from './types.ts';
 
 /**
- * Policy calendar of the Historical Bill 35 preset, in ticks from Sep 2023 (PLAN §2):
+ * Policy calendar of the Historical Bill 35 preset, in ticks from Sep 2023 (ASSUMPTIONS A6):
  * Oct 2023 announced (t=1), May 2024 Phase 1 (t=8), May 2025 Phase 2 (t=20).
  * Salt Spring's Nov 2025 opt-in is a zone attribute (optInTick) in the Victoria scenario.
  */

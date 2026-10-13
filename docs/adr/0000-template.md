@@ -6,7 +6,7 @@
 
 ## Context
 
-What problem or force makes a decision necessary? Cite PLAN.md sections.
+What problem or force makes a decision necessary? Cite the ODD or earlier ADRs.
 
 ## Decision
 

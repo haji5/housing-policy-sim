@@ -5,7 +5,7 @@ import { classBeta, classCompliance, scheduleBuy } from '../world.ts';
 import { anticipatedPenalty, DUE_REMOVED, illegalPenalty } from './enforcement.ts';
 
 /**
- * Host decisions (PLAN §5.4, ADR 0007). Investor-owned units choose among renting long-term
+ * Host decisions (ODD §7.1, ADR 0007). Investor-owned units choose among renting long-term
  * (LTR), short-term (STR), holding the unit vacant (VACANT) and selling it to an owner-occupier
  * (SELL); principal-residence owners choose whether to list their home. Choices are multinomial
  * logit, implemented with keyed Gumbel draws (argmax of U_k + scale * G_k) so draws are common
@@ -171,7 +171,7 @@ function purchases(state: SimState): void {
 }
 
 /**
- * Investor entry (PLAN §5.4 spillover): in zones where the rule does not bind, a non-listing
+ * Investor entry (spillover, ODD §7.1): in zones where the rule does not bind, a non-listing
  * owner-occupied home is bought by an investor with monthly probability
  * investorEntry * max(0, strNet / strNet0 - 1). The new owner is a commercial operator and
  * decides on the unit's use immediately. Zero while STR profits are at or below their start level.

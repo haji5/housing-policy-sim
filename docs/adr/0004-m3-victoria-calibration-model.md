@@ -6,7 +6,7 @@
 
 ## Context
 
-M3 calibrates the model to the Bill 35 estimates (PLAN §7). That needs the real geography, the
+M3 calibrates the model to the Bill 35 estimates (CALIBRATION.md). That needs the real geography, the
 Phase 2 registry, host classes for target T5, a spillover channel for the exempt-area path (T4),
 and pre-policy months to test for spurious pre-trends (T7). Two defects in the M1 model showed up
 on the 8-zone geography and are fixed here.

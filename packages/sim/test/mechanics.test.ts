@@ -9,7 +9,7 @@ const sum = (xs: readonly number[], from = 0, to = xs.length) =>
 const allZones = (o: RunOutput, f: (z: RunOutput['series']['zones'][number]) => number[]) =>
   o.series.zones.map(f).reduce((acc, xs) => acc.map((v, i) => v + xs[i]!));
 
-describe('M5 mechanics: face validity (PLAN §8.1)', () => {
+describe('M5 mechanics: face validity', () => {
   it('a higher vacancy tax means fewer units held vacant (monotone over 0..3%)', () => {
     const held = [0, 1, 2, 3].map((rate) =>
       mean(

@@ -6,7 +6,7 @@
 
 ## Context
 
-PLAN §5.10 and §8.3 need a "researcher view": what an analyst with Inside Airbnb snapshots and a
+The game and the DiD-recovery experiment (VALIDATION §3) need a "researcher view": what an analyst with Inside Airbnb snapshots and a
 CPI series would see, as distinct from the true state. The DiD-recovery experiment (M4) estimates
 the first project's design on this view and compares the estimate with the true effect from
 paired runs. The game (M5) shows the player this view, not the truth.

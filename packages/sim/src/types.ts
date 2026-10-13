@@ -54,7 +54,7 @@ export const RentalKind = {
   PURPOSE_BUILT: 2,
 } as const;
 
-/** Rent-increase cap lever (PLAN §5.8): nominal annual caps in params.rental. */
+/** Rent-increase cap lever (ADR 0007): nominal annual caps in params.rental. */
 export const RentCap = {
   LOW: 0,
   MEDIUM: 1,

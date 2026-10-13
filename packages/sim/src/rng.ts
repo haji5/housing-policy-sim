@@ -1,5 +1,5 @@
 /**
- * Counter-based hashed RNG (PLAN §5.1).
+ * Counter-based hashed RNG (ODD §4).
  *
  * Every random number is a pure function of (seed, agentId, tick, purpose, sub). There is no
  * stateful stream, so changing a policy lever never shifts the draws of unrelated agents. This

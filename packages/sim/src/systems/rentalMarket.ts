@@ -13,7 +13,7 @@ export function newLeaseRent(state: SimState, d: number, marketRent: number): nu
 }
 
 /**
- * Rental market (PLAN §5.5), M1 version.
+ * Rental market (ODD §7.4).
  *
  * 1. Each searching household targets its preferred zone, or with probability
  *    searchOtherZoneProb another zone chosen in proportion to renter stock.

@@ -1,5 +1,5 @@
 {
-  "_doc": "Shock cards (PLAN §5.9, ADR 0009). Effects are ASSUMED magnitudes for gameplay; each lasts durationTicks months from the tick it is drawn. Codes are append-only. Multipliers compound and shifts add when cards overlap.",
+  "_doc": "Shock cards (ODD §7.10, ADR 0009). Effects are ASSUMED magnitudes for gameplay; each lasts durationTicks months from the tick it is drawn. Codes are append-only. Multipliers compound and shifts add when cards overlap.",
   "cards": [
     {
       "code": 1,

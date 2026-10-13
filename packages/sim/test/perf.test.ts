@@ -14,7 +14,7 @@ describe('performance budget', () => {
       ms = Math.min(ms, performance.now() - t0);
     }
     expect(agents).toBeGreaterThan(8_000);
-    // PLAN §10 M1 target is 150 ms; CI gets a generous 4x margin for slow shared runners.
+    // The M1 target is 150 ms; CI gets a generous 4x margin for slow shared runners.
     expect(ms).toBeLessThan(600);
   });
 });

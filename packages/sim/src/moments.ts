@@ -1,5 +1,5 @@
 /**
- * Calibration moments (PLAN §7.1): the researcher-style statistics of a run, computed the way
+ * Calibration moments (docs/CALIBRATION.md): the researcher-style statistics of a run, computed the way
  * the first project computed them on real data, but on the sim's zone x snapshot-month panel and
  * without observation noise.
  *

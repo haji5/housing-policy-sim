@@ -6,7 +6,7 @@ import { drawFrame, drawText, loadAtlas, textWidth } from './atlas.ts';
 import type { City, Lot } from './city.ts';
 import { buildCity } from './city.ts';
 
-/** Overlay modes (PLAN §6.6). */
+/** Overlay modes (ADR 0010). */
 export type Overlay = 'none' | 'str' | 'vacant' | 'construction';
 
 const OVERLAYS: { id: Overlay; label: string }[] = [

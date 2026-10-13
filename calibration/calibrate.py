@@ -1,4 +1,4 @@
-"""Simulated method of moments / ABC calibration (PLAN §7).
+"""Simulated method of moments / ABC calibration (docs/CALIBRATION.md).
 
 Stage 1  Scrambled Sobol sample of the prior (unit cube), every draw run on common seeds.
 Stage 2  Nelder-Mead from the best Stage-1 points (local refinement; reported, and used to

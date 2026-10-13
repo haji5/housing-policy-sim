@@ -1,4 +1,4 @@
-"""Sobol sensitivity indices (PLAN §8.1) -> calibration/reports/sobol.{md,json}
+"""Sobol sensitivity indices (docs/VALIDATION.md §1.1) -> calibration/reports/sobol.{md,json}
 
 Variance-based global sensitivity of four outputs of the historical-policy run to the 18
 calibrated parameters, each varied uniformly over its posterior 5-95% range (in the prior's own

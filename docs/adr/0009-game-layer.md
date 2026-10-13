@@ -6,7 +6,7 @@
 
 ## Context
 
-PLAN §5.8-5.9 and §6.1-6.2 define six levers, resources, shock cards and a multi-objective
+The game needs six levers, resources, shock cards and a multi-objective
 scorecard with mandates. The M5 acceptance asks that no single strategy dominates in five
 headless playtests. The rules must be the same in the browser and headless.
 

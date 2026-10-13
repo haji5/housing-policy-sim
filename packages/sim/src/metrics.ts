@@ -1,5 +1,5 @@
 /**
- * Outcomes and the scorecard (PLAN §6.2, ADR 0009). Every objective is measured against the
+ * Outcomes and the scorecard (ADR 0009). Every objective is measured against the
  * paired no-policy run (same seed, same shocks), so the score is the effect of the player's
  * policy, not the level of a quantity the player cannot influence (e.g. the baseline flow of
  * households who leave because nothing is affordable to them).

@@ -6,7 +6,7 @@
 
 ## Context
 
-PLAN.md §5 gives v1 proposals for the model. M1 implements a two-zone subset (STR/LTR host
+The project plan gives v1 proposals for the model. M1 implements a two-zone subset (STR/LTR host
 choice, minimal rental market). Several details were unspecified or, implemented literally, give a
 non-stationary baseline that would create spurious pre-trends (violating target T7). This ADR
 records what was implemented and where it departs from §5.
@@ -50,7 +50,7 @@ records what was implemented and where it departs from §5.
 
 - With no policy change, listings and asking rents are approximately stationary (asking index
   within ~2% over 12 years in the two-zone scenario). The CPI-style index rises a few points
-  early on as below-market sitting tenants catch up under the cap; this is intended (PLAN §5.5).
+  early on as below-market sitting tenants catch up under the cap; this is intended.
 - `ASC`s and matching efficiencies are derived quantities, not calibrated parameters.
 - VACANT and SELL alternatives, host classes, developers, the rent-cap lever and shock cards are
   deferred (M3/M5).

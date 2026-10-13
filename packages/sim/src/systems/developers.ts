@@ -4,7 +4,7 @@ import { RentalKind, Tenure } from '../types.ts';
 import { addConstruction, birthKey, drawLag, pickWeighted, scheduleBuy } from '../world.ts';
 
 /**
- * Developers (PLAN §5.6, ADR 0008), after host decisions in the tick order.
+ * Developers (ODD §7.9, ADR 0008), after host decisions in the tick order.
  *
  * 1. Completions: units whose construction finishes this tick enter the stock, either for
  *    owner-occupiers (`forOwner`) or as purpose-built rentals (market rent) or non-market rentals

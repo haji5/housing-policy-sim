@@ -6,7 +6,7 @@
 
 ## Context
 
-M2 needs a playable loop with the sim running off the main thread (PLAN §3, §10 M2).
+M2 needs a playable loop with the sim running off the main thread .
 
 ## Decision
 
@@ -19,7 +19,7 @@ M2 needs a playable loop with the sim running off the main thread (PLAN §3, §1
 2. **Seeds.** `?seed=N` in the URL fixes the seed; otherwise the UI draws one with
    `crypto.getRandomValues`. That is fine in the UI; randomness stays out of the sim core.
 3. **No D3 yet.** Two placeholder line charts are hand-written SVG (`ui/LineChart.tsx`), so no
-   dependency is added. PLAN §3 names D3; revisit when the M7 fan charts need it.
+   dependency is added. The project plan named D3; revisit when the M7 fan charts need it.
 4. **Placeholder map.** Canvas 2D, one small square per dwelling, in a fixed hashed shuffle per
    zone. Colours are Okabe-Ito with distinct luminance. Shapes and the isometric renderer come in
    M6.

@@ -154,7 +154,7 @@ function servedNights(params: Params, demand: number, supply: number): number {
 }
 
 /**
- * Policy enforcement for this tick (PLAN §5.3 step 2).
+ * Policy enforcement for this tick (ODD §3, step 2).
  *
  * Announcement (rule announced, not yet in force): compliant investor hosts in zones the rule will
  * cover exit with monthly probability `anticipation`.

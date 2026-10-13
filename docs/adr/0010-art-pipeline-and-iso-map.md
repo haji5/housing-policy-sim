@@ -6,14 +6,14 @@
 
 ## Context
 
-PLAN §9 asks for a small-palette isometric pixel-art city generated entirely by code (original,
+The game needs a small-palette isometric pixel-art city generated entirely by code (original,
 reproducible, editable), an atlas PNG + JSON, an isometric renderer with pan/zoom, animations and
-overlays, and a screenshot-driven review loop. WORKING_AGREEMENTS.md forbids third-party sprites and fonts
+overlays, and a screenshot-driven review loop. The project forbids third-party sprites and fonts
 without an OFL-compatible licence.
 
 ## Decision
 
-1. **No image dependency.** PLAN §9.2 suggests `pngjs`. `tools/art/src/png.ts` instead writes
+1. **No image dependency.** The obvious choice is `pngjs`. `tools/art/src/png.ts` instead writes
    indexed-colour PNGs (colour type 3 with PLTE and tRNS) using only `node:zlib` (`deflateSync`,
    `crc32`), about 60 lines. No package is added.
 2. **Palette.** 31 named colours plus transparency (`tools/art/src/palette.ts`). Meaningful
@@ -32,7 +32,7 @@ without an OFL-compatible licence.
    pixel is covered exactly once.
 5. **Own pixel font.** "Zoned Out Mono", a 5×7 upper-case font drawn for this project (CC BY 4.0
    with the rest of the art), used only for the title and map labels. Body text stays in the
-   system UI font (PLAN §6.7 asks for 16 px readable UI text). This avoids shipping a third-party
+   system UI font (ACCESSIBILITY.md asks for 16 px readable UI text). This avoids shipping a third-party
    font and its licence file.
 6. **Representative lots.** The city is about 1,250 tiles of buildings, not one per dwelling
    (Victoria has 39,000 dwelling agents). Each lot stands for about 250 real homes (fewer for
@@ -61,4 +61,4 @@ without an OFL-compatible licence.
 - No model change: ASSUMPTIONS.md is unaffected. ODD §4 (Observation) records the map's sampling
   rule. The map is a god view of sampled homes; the charts remain the researcher view (ADR 0006).
 - The flat placeholder map (`render/MapCanvas.tsx`) stays as a fallback (`?map=flat`).
-- Licence: generated art is CC BY 4.0 (PLAN D4); code stays MIT.
+- Licence: generated art is CC BY 4.0; code stays MIT.

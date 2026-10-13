@@ -1,6 +1,6 @@
 import { defineConfig, devices } from '@playwright/test';
 
-// Smoke test of the deployed site (PLAN §10 M8: "the deployed URL works from a clean browser").
+// Smoke test of the deployed site (the deployed URL must work from a clean browser).
 // Not part of `pnpm e2e`: it needs the network and checks what GitHub Pages serves, not the
 // local build. Run with `pnpm e2e:live`; LIVE_URL overrides the address (must end in "/").
 export default defineConfig({

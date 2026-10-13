@@ -1,5 +1,5 @@
 /**
- * The art palette (PLAN §9.1): 31 named colours plus transparency, defined once. Meaningful
+ * The art palette (ADR 0010): 31 named colours plus transparency, defined once. Meaningful
  * overlay colours use the Okabe-Ito colour-blind-safe set (STR orange #e69f00, principal-residence
  * STR yellow #f0e442, long-term rental blue #0072b2, construction purple #cc79a7), and every
  * building state also differs in shape and luminance, so nothing relies on hue alone.

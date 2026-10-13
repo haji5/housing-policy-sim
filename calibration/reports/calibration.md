@@ -45,7 +45,7 @@ Pass = ensemble mean within 2 standard errors of the target (paths: last point).
 
 ## Parameters and identification
 
-Contraction = 1 - Var(posterior)/Var(prior) on the unit-cube scale. Labels: >= 0.5 identified, 0.2-0.5 partly identified, < 0.2 weakly identified (PLAN §7.3). Weakly identified parameters carry their uncertainty into the game through the ensemble.
+Contraction = 1 - Var(posterior)/Var(prior) on the unit-cube scale. Labels: >= 0.5 identified, 0.2-0.5 partly identified, < 0.2 weakly identified. Weakly identified parameters carry their uncertainty into the game through the ensemble.
 
 | Parameter | Prior | Median | 5% | 95% | Contraction | Label |
 |---|---|---:|---:|---:|---:|---|

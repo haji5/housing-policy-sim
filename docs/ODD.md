@@ -1,16 +1,16 @@
 # ODD protocol: Zoned Out housing-policy ABM
 
 Overview, Design concepts, Details (Grimm et al. ODD protocol). This document describes the model
-**as implemented**; PLAN.md §5 holds the original proposals. Every modelling change needs an ADR
-in `docs/adr/` and an update here and in `ASSUMPTIONS.md` (IDs like `A12` refer to that file).
+**as implemented**. Every modelling change needs an ADR in `docs/adr/` and an update here and in
+`ASSUMPTIONS.md` (IDs like `A12` refer to that file).
 
-_Implemented through: M5 (ADRs 0002, 0004-0009). SIM_VERSION 0.5.0._
+_Implemented through ADRs 0002, 0004-0009 and 0013. SIM_VERSION 0.6.0._
 
 ## 1. Purpose and patterns
 
 The model asks how short-term-rental (STR) regulation and other housing levers change the use of
 the housing stock and, through that, renter outcomes, in a stylised city with covered and exempt
-zones. It must reproduce these patterns (calibration targets from M3, PLAN §2):
+zones. It must reproduce these patterns (calibration targets from M3; CALIBRATION.md):
 
 - covered-zone entire-home listings fall sharply after a principal-residence rule, while exempt
   zones are flat or rising;
@@ -78,7 +78,7 @@ Each tick runs in fixed order (`step.ts`), and agents are iterated in ascending 
 
 - **Stochasticity and common random numbers.** Every draw is `hash(seed, key, tick, purpose, sub)`
   (`rng.ts`). Runs that share a seed share every agent's draws, so counterfactuals are paired
-  (PLAN §5.1). New dwellings get a birth key (start tick, zone, order within the tick), so one
+  (ADR 0002). New dwellings get a birth key (start tick, zone, order within the tick), so one
   extra start in one arm does not shift the draws of every later unit. Tested: prefix identity,
   variance reduction six months after a rule, exempt-zone invariance when markets are decoupled.
 - **Adaptation.** Hosts choose the use with the highest random utility (logit). Searchers take

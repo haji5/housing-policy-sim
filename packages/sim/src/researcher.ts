@@ -1,5 +1,5 @@
 /**
- * Researcher view ("fog of data", PLAN §5.10, ADR 0006): what an analyst with Inside Airbnb-style
+ * Researcher view ("fog of data", ODD §7.8, ADR 0006): what an analyst with Inside Airbnb-style
  * snapshots and a CPI series would see. Pure post-processing of a run's true series, so it never
  * changes model dynamics. Draws are keyed hashes (seed, zone, tick, purpose): deterministic, and
  * shared by paired runs with the same seed (CRN).

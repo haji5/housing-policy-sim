@@ -1,5 +1,5 @@
 /**
- * Headless play (PLAN §10 M5 balance playtests, ADR 0009): play a full term turn by turn under the
+ * Headless play (balance playtests, VALIDATION §4; ADR 0009): play a full term turn by turn under the
  * game rules, next to the paired no-policy run (same seed, same parameter set, same shocks), and
  * score it. The web worker uses the same functions, so headless and in-browser play agree.
  */

@@ -2,7 +2,7 @@ import { useState } from 'preact/hooks';
 import { AtlasSprite } from './AtlasSprite.tsx';
 
 /**
- * Onboarding (PLAN §6.5): one tip per turn for the first four turns, introducing one idea at a
+ * Onboarding (ADR 0011): one tip per turn for the first four turns, introducing one idea at a
  * time. Skippable; the choice is remembered in this browser only (a convenience, not game state).
  */
 const STEPS = [

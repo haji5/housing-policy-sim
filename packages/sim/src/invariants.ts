@@ -5,7 +5,7 @@ const TENURES = new Set<number>(Object.values(Tenure));
 const STATUSES = new Set<number>(Object.values(HouseholdStatus));
 
 /**
- * Conservation and consistency checks (PLAN §8.1). Returns a list of violations (empty = OK).
+ * Conservation and consistency checks (docs/VALIDATION.md §1). Returns a list of violations (empty = OK).
  * Used by tests; cheap enough to call every tick in debug runs.
  */
 export function checkInvariants(state: SimState): string[] {

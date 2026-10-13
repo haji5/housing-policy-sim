@@ -6,7 +6,7 @@ import { AtlasSprite } from './AtlasSprite.tsx';
 import { LEVER_EVIDENCE } from './evidence.ts';
 import { Badge } from './Tips.tsx';
 
-/** Evidence badge for a lever (PLAN §6.3). */
+/** Evidence badge for a lever (ADR 0011). */
 function LeverBadge({ lever }: { lever: keyof typeof LEVER_EVIDENCE }) {
   const e = LEVER_EVIDENCE[lever]!;
   return <Badge level={e.level} why={e.why} />;

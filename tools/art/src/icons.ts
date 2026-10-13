@@ -1,5 +1,5 @@
 /**
- * Hand-drawn pixel grids (PLAN §9.2): building-state markers, 16x16 overlay and shock icons,
+ * Hand-drawn pixel grids (ADR 0010): building-state markers, 16x16 overlay and shock icons,
  * effects and evidence badges. One character per pixel; see KEY.
  */
 import { fromGrid } from './draw.ts';
@@ -562,7 +562,7 @@ const ICON_GRIDS: Record<string, string[]> = {
     '................',
     '................',
   ],
-  // Evidence badges (PLAN §6.3).
+  // Evidence badges (ADR 0011).
   badge_measured: [
     '................',
     '....kkkkkkkk....',

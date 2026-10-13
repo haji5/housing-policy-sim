@@ -6,10 +6,10 @@
 
 ## Context
 
-PLAN §6.3-6.5 asks for evidence badges on every lever and displayed effect, a glossary, a
+M7 needs evidence badges on every lever and displayed effect, a glossary, a
 skippable four-turn tutorial, and a debrief: the player's term against the no-policy
 counterfactual with fan charts across N = 200 replications in a Web Worker (< 10 s across 4
-workers, PLAN §11), "what you could have known" (researcher view against god view), the Bill 35
+workers, a budget set at the start of the project), "what you could have known" (researcher view against god view), the Bill 35
 lesson card, a DiD-recovery card for the player's own world, and a shareable seed string.
 
 ## Decision
@@ -21,8 +21,8 @@ lesson card, a DiD-recovery card for the player's own world, and a shareable see
    workers (`workers/debrief.worker.ts`), streaming each finished variant. Measured in the e2e
    run on the development machine (busy, Chromium headless): 8.0-9.6 s for 32 × 2 runs
    alone, 12.4 s with another e2e test running in parallel. N = 200 would take about 50-60 s
-   there, far over PLAN's 10 s budget, so **N = 32 is a deliberate
-   deviation from PLAN §6.4**. With 300 sets of which 179 were distinct (ESS 21 at the time; 174 and about 63 since ADR 0013),
+   there, far over the 10 s budget, so **N = 32 is a deliberate
+   deviation from the planned 200**. With 300 sets of which 179 were distinct (ESS 21 at the time; 174 and about 63 since ADR 0013),
    32 evenly spaced members already span the ensemble; the fan shows 5-95% and 25-75% bands
    and the median, which 32 paths estimate adequately for a teaching display (not for inference).
    What varies across the fan is model uncertainty (parameters), not seed noise: every variant

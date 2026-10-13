@@ -89,7 +89,7 @@ export interface DidCard {
 }
 
 /**
- * The researcher's DiD in the player's own world (PLAN §8.3, ADR 0006): quarterly scraped
+ * The researcher's DiD in the player's own world (VALIDATION §3, ADR 0006): quarterly scraped
  * snapshots, flagged ones dropped, log(1 + listings) on "covered × rule in force" with zone and
  * snapshot fixed effects. The truth is the mean policy-minus-no-policy log gap in covered
  * listings over the snapshots with the rule in force (paired runs, so it is exact).

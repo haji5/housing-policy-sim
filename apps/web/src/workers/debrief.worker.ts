@@ -1,6 +1,6 @@
 /// <reference lib="webworker" />
 /**
- * Debrief runner (PLAN §6.4): replays the player's decisions under other calibrated model
+ * Debrief runner (ADR 0011): replays the player's decisions under other calibrated model
  * variants, each paired with its own no-policy run (same seed and shocks, common random numbers),
  * and returns the effect paths for the fan charts. Several of these workers share the members.
  */

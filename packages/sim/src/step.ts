@@ -9,7 +9,7 @@ import type { SimState, TickRecord } from './types.ts';
 import { emptyAcc } from './world.ts';
 
 /**
- * Advance one monthly tick. Subsystems run in the fixed order of PLAN §5.3:
+ * Advance one monthly tick. Subsystems run in the fixed order of ODD §3:
  * exogenous -> policy/enforcement -> hosts -> developers -> rental market -> households ->
  * observe. Agents are always iterated in ascending id order.
  */

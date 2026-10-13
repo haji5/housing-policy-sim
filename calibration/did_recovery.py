@@ -1,4 +1,4 @@
-"""DiD-recovery experiment (PLAN §8.3): does the first project's covered-vs-exempt DiD recover the
+"""DiD-recovery experiment (docs/VALIDATION.md §3): does the first project's covered-vs-exempt DiD recover the
 true effect inside a world where we know the truth?
 
 For ensemble members x spillover strengths:

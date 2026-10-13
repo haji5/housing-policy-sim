@@ -6,7 +6,7 @@
 
 ## Context
 
-PLAN §5.6 and §10 M5 ask for developers with a permit lag and a construction pipeline, zoning
+M5 needs developers with a permit lag and a construction pipeline, zoning
 that can be relaxed, and non-market building. The dwelling stock was fixed until M4.
 
 ## Decision
@@ -30,7 +30,7 @@ so paired runs stay paired even when their numbers of starts differ.
   BoC's published neutral-rate range).
 - `capElasticity = 3` (ASSUMED magnitude; the direction, rent control reducing rental supply, is
   LITERATURE: Diamond, McQuade & Qian 2019).
-- Lags are uniform on 18-30 months (VERIFY; PLAN §5.6).
+- Lags are uniform on 18-30 months (VERIFY).
 
 **Completions.** A start is for an owner-occupier, or a rental, with the rental share
 `rentalShare_z = renterHouseholds_z / dwellings_z` (adjusted by the cap factor). Rental completions
@@ -46,7 +46,7 @@ no-policy baseline keeps its vacancy near v*.
 **Upzoning** is a per-zone starts multiplier (Moderate ×1.4, Aggressive ×2.0) that takes effect
 `permitDelayTicks = 12` months after the decision. ASSUMED magnitudes, informed by Auckland's
 2016 upzoning, which roughly doubled consents on upzoned land (VERIFY). It is irreversible in the
-game. A capacity-headroom model (PLAN §5.6) was tried first and rejected: with 110% capacity and
+game. A capacity-headroom model was tried first and rejected: with 110% capacity and
 ~2%/yr growth, headroom ran out within the game's horizon in the baseline, so starts collapsed
 regardless of policy.
 
@@ -62,5 +62,5 @@ so completions flow from the first month.
 - Runs are ~50% slower (~0.23 s for the calibration window); calibration ~45-60 min.
 - The scenario's `capacity` field is no longer used.
 - Upzoning effects show up only after the permit delay plus the construction lag (≥ 30 months),
-  inside a 60-month term: the player feels the lag, as PLAN §5.6 intends.
+  inside a 60-month term: the player feels the lag, as intended.
 - ODD §2, §3, §5, §7.9; ASSUMPTIONS D1-D10.

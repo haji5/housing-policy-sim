@@ -87,7 +87,7 @@ describe('atlas', () => {
       }
   });
 
-  it('stays within the PLAN §11 size budget (300 KB)', () => {
+  it('stays within the 300 KB size budget', () => {
     expect(buildAtlas().png.length).toBeLessThan(300 * 1024);
   });
 
@@ -141,7 +141,7 @@ describe('iso grid', () => {
   });
 });
 
-describe('greyscale distinguishability (PLAN §9.4)', () => {
+describe('greyscale distinguishability', () => {
   it('vacant buildings are much darker than occupied ones in greyscale', () => {
     const all = buildings();
     for (const b of all.filter((x) => !x.name.endsWith('_dark'))) {

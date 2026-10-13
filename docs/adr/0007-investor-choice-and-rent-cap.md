@@ -6,7 +6,7 @@
 
 ## Context
 
-PLAN §5.4 asks where displaced STR units go. The first project does not identify it, so the
+Where do displaced STR units go? The first project does not identify it, so the
 destination simplex (long-term rental, held vacant, sold to an owner-occupier) must be explicit
 and uncertain. Through M4 investor units could only be STR or LTR. The vacancy-tax lever (§5.8)
 needs a VACANT use to act on, and the rent-cap lever needs a reason to matter: with no inflation in
@@ -41,7 +41,7 @@ tick (`−preTicks − spinUpMonths`), so scheduled events run on one clock. (Bu
 grew the investor stock by 2 pp in the baseline.)
 
 **Calibrated.** `vacantHeldShare` (prior U(0.005, 0.08)) and `sellRateAnnual` (prior U(0.02, 0.10))
-join the priors, so the ensemble carries destination uncertainty into the game (PLAN §5.4).
+join the priors, so the ensemble carries destination uncertainty into the game.
 
 **Real-terms rent cap.** The model stays in real terms; general inflation `π = 2.65%/yr` (DATA:
 Victoria all-items CPI, Sep 2023 to Jun 2026, first project's fixture) separates nominal from
@@ -58,7 +58,7 @@ asking-rent growth over 12 months.
 ## Consequences
 
 - Displaced units can now be sold or held vacant, so the rent effect of an STR rule depends on
-  weakly identified parameters, as PLAN intends.
+  weakly identified parameters, by design.
 - Paired-run variance reduction (CRN) fades over long horizons: once a rule removes the investor
   STR stock in one arm, the churn of that stock in the other arm (reviews, sales, purchases) is not
   shared. The CRN test now measures the effect six months after the rule (variance ratio ~0.3).

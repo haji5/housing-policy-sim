@@ -6,7 +6,7 @@
 
 ## Context
 
-PLAN.md §3 fixes the stack (pnpm workspaces, strict TypeScript, Vite, Preact, Canvas 2D, D3,
+The project plan fixes the stack (pnpm workspaces, strict TypeScript, Vite, Preact, Canvas 2D, D3,
 Vitest, fast-check, Playwright). A few version and tooling details had to be settled at scaffold
 time.
 
